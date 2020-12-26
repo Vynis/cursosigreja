@@ -1,5 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { ptBrLocale } from 'ngx-bootstrap/locale';
+
+defineLocale('pt-br', ptBrLocale);
 
 @Component({
   selector: 'kt-inscricao',
@@ -37,8 +42,11 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 	};
 
   constructor(
-	private fb: FormBuilder
-  ) { }
+	private fb: FormBuilder,
+	private localeService: BsLocaleService
+  ) { 
+	  this.localeService.use('pt-br');
+  }
 
   ngOnInit() {
 	  this.createForm();
@@ -48,7 +56,11 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 	  this.formulario = this.fb.group({
 		nome: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(60)]],
 		cpf: ['',  [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
-		dataNascimento: ['', [Validators.required]]
+		dataNascimento: ['', [Validators.required]],
+		email: ['', [Validators.required, Validators.email]],
+		telefoneCelular: ['', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(9)]],
+		telefoneFixo: ['', [ Validators.pattern("^[0-9]*$"), Validators.minLength(8)]],
+		congregacaoId: ['', Validators.required ]
 	  });
   }
 

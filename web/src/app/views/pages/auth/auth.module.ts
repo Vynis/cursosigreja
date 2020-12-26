@@ -22,6 +22,7 @@ import { AuthNoticeComponent } from './auth-notice/auth-notice.component';
 // Auth
 import { AuthEffects, AuthGuard, authReducer, AuthService } from '../../../core/auth';
 import { InscricaoComponent } from './inscricao/inscricao.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 const routes: Routes = [
 	{
@@ -68,7 +69,8 @@ const routes: Routes = [
 		TranslateModule.forChild(),
 		StoreModule.forFeature('auth', authReducer),
 		EffectsModule.forFeature([AuthEffects]),
-		MatSelectModule
+		MatSelectModule,
+		BsDatepickerModule.forRoot()
 	],
 	providers: [
 		InterceptService,
