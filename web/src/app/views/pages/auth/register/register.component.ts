@@ -89,12 +89,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 				Validators.maxLength(320)
 			]),
 			],
-			username: ['', Validators.compose([
-				Validators.required,
-				Validators.minLength(3),
-				Validators.maxLength(100)
-			]),
-			],
 			password: ['', Validators.compose([
 				Validators.required,
 				Validators.minLength(3),

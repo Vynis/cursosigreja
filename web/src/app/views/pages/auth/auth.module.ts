@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // Material
-import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
 // Translate
 import { TranslateModule } from '@ngx-translate/core';
 // NGRX
@@ -21,6 +21,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { AuthNoticeComponent } from './auth-notice/auth-notice.component';
 // Auth
 import { AuthEffects, AuthGuard, authReducer, AuthService } from '../../../core/auth';
+import { InscricaoComponent } from './inscricao/inscricao.component';
 
 const routes: Routes = [
 	{
@@ -44,6 +45,10 @@ const routes: Routes = [
 			{
 				path: 'forgot-password',
 				component: ForgotPasswordComponent,
+			},
+			{
+				path: 'inscricao',
+				component: InscricaoComponent
 			}
 		]
 	}
@@ -62,7 +67,8 @@ const routes: Routes = [
 		MatCheckboxModule,
 		TranslateModule.forChild(),
 		StoreModule.forFeature('auth', authReducer),
-		EffectsModule.forFeature([AuthEffects])
+		EffectsModule.forFeature([AuthEffects]),
+		MatSelectModule
 	],
 	providers: [
 		InterceptService,
@@ -78,7 +84,8 @@ const routes: Routes = [
 		LoginComponent,
 		RegisterComponent,
 		ForgotPasswordComponent,
-		AuthNoticeComponent
+		AuthNoticeComponent,
+		InscricaoComponent
 	]
 })
 
