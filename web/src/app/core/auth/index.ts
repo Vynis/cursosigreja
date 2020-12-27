@@ -1,6 +1,7 @@
 // SERVICES
-export { AuthService } from './_services';
+export { AuthService  } from './_services';
 export { AuthNoticeService } from './auth-notice/auth-notice.service';
+export { InscricaoService } from './_services/inscricao.service';
 
 // DATA SOURCERS
 export { RolesDataSource } from './_data-sources/roles.datasource';
@@ -110,5 +111,6 @@ export { Role } from './_models/role.model';
 export { Address } from './_models/address.model';
 export { SocialNetworks } from './_models/social-networks.model';
 export { AuthNotice } from './auth-notice/auth-notice.interface';
+export { Congregacao } from './_models/congregacao.model';
 
 export { AuthDataContext } from './_server/auth.data-context';

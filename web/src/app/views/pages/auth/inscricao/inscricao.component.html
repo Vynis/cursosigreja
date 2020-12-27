@@ -162,11 +162,8 @@
 								<div class="form-group">
 									<label>*Congregação</label>
 									<select class="form-control" formControlName="congregacaoId">
-										<option>1</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-										<option>5</option>
+										<option value="">Selecione</option>
+										<option *ngFor="let lista of listaCongrecoes" [ngValue]="lista.id">{{lista.nome}}</option>
 									  </select>
 								</div>
 

@@ -49,7 +49,7 @@ import {
 } from './core/_base/layout';
 // Auth
 import { AuthModule } from './views/pages/auth/auth.module';
-import { AuthService } from './core/auth';
+import { AuthService, InscricaoService } from './core/auth';
 // CRUD
 import { HttpUtilsService, LayoutUtilsService, TypesUtilsService } from './core/_base/crud';
 // Config
@@ -116,6 +116,7 @@ export function hljsLanguages(): HighlightLanguage[] {
 	exports: [],
 	providers: [
 		AuthService,
+		InscricaoService,
 		LayoutConfigService,
 		LayoutRefService,
 		MenuConfigService,

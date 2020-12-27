@@ -1,8 +1,10 @@
+import { RtlScrollAxisType } from '@angular/cdk/platform';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { Congregacao, InscricaoService } from '../../../../core/auth';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -17,39 +19,24 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   submitted = false;
   exiteErro = false;
   formulario: FormGroup;
-
-  model: any = {
-		address1: 'Address Line 1',
-		address2: 'Address Line 2',
-		postcode: '3000',
-		city: 'Melbourne',
-		state: 'VIC',
-		country: 'AU',
-		package: 'Complete Workstation (Monitor, Computer, Keyboard & Mouse)',
-		weight: '25',
-		width: '110',
-		height: '90',
-		length: '150',
-		delivery: 'overnight',
-		packaging: 'regular',
-		preferreddelivery: 'morning',
-		locaddress1: 'Address Line 1',
-		locaddress2: 'Address Line 2',
-		locpostcode: '3072',
-		loccity: 'Preston',
-		locstate: 'VIC',
-		loccountry: 'AU',
-	};
+  listaCongrecoes: Congregacao[] = [];
+ 
 
   constructor(
 	private fb: FormBuilder,
-	private localeService: BsLocaleService
+	private localeService: BsLocaleService,
+	private inscricaoService: InscricaoService
   ) { 
 	  this.localeService.use('pt-br');
   }
 
   ngOnInit() {
-	  this.createForm();
+	this.carregamentoInicial();
+  }
+
+  carregamentoInicial() {
+	this.createForm();
+	this.buscarTodasCongregacoesAtivas();
   }
 
   createForm() {
@@ -70,7 +57,6 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 			startStep: 1
     });
 
-    let teste = this.model;
     
 		// Validation before going to next page
 		wizard.on('beforeNext', (wizardObj) => {
@@ -92,5 +78,13 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 	onSubmit() {
 		this.submitted = true;
 
+	}
+
+	buscarTodasCongregacoesAtivas() {
+		this.inscricaoService.buscarTodasCongregacoes().subscribe(res  => {
+			if (res.success){
+				this.listaCongrecoes = res.dados;
+			}
+		})
 	}
 }
