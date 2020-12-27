@@ -1,5 +1,5 @@
 
-
+<div>
 		<!--begin: Wizard -->
 		<div #wizard class="kt-grid kt-wizard-v1 kt-wizard-v1--white" id="kt_wizard_v1" data-ktwizard-state="step-first">
 			<div class="kt-grid__item">
@@ -52,9 +52,7 @@
 			</div>
 			<div class="kt-grid__item kt-grid__item--fluid kt-wizard-v1__wrapper">
 
-				<div *ngIf="exiteErro">
-					teste
-				</div>
+				<kt-auth-notice></kt-auth-notice>
 
 				<!--begin: Form Wizard Form-->
 				<form *ngIf="usuario" [formGroup]="formulario" class="kt-form" id="kt_form">
@@ -161,10 +159,16 @@
 
 								<div class="form-group">
 									<label>*Congregação</label>
-									<select class="form-control" formControlName="congregacaoId">
-										<option value="">Selecione</option>
+									<select 
+									[ngClass]="{'is-invalid': formulario.get('congregacaoId').errors  && formulario.get('congregacaoId').touched}"
+									class="form-control" formControlName="congregacaoId">
+										<option [ngValue]="null" disabled>Selecione</option>
 										<option *ngFor="let lista of listaCongrecoes" [ngValue]="lista.id">{{lista.nome}}</option>
-									  </select>
+									</select>
+
+									<div *ngIf="formulario.get('congregacaoId').hasError('required')  && formulario.get('congregacaoId').touched" class="invalid-feedback">
+									A congregação é obrigatório.
+									</div>  
 								</div>
 
 							</div>
@@ -235,12 +239,14 @@
 				<!--end: Form Wizard Form-->
 			</div>
 		</div>
+	</div>
 		<!--end: Wizard -->
 		<div *ngIf="usuario">
 			<br>
 			<br>
 			<p>Form Value: {{formulario.value | json}}</p>
 			<p>Form Status: {{formulario.status | json}}</p>
+			<p>Congregacao: {{listaCongrecoes | json}}</p>
 		</div>
 
 		<div *ngIf="usuario == null">

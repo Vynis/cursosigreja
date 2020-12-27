@@ -6,8 +6,6 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { Usuario } from '../../../../core/auth/_models/usurario.model';
 import { Congregacao, InscricaoService } from '../../../../core/auth';
-import { Store } from '@ngrx/store/src/store';
-import { AppState } from '../../../../core/reducers';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -22,17 +20,18 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   submitted = false;
   exiteErro = false;
   formulario: FormGroup;
-  listaCongrecoes: Congregacao[] = [];
+  public listaCongrecoes: Congregacao[] = [];
   usuario: Usuario;
+  teste: any;
  
 
   constructor(
 	private fb: FormBuilder,
 	private localeService: BsLocaleService,
-	private inscricaoService: InscricaoService,
-	private store: Store<AppState>
+	private inscricaoService: InscricaoService
   ) { 
 	  this.localeService.use('pt-br');
+	  this.buscarTodasCongregacoesAtivas();
   }
 
   ngOnInit() {
@@ -42,7 +41,6 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   carregamentoInicial() {
 	this.usuario = new Usuario();
 	this.createForm();
-	this.buscarTodasCongregacoesAtivas();
   }
 
   createForm() {
@@ -87,10 +85,13 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 	}
 
 	buscarTodasCongregacoesAtivas() {
-		this.inscricaoService.buscarTodasCongregacoes().subscribe(res  => {
+        this.inscricaoService.buscarTodasCongregacoes().subscribe(res  => {
 			if (res.success){
 				this.listaCongrecoes = res.dados;
 			}
 		})
+		
+
+		//this.listaCongrecoes = lista;
 	}
 }
