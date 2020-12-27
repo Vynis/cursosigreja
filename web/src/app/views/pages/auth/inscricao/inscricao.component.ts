@@ -4,7 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { Usuario } from '../../../../core/auth/_models/usurario.model';
 import { Congregacao, InscricaoService } from '../../../../core/auth';
+import { Store } from '@ngrx/store/src/store';
+import { AppState } from '../../../../core/reducers';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -20,12 +23,14 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   exiteErro = false;
   formulario: FormGroup;
   listaCongrecoes: Congregacao[] = [];
+  usuario: Usuario;
  
 
   constructor(
 	private fb: FormBuilder,
 	private localeService: BsLocaleService,
-	private inscricaoService: InscricaoService
+	private inscricaoService: InscricaoService,
+	private store: Store<AppState>
   ) { 
 	  this.localeService.use('pt-br');
   }
@@ -35,19 +40,20 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   }
 
   carregamentoInicial() {
+	this.usuario = new Usuario();
 	this.createForm();
 	this.buscarTodasCongregacoesAtivas();
   }
 
   createForm() {
 	  this.formulario = this.fb.group({
-		nome: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(60)]],
-		cpf: ['',  [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
-		dataNascimento: ['', [Validators.required]],
-		email: ['', [Validators.required, Validators.email]],
-		telefoneCelular: ['', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(9)]],
-		telefoneFixo: ['', [ Validators.pattern("^[0-9]*$"), Validators.minLength(8)]],
-		congregacaoId: ['', Validators.required ]
+		nome: [this.usuario.nome, [Validators.required, Validators.minLength(4), Validators.maxLength(60)]],
+		cpf: [this.usuario.cpf,  [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
+		dataNascimento: [this.usuario.dataNascimento, [Validators.required]],
+		email: [this.usuario.email, [Validators.required, Validators.email]],
+		telefoneCelular: [this.usuario.telefoneCelular, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(9)]],
+		telefoneFixo: [this.usuario.telefoneFixo, [ Validators.pattern("^[0-9]*$"), Validators.minLength(8)]],
+		congregacaoId: [this.usuario.congregacaoId, Validators.required ]
 	  });
   }
 

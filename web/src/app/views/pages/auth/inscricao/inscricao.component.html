@@ -57,7 +57,7 @@
 				</div>
 
 				<!--begin: Form Wizard Form-->
-				<form [formGroup]="formulario" class="kt-form" id="kt_form">
+				<form *ngIf="usuario" [formGroup]="formulario" class="kt-form" id="kt_form">
 					<!--begin: Form Wizard Step 1-->
 					<div class="kt-wizard-v1__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
 						<div class="kt-heading kt-heading--md">Informe seus dados</div>
@@ -236,7 +236,13 @@
 			</div>
 		</div>
 		<!--end: Wizard -->
-<br>
-<br>
-<p>Form Value: {{formulario.value | json}}</p>
-<p>Form Status: {{formulario.status | json}}</p>
+		<div *ngIf="usuario">
+			<br>
+			<br>
+			<p>Form Value: {{formulario.value | json}}</p>
+			<p>Form Status: {{formulario.status | json}}</p>
+		</div>
+
+		<div *ngIf="usuario == null">
+			Carregando..
+		</div>
