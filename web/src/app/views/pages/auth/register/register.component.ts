@@ -6,11 +6,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, takeUntil, tap } from 'rxjs/operators';
 // Translate
 import { TranslateService } from '@ngx-translate/core';
-// NGRX
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../core/reducers';
+
 // Auth
-import { AuthNoticeService, AuthService, Register, User } from '../../../../core/auth/';
+import { AuthNoticeService, AuthService, User } from '../../../../core/auth/';
 import { Subject } from 'rxjs';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
 
@@ -42,7 +40,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 		private translate: TranslateService,
 		private router: Router,
 		private auth: AuthService,
-		private store: Store<AppState>,
 		private fb: FormBuilder,
 		private cdr: ChangeDetectorRef
 	) {
@@ -137,23 +134,23 @@ export class RegisterComponent implements OnInit, OnDestroy {
 		_user.fullname = controls.fullname.value;
 		_user.password = controls.password.value;
 		_user.roles = [];
-		this.auth.register(_user).pipe(
-			tap(user => {
-				if (user) {
-					this.store.dispatch(new Register({authToken: user.accessToken}));
-					// pass notice message to the login page
-					this.authNoticeService.setNotice(this.translate.instant('AUTH.REGISTER.SUCCESS'), 'success');
-					this.router.navigateByUrl('/auth/login');
-				} else {
-					this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
-				}
-			}),
-			takeUntil(this.unsubscribe),
-			finalize(() => {
-				this.loading = false;
-				this.cdr.markForCheck();
-			})
-		).subscribe();
+		// this.auth.register(_user).pipe(
+		// 	tap(user => {
+		// 		if (user) {
+		// 			this.store.dispatch(new Register({authToken: user.accessToken}));
+		// 			// pass notice message to the login page
+		// 			this.authNoticeService.setNotice(this.translate.instant('AUTH.REGISTER.SUCCESS'), 'success');
+		// 			this.router.navigateByUrl('/auth/login');
+		// 		} else {
+		// 			this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
+		// 		}
+		// 	}),
+		// 	takeUntil(this.unsubscribe),
+		// 	finalize(() => {
+		// 		this.loading = false;
+		// 		this.cdr.markForCheck();
+		// 	})
+		// ).subscribe();
 	}
 
 	/**

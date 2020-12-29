@@ -1,6 +1,10 @@
 
 export class Usuario {
 
+    Usuario() {
+        this.tipoAcesso = 'E';
+    }
+
     id: number;
     nome: string;
     email: string;
@@ -10,6 +14,7 @@ export class Usuario {
     cpf: string;
     dataNascimento: Date;
     rua: string;
+    complemento: string;
     bairro: string;
     cidade: string;
     estado: string;
@@ -18,5 +23,12 @@ export class Usuario {
     telefoneCelular: string;
     telefoneFixo: string;
     congregacaoId: number;
+    tipoAcesso: string;
+
+    congregaHaQuantoTempo: string;
+    recebePastoreiro: string;
+    quemPastoreia: string;
+    frequentaCelula: string;
+    quemLider: string;
 
 }

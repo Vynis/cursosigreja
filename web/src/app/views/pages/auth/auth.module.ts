@@ -5,12 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // Material
-import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatSlideToggleModule } from '@angular/material';
 // Translate
 import { TranslateModule } from '@ngx-translate/core';
-// NGRX
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 // CRUD
 import { InterceptService } from '../../../core/_base/crud/';
 // Module components
@@ -20,7 +17,7 @@ import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { AuthNoticeComponent } from './auth-notice/auth-notice.component';
 // Auth
-import { AuthEffects, AuthGuard, authReducer, AuthService } from '../../../core/auth';
+import { AuthGuard, AuthService } from '../../../core/auth';
 import { InscricaoComponent } from './inscricao/inscricao.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
@@ -67,10 +64,9 @@ const routes: Routes = [
 		MatFormFieldModule,
 		MatCheckboxModule,
 		TranslateModule.forChild(),
-		StoreModule.forFeature('auth', authReducer),
-		EffectsModule.forFeature([AuthEffects]),
 		MatSelectModule,
-		BsDatepickerModule.forRoot()
+		BsDatepickerModule.forRoot(),
+		MatSlideToggleModule
 	],
 	providers: [
 		InterceptService,

@@ -6,12 +6,12 @@ export class ConfirmPasswordValidator {
 	 * @param control AbstractControl
 	 */
 	static MatchPassword(control: AbstractControl) {
-		const password = control.get('password').value;
+		const password = control.get('senha').value;
 
-		const confirmPassword = control.get('confirmPassword').value;
+		const confirmPassword = control.get('confirmarSenha').value;
 
 		if (password !== confirmPassword) {
-			control.get('confirmPassword').setErrors({ConfirmPassword: true});
+			control.get('confirmarSenha').setErrors({ConfirmPassword: true});
 		} else {
 			return null;
 		}

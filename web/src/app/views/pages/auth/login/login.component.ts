@@ -7,11 +7,9 @@ import { Observable, Subject } from 'rxjs';
 import { finalize, takeUntil, tap } from 'rxjs/operators';
 // Translate
 import { TranslateService } from '@ngx-translate/core';
-// Store
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../core/reducers';
+
 // Auth
-import { AuthNoticeService, AuthService, Login } from '../../../../core/auth';
+import { AuthNoticeService, AuthService } from '../../../../core/auth';
 
 /**
  * ! Just example => Should be removed in development
@@ -56,7 +54,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private authNoticeService: AuthNoticeService,
 		private translate: TranslateService,
-		private store: Store<AppState>,
 		private fb: FormBuilder,
 		private cdr: ChangeDetectorRef,
 		private route: ActivatedRoute
@@ -139,24 +136,24 @@ export class LoginComponent implements OnInit, OnDestroy {
 			email: controls.email.value,
 			password: controls.password.value
 		};
-		this.auth
-			.login(authData.email, authData.password)
-			.pipe(
-				tap(user => {
-					if (user) {
-						this.store.dispatch(new Login({authToken: user.accessToken}));
-						this.router.navigateByUrl(this.returnUrl); // Main page
-					} else {
-						this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
-					}
-				}),
-				takeUntil(this.unsubscribe),
-				finalize(() => {
-					this.loading = false;
-					this.cdr.markForCheck();
-				})
-			)
-			.subscribe();
+		// this.auth
+		// 	.login(authData.email, authData.password)
+		// 	.pipe(
+		// 		tap(user => {
+		// 			if (user) {
+		// 				this.store.dispatch(new Login({authToken: user.accessToken}));
+		// 				this.router.navigateByUrl(this.returnUrl); // Main page
+		// 			} else {
+		// 				this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
+		// 			}
+		// 		}),
+		// 		takeUntil(this.unsubscribe),
+		// 		finalize(() => {
+		// 			this.loading = false;
+		// 			this.cdr.markForCheck();
+		// 		})
+		// 	)
+		// 	.subscribe();
 	}
 
 	/**

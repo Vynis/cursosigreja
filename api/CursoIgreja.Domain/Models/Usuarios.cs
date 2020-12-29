@@ -20,8 +20,10 @@ namespace CursoIgreja.Domain.Models
         public DateTime DataCadastro { get; set; }
         public string Cpf { get; set; }
         public DateTime DataNascimento { get; set; }
+        public string TipoAcesso { get; set; }
 
         public string Rua { get; set; }
+        public string Complemento { get; set; }
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
@@ -29,6 +31,12 @@ namespace CursoIgreja.Domain.Models
         public string Cep { get; set; }
         public string TelefoneCelular { get; set; }
         public string TelefoneFixo { get; set; }
+
+        public string CongregaHaQuantoTempo { get; set; }
+        public string RecebePastoreiro { get; set; }
+        public string QuemPastoreia { get; set; }
+        public string FrequentaCelula { get; set; }
+        public string QuemLider { get; set; }
 
         public int CongregacaoId { get; set; }
         public Congregacao Congregacao { get; set; }

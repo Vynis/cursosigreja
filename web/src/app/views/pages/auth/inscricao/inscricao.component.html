@@ -29,20 +29,20 @@
 						<a class="kt-wizard-v1__nav-item" href="javascript:;" data-ktwizard-type="step">
 							<div class="kt-wizard-v1__nav-body">
 								<div class="kt-wizard-v1__nav-icon">
-									<i class="flaticon-responsive"></i>
+									<i class="flaticon-search"></i>
 								</div>
 								<div class="kt-wizard-v1__nav-label">
-									3) Cursos
+									3) Info
 								</div>
 							</div>
 						</a>
 						<a class="kt-wizard-v1__nav-item" href="javascript:;" data-ktwizard-type="step">
 							<div class="kt-wizard-v1__nav-body">
 								<div class="kt-wizard-v1__nav-icon">
-									<i class="flaticon-price-tag"></i>
+									<i class="flaticon-responsive"></i>
 								</div>
 								<div class="kt-wizard-v1__nav-label">
-									4) Investimento
+									4) Cursos
 								</div>
 							</div>
 						</a>
@@ -52,15 +52,16 @@
 			</div>
 			<div class="kt-grid__item kt-grid__item--fluid kt-wizard-v1__wrapper">
 
-				<kt-auth-notice></kt-auth-notice>
-
 				<!--begin: Form Wizard Form-->
 				<form *ngIf="usuario" [formGroup]="formulario" class="kt-form" id="kt_form">
+
+					<kt-auth-notice ></kt-auth-notice>
+
 					<!--begin: Form Wizard Step 1-->
 					<div class="kt-wizard-v1__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
 						<div class="kt-heading kt-heading--md">Informe seus dados</div>
 						<div class="kt-form__section kt-form__section--first">
-							<div class="kt-wizard-v1__form">
+							<div class="kt-wizard-v1__form" >
 								<div class="form-group">
 									<label>*Nome</label>
 									<input type="text" class="form-control"
@@ -78,23 +79,6 @@
 								</div>
 
 								<div class="row">
-
-									<div class="form-group col-xl-6">
-										<label>*Cpf</label>
-										<input type="text" class="form-control"
-										[ngClass]="{'is-invalid': formulario.get('cpf').errors  && formulario.get('cpf').touched}"
-										 name="cpf" formControlName="cpf" placeholder="" maxlength="12" >
-										 <div *ngIf="formulario.get('cpf').hasError('required')  && formulario.get('cpf').touched" class="invalid-feedback">
-											O cpf é obrigatório.
-										</div>
-										<div *ngIf="formulario.get('cpf').hasError('minlength')  && formulario.get('cpf').touched" class="invalid-feedback">
-											O cpf deve ter no mínimo 11 caracteres.
-										</div>
-										<div *ngIf="formulario.get('cpf').hasError('maxlength')  && formulario.get('cpf').touched" class="invalid-feedback">
-											O cpf deve ter no máximo 11 caracteres.
-										</div>
-									</div>
-	
 									<div class="form-group col-xl-6">
 										<label>*Data de nascimento</label>
 										<input type="text" class="form-control"
@@ -111,26 +95,12 @@
 											A Data de Nascimento deve ter no máximo 11 caracteres.
 										</div>
 									</div>
-
-								</div>
-
-								<div class="form-group">
-									<label>*E-mail</label>
-									<input type="text" class="form-control"
-									[ngClass]="{'is-invalid': formulario.get('email').errors  && formulario.get('email').touched}"
-									 name="email" formControlName="email" placeholder="" maxlength="101" >
-									<div *ngIf="formulario.get('email').hasError('required')  && formulario.get('email').touched" class="invalid-feedback">
-										O e-mail é obrigatório.
-									</div>
-									<div *ngIf="formulario.get('email').hasError('email')  && formulario.get('email').touched" class="invalid-feedback">
-										E-mail inválido.
-									</div>
 								</div>
 
 								<div class="row">
 									<div class="form-group col-xl-6">
 										<label>*Celular</label>
-										<input type="text" class="form-control"
+										<input type="number" class="form-control"
 										[ngClass]="{'is-invalid': formulario.get('telefoneCelular').errors  && formulario.get('telefoneCelular').touched}"
 										 name="telefoneCelular" placeholder="Ex: 62999999999" formControlName="telefoneCelular" placeholder="" maxlength="45" >
 										 <div *ngIf="formulario.get('telefoneCelular').hasError('required')  && formulario.get('telefoneCelular').touched" class="invalid-feedback">
@@ -145,7 +115,7 @@
 									</div>
 									<div class="form-group col-xl-6">
 										<label>Telefone Fixo</label>
-										<input type="text" class="form-control"
+										<input type="number" class="form-control"
 										[ngClass]="{'is-invalid': formulario.get('telefoneFixo').errors  && formulario.get('telefoneFixo').touched}"
 										 name="telefoneFixo" placeholder="Ex: 62999999999" formControlName="telefoneFixo" placeholder="" maxlength="45" >
 										<div *ngIf="formulario.get('telefoneFixo').hasError('pattern')  && formulario.get('telefoneFixo').touched" class="invalid-feedback">
@@ -157,18 +127,78 @@
 									</div>
 								</div>
 
-								<div class="form-group">
-									<label>*Congregação</label>
-									<select 
-									[ngClass]="{'is-invalid': formulario.get('congregacaoId').errors  && formulario.get('congregacaoId').touched}"
-									class="form-control" formControlName="congregacaoId">
-										<option [ngValue]="null" disabled>Selecione</option>
-										<option *ngFor="let lista of listaCongrecoes" [ngValue]="lista.id">{{lista.nome}}</option>
-									</select>
+								<div class="kt-heading kt-heading--md">Dados de acesso</div>
 
-									<div *ngIf="formulario.get('congregacaoId').hasError('required')  && formulario.get('congregacaoId').touched" class="invalid-feedback">
-									A congregação é obrigatório.
-									</div>  
+								<div class="form-group">
+									<label>*Logar no sistema como:</label>
+									<select  (change)="onChangeTipoAcesso()"
+									[ngClass]="{'is-invalid': formulario.get('tipoAcesso').errors  && formulario.get('tipoAcesso').touched}"
+									class="form-control" formControlName="tipoAcesso">
+									<option [ngValue]="null" disabled>Selecione</option>
+										<option value="C">CPF</option>
+										<option value="E">E-mail</option>
+									</select>
+								</div>
+
+								<div [hidden]="formulario.controls.tipoAcesso.value == null">
+									<div class="form-group" [hidden]="formulario.controls.tipoAcesso.value == 'E'">
+										<label>*Cpf</label>
+										<input type="number" class="form-control" 
+										[ngClass]="{'is-invalid': formulario.get('cpf').errors  && formulario.get('cpf').touched}"
+										 name="cpf" formControlName="cpf" placeholder="" maxlength="12" >
+										 <div *ngIf="formulario.get('cpf').hasError('required')  && formulario.get('cpf').touched" class="invalid-feedback">
+											O cpf é obrigatório.
+										</div>
+										<div *ngIf="formulario.get('cpf').hasError('minlength')  && formulario.get('cpf').touched" class="invalid-feedback">
+											O cpf deve ter no mínimo 11 caracteres.
+										</div>
+										<div *ngIf="formulario.get('cpf').hasError('maxlength')  && formulario.get('cpf').touched" class="invalid-feedback">
+											O cpf deve ter no máximo 11 caracteres.
+										</div>
+									</div>
+	
+									<div class="form-group"  [hidden]="formulario.controls.tipoAcesso.value == 'C'">
+										<label>*E-mail</label>
+										<input type="text" class="form-control"
+										[ngClass]="{'is-invalid': formulario.get('email').errors  && formulario.get('email').touched}"
+										 name="email" formControlName="email" placeholder="" maxlength="101" >
+										<div *ngIf="formulario.get('email').hasError('required')  && formulario.get('email').touched" class="invalid-feedback">
+											O e-mail é obrigatório.
+										</div>
+										<div *ngIf="formulario.get('email').hasError('email')  && formulario.get('email').touched" class="invalid-feedback">
+											E-mail inválido.
+										</div>
+									</div>
+
+									<div class="form-group" [hidden]="formulario.controls.senhaPadrao.value">
+										<label>*Senha</label>
+										<input type="password" class="form-control"
+										[ngClass]="{'is-invalid': formulario.get('senha').errors  && formulario.get('senha').touched}"
+										 name="senha" formControlName="senha" placeholder="" maxlength="45" >
+
+										 <div *ngIf="formulario.get('senha').hasError('required')  && formulario.get('senha').touched" class="invalid-feedback">
+											A senha é obrigatório.
+										</div>
+									</div>
+
+									<div class="form-group" [hidden]="formulario.controls.senhaPadrao.value">
+										<label>*Confirmar Senha</label>
+										<input type="password" class="form-control" 
+										[ngClass]="{'is-invalid': formulario.get('confirmarSenha').errors  && formulario.get('confirmarSenha').touched}"
+										 name="confirmarSenha" formControlName="confirmarSenha" placeholder="" maxlength="45" >
+
+										 <div *ngIf="formulario.get('confirmarSenha').hasError('required')  && formulario.get('confirmarSenha').touched" class="invalid-feedback">
+											A confirmação da senha é obrigatório.
+										</div>
+										<div *ngIf="formulario.get('confirmarSenha').errors && formulario.get('confirmarSenha').errors.ConfirmPassword  && formulario.get('confirmarSenha').touched" class="invalid-feedback">
+											A confirmação da senha incorreto.
+										</div>
+									</div>
+
+									<div class="form-group">
+										<mat-slide-toggle formControlName="senhaPadrao" (change)="onChangeSenhaPadrao()" >Deseja cadastro com senha padrão: @inicio1234</mat-slide-toggle>
+									</div>
+
 								</div>
 
 							</div>
@@ -178,10 +208,94 @@
 
 					<!--begin: Form Wizard Step 2-->
 					<div class="kt-wizard-v1__content" data-ktwizard-type="step-content">
-						<div class="kt-heading kt-heading--md">Enter the Details of your Delivery</div>
+						<div class="kt-heading kt-heading--md">Seu endereço</div>
 						<div class="kt-form__section kt-form__section--first">
-							<div class="kt-wizard-v1__form">
-									Passo 2
+							<div class="kt-wizard-v1__form" formGroupName="stepEndereco">
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>*Cep</label>
+											<input type="number"
+											[ngClass]="{'is-invalid': formulario.get('stepEndereco').get('cep').errors  && formulario.get('stepEndereco').get('cep').touched}"
+											 (blur)="consultaCEP($event.target.value)" maxlength="8" class="form-control" name="cep"
+												formControlName="cep" >
+												<div *ngIf="formulario.get('stepEndereco').get('cep').hasError('required')  && formulario.get('stepEndereco').get('cep').touched" class="invalid-feedback">
+												O cep é obrigatório.
+												</div>	
+										</div>
+									</div> 
+									<div class="col-md-8">
+										<div class="form-group">
+											<label>*Rua/Avenida</label>
+											<input type="text"
+											[ngClass]="{'is-invalid': formulario.get('stepEndereco').get('rua').errors  && formulario.get('stepEndereco').get('rua').touched}"
+											 maxlength="45" class="form-control" name="rua"
+												formControlName="rua" >
+												<div *ngIf="formulario.get('stepEndereco').get('rua').hasError('required')  && formulario.get('stepEndereco').get('rua').touched" class="invalid-feedback">
+													A Rua/Avenida é obrigatório.
+												</div>	
+										</div>
+									</div> 
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>Numero</label>
+											<input type="text" maxlength="45" class="form-control" name="numero"
+												formControlName="numero" >
+										</div>
+									</div> 
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>*Bairro</label>
+											<input type="text"
+											[ngClass]="{'is-invalid': formulario.get('stepEndereco').get('bairro').errors  && formulario.get('stepEndereco').get('bairro').touched}"
+											 maxlength="45" class="form-control" name="bairro"
+												formControlName="bairro">
+												<div *ngIf="formulario.get('stepEndereco').get('bairro').hasError('required')  && formulario.get('stepEndereco').get('bairro').touched" class="invalid-feedback">
+													O Bairro é obrigatório.
+												</div>												
+										</div>
+									</div> 
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>*Cidade</label>
+											<input type="text"
+											[ngClass]="{'is-invalid': formulario.get('stepEndereco').get('cidade').errors  && formulario.get('stepEndereco').get('cidade').touched}"
+											 maxlength="45" class="form-control" name="cidade"
+												formControlName="cidade" >
+												<div *ngIf="formulario.get('stepEndereco').get('cidade').hasError('required')  && formulario.get('stepEndereco').get('cidade').touched" class="invalid-feedback">
+													A Cidade é obrigatório.
+												</div>												
+										</div>
+									</div> 
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>*Estado</label>
+											<select
+											[ngClass]="{'is-invalid': formulario.get('stepEndereco').get('estado').errors  && formulario.get('stepEndereco').get('estado').touched}"
+											  formControlName="estado" class="form-control">
+												<option  *ngFor="let estado of listaestadosBrasileiros" [value]="estado.sigla">
+													{{ estado.nome }}
+												</option>
+											</select>
+											<div *ngIf="formulario.get('stepEndereco').get('estado').hasError('required')  && formulario.get('stepEndereco').get('estado').touched" class="invalid-feedback">
+												A Estado é obrigatório.
+											</div>
+										</div>
+									</div> 
+									<div class="col-md-8">
+										<div class="form-group">
+											<label>Complemento</label>
+											<input type="text" maxlength="100" class="form-control" 
+												formControlName="complemento">
+										</div>
+									</div> 
+								</div>
 							</div>
 						</div>
 					</div>
@@ -189,10 +303,59 @@
 
 					<!--begin: Form Wizard Step 3-->
 					<div class="kt-wizard-v1__content" data-ktwizard-type="step-content">
-						<div class="kt-heading kt-heading--md">Select your Services</div>
+						<div class="kt-heading kt-heading--md">Informações complementares</div>
 						<div class="kt-form__section kt-form__section--first">
-							<div class="kt-wizard-v1__form">
-								Passo 3
+							<div class="kt-wizard-v1__form" formGroupName="stepOutrasInfo">
+								<div class="row">
+									<div class="form-group col-md-6">
+										<label>*Congregação</label>
+										<select 
+										[ngClass]="{'is-invalid': formulario.get('stepOutrasInfo').get('congregacaoId').errors  && formulario.get('stepOutrasInfo').get('congregacaoId').touched}"
+										class="form-control" formControlName="congregacaoId">
+											<option [ngValue]="null" disabled>Selecione</option>
+											<option *ngFor="let lista of listaCongregacoes$ | async" [ngValue]="lista.id">{{lista.nome}}</option>
+										</select>
+	
+										<div *ngIf="formulario.get('stepOutrasInfo').get('congregacaoId').hasError('required')  && formulario.get('stepOutrasInfo').get('congregacaoId').touched" class="invalid-feedback">
+										A congregação é obrigatório.
+										</div>  
+									</div>
+									<div class="form-group col-md-6">
+										<label>*Congrega há quanto tempo?</label>
+										<input type="text" maxlength="100" class="form-control" 
+												formControlName="congregaHaQuantoTempo">
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-md-6">
+										<label>*Recebe pastoreio de alguém mais proximo?</label>
+										<select class="form-control" ormControlName="recebePastoreiro">
+											<option [ngValue]="null" disabled>Selecione</option>
+											<option value="S">Sim</option>
+											<option value="N">Não</option>
+										</select>
+									</div>
+									<div class="form-group col-md-6">
+										<label>*De quem?</label>
+										<input type="text" maxlength="100" class="form-control" 
+												formControlName="quemPastoreia">
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-md-6">
+										<label>*Frequenta alguma célula?</label>
+										<select class="form-control" ormControlName="frequentaCelula">
+											<option [ngValue]="null" disabled>Selecione</option>
+											<option value="S">Sim</option>
+											<option value="N">Não</option>
+										</select>
+									</div>
+									<div class="form-group col-md-6">
+										<label>*Quem é o líder?</label>
+										<input type="text" maxlength="100" class="form-control" 
+												formControlName="quemLider">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -241,14 +404,11 @@
 		</div>
 	</div>
 		<!--end: Wizard -->
-		<div *ngIf="usuario">
+		<div *ngIf="usuario && modoDebug">
 			<br>
 			<br>
 			<p>Form Value: {{formulario.value | json}}</p>
 			<p>Form Status: {{formulario.status | json}}</p>
-			<p>Congregacao: {{listaCongrecoes | json}}</p>
+			<p>Congregacao: {{listaCongregacoes$ | async | json}}</p>
 		</div>
 
-		<div *ngIf="usuario == null">
-			Carregando..
-		</div>
