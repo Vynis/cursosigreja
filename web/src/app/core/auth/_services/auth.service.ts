@@ -4,10 +4,11 @@ import { Observable, of } from 'rxjs';
 import { User } from '../_models/user.model';
 import { Permission } from '../_models/permission.model';
 import { Role } from '../_models/role.model';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { QueryParamsModel, QueryResultsModel } from '../../_base/crud';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
+import { Usuario } from '../_models/usurario.model';
 
 const API_USERS_URL = 'api/users';
 const API_PERMISSION_URL = 'api/permissions';
@@ -15,12 +16,20 @@ const API_ROLES_URL = 'api/roles';
 
 @Injectable()
 export class AuthService {
-    constructor(private http: HttpClient) {}
-    // Authentication/Authorization
-    login(email: string, password: string): Observable<User> {
-        return this.http.post<User>(API_USERS_URL, { email, password });
-    }
+    caminhoApi: string = '';
 
+    constructor(private http: HttpClient) {
+         this.caminhoApi = environment.api;
+    }
+    // Authentication/Authorization
+    login(email: string, password: string): Observable<any> {
+        return this.http.post<Usuario>(this.caminhoApi + "auth", { email, senha: password }).pipe(
+            tap((res: Usuario) => {
+                return res;
+            })
+        );
+    }
+//Teste
     getUserByToken(): Observable<User> {
         const userToken = localStorage.getItem(environment.authTokenKey);
         const httpHeaders = new HttpHeaders();

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // Material
-import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatSlideToggleModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatSelectModule, MatSlideToggleModule } from '@angular/material';
 // Translate
 import { TranslateModule } from '@ngx-translate/core';
 // CRUD
@@ -66,7 +66,8 @@ const routes: Routes = [
 		TranslateModule.forChild(),
 		MatSelectModule,
 		BsDatepickerModule.forRoot(),
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		MatRadioModule
 	],
 	providers: [
 		InterceptService,
@@ -74,7 +75,7 @@ const routes: Routes = [
 			provide: HTTP_INTERCEPTORS,
 			useClass: InterceptService,
 			multi: true
-		},
+		}
 	],
 	exports: [AuthComponent],
 	declarations: [

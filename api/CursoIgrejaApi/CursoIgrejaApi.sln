@@ -8,12 +8,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoIgreja.Api", "CursoIgr
 		{3B8D4F16-B77F-455B-87C5-E5DDEA3AD50E} = {3B8D4F16-B77F-455B-87C5-E5DDEA3AD50E}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoIgreja.Domain", "..\CursoIgreja.Domain\CursoIgreja.Domain.csproj", "{3B8D4F16-B77F-455B-87C5-E5DDEA3AD50E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoIgreja.Domain", "..\CursoIgreja.Domain\CursoIgreja.Domain.csproj", "{3B8D4F16-B77F-455B-87C5-E5DDEA3AD50E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoIgreja.Repository", "..\CursoIgreja.Repository\CursoIgreja.Repository.csproj", "{5A9AB7AD-069E-4083-ACC9-D8677F5C629C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoIgreja.Repository", "..\CursoIgreja.Repository\CursoIgreja.Repository.csproj", "{5A9AB7AD-069E-4083-ACC9-D8677F5C629C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3B8D4F16-B77F-455B-87C5-E5DDEA3AD50E} = {3B8D4F16-B77F-455B-87C5-E5DDEA3AD50E}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoIgreja.PagSeguro", "..\CursoIgreja.PagSeguro\CursoIgreja.PagSeguro.csproj", "{B037B548-7989-45A7-A988-50C5F54E153B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5A9AB7AD-069E-4083-ACC9-D8677F5C629C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A9AB7AD-069E-4083-ACC9-D8677F5C629C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A9AB7AD-069E-4083-ACC9-D8677F5C629C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B037B548-7989-45A7-A988-50C5F54E153B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B037B548-7989-45A7-A988-50C5F54E153B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B037B548-7989-45A7-A988-50C5F54E153B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B037B548-7989-45A7-A988-50C5F54E153B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

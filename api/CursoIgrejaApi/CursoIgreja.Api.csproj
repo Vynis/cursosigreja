@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CursoIgreja.Domain\CursoIgreja.Domain.csproj" />
+    <ProjectReference Include="..\CursoIgreja.PagSeguro\CursoIgreja.PagSeguro.csproj" />
     <ProjectReference Include="..\CursoIgreja.Repository\CursoIgreja.Repository.csproj" />
   </ItemGroup>
 

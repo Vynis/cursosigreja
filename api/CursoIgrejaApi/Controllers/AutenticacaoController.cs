@@ -36,7 +36,7 @@ namespace CursoIgreja.Api.Controllers
             {
                 autenticarDto.Senha = SenhaHashService.CalculateMD5Hash(autenticarDto.Senha);
 
-                var response = await _usuarioRepository.Buscar(x => x.Email.Equals(autenticarDto.Email) && x.Senha.Equals(autenticarDto.Senha) && x.Status.Equals("A"));
+                var response = await _usuarioRepository.Buscar(x =>( x.Email.Equals(autenticarDto.Email) || x.Cpf.Equals(autenticarDto.Email)) && x.Senha.Equals(autenticarDto.Senha) && x.Status.Equals("A"));
 
                 var usuario = response.FirstOrDefault();
 
@@ -45,7 +45,7 @@ namespace CursoIgreja.Api.Controllers
 
                 var token = TokenService.GenerateToken(usuario, _configuration);
 
-                return Response(new { usuario = _mapper.Map<UsuarioAutDto>(usuario), token });
+                return Response(new { usuario , token });
 
             }
             catch (Exception ex)

@@ -5,13 +5,20 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { Usuario } from '../../../../core/auth/_models/usurario.model';
-import { AuthNoticeService, Congregacao, InscricaoService } from '../../../../core/auth';
+import { AuthNoticeService, AuthService, Congregacao, InscricaoService } from '../../../../core/auth';
 import { map } from 'rxjs/internal/operators/map';
 import { Observable } from 'rxjs';
 import { ConfirmPasswordValidator } from '../register/confirm-password.validator';
 import { EstadosBrasileiros } from '../../../../core/utils/estados-brasileiros.enum';
 import { ConsultaCepService } from '../../../../core/_base/consulta-cep.service';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { ProcessoInscricaoService } from '../../../../core/processo-inscricao/_services/processoInscricao.service';
+import { ProcessoInscricao } from '../../../../core/processo-inscricao/_models/processoInscricao.model';
+import { tap } from 'rxjs/internal/operators/tap';
+import { InscricaoUsuario } from '../../../../core/inscricao-usuario/_models/inscricaoUsuario.model';
+import { InscricaoUsuarioService } from '../../../../core/inscricao-usuario/_services/inscricaoUsuario.service';
+import Swal from 'sweetalert2'
+import { ActivatedRoute, Router } from '@angular/router';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -25,28 +32,39 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   @ViewChild('wizard', {static: true}) el: ElementRef;
   submitted = false;
   exiteErro = false;
-  modoDebug = true;
+  modoDebug = false;
   formulario: FormGroup;
   usuario: Usuario;
   listaCongregacoes$: Observable<Congregacao[]>;
+  listaCursosLiberados$: Observable<ProcessoInscricao[]>;
   listaestadosBrasileiros = EstadosBrasileiros;
+  inscricaoUsuario: InscricaoUsuario = new InscricaoUsuario();
+  token: string = '';
+  etapaPagamento = false;
 
   constructor(
 	private fb: FormBuilder,
 	private localeService: BsLocaleService,
 	private inscricaoService: InscricaoService,
 	private cepService: ConsultaCepService,
-	private authNoticeService: AuthNoticeService
+	private authNoticeService: AuthNoticeService,
+	private processoInscricaoService: ProcessoInscricaoService,
+	private authService: AuthService,
+	private inscricaoUsuarioService: InscricaoUsuarioService,
+	private route: ActivatedRoute,
+	private router: Router,
   ) { 
 	  this.localeService.use('pt-br');
   }
 
   ngOnInit() {
 	this.carregamentoInicial();
-	this.buscarTodasCongregacoesAtivas();
   }
 
   carregamentoInicial() {
+	this.buscarTodasCongregacoesAtivas();
+	this.buscarTodosCursosLiberados();
+	
 	this.usuario = new Usuario();
 	this.createForm();
   }
@@ -79,6 +97,9 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 			quemPastoreia: [''],
 			frequentaCelula: ['', Validators.required],
 			quemLider: ['']
+		}),
+		stepSelecaoCurso: this.fb.group({
+			cursoSelecionado: ['']
 		})
 	  },{validator: ConfirmPasswordValidator.MatchPassword});
   }
@@ -113,13 +134,17 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 
 			switch (wizardObj.currentStep) {
 				case 1:
-					// if (!this.setpMeusDados())
-					// 	wizardObj.stop();
+					if (!this.setpMeusDados())
+						wizardObj.stop();
 					break;
 				case 2:
-					// if (!this.setpMeusDados('stepEndereco'))
-					// 	wizardObj.stop();
+					if (!this.setpMeusDados('stepEndereco'))
+						wizardObj.stop();
 					break;
+				case 3:
+					if (!this.setpMeusDados('stepOutrasInfo'))
+						wizardObj.stop();
+					break;	
 				default:
 					break;
 			} 
@@ -133,9 +158,145 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	onSubmit() {
+	onSubmit(idCurso: number = 0) {
 		this.submitted = true;
 
+		if (idCurso !== 0)
+			this.formulario.controls.stepSelecaoCurso.setValue({
+				cursoSelecionado: idCurso
+			})
+
+		if (this.formulario.invalid)
+			return;
+
+		this.usuario = this.prepararUsuario();
+		this.inscricaoUsuario.id = 0;
+		this.inscricaoUsuario.status = 'AG';
+		this.inscricaoUsuario.processoInscricaoId = idCurso;
+
+		this.inscricaoService.cadastrar(this.usuario).subscribe(
+			res => {
+				
+				if (res.dados) {
+					if (res.success) {
+						let dadosCadastrados = res.dados;
+
+						if (idCurso !== 0) {
+							this.inscricaoUsuario.usuarioId = dadosCadastrados.id;
+
+							this.authService.login(this.usuario.email === '' ? this.usuario.cpf :  this.usuario.email, this.usuario.senha).subscribe(
+								res => {
+									if (res.success){
+										let dadosLogin = res.dados;
+										this.token = dadosLogin.token;
+										
+										this.inscricaoUsuarioService.cadastrar(this.inscricaoUsuario,dadosLogin.token).subscribe(
+											res => {
+												if (res.success){
+													let dadosInscriccao = res.dados;
+													this.inscricaoUsuario.id = dadosInscriccao.id;
+													this.inscricaoUsuario.processoInscricaoId = dadosInscriccao.processoInscricaoId;
+													this.inscricaoUsuario.usuarioId = dadosInscriccao.usuarioId;
+													
+													Swal.fire({
+														title: 'Seu cadastro voi realizado com sucesso',
+														text: 'Qual proximo passo?',
+														icon: 'success',
+														showCancelButton: true,
+														confirmButtonText: 'Realizar pagamento',
+														cancelButtonText: "Realizar o login",
+														reverseButtons: true,
+														allowOutsideClick: false
+													}).then((result: any) => {
+														if (result.value) {
+															
+															this.inscricaoUsuarioService.gerarPagamento(this.inscricaoUsuario.id,this.token).subscribe(
+																res => {
+																	if (res.success) {
+																		window.open(res.dados,'_blank');
+																		this.authNoticeService.setNotice(null);
+																		this.router.navigateByUrl("/auth/login", { skipLocationChange: true }) ;
+																	}
+																	else {
+																		this.authNoticeService.setNotice(null);
+																		this.router.navigateByUrl("/auth/login", { skipLocationChange: true }) ;
+																	}
+																}
+															)
+
+														}
+													});
+												}
+												else {
+													this.authNoticeService.setNotice(res.dados,'danger');
+												}
+											}
+										);
+									} 
+									else {
+										this.authNoticeService.setNotice(res.dados,'danger');
+									}
+								}
+							)
+						} else {
+							this.etapaPagamento = false;
+
+							Swal.fire({
+								title: 'Seu cadastro voi realizado com sucesso',
+								text: 'Realize o login para ter acesso a nossa plataforma.',
+								icon: 'success',
+								confirmButtonText: 'Login',
+								allowOutsideClick: false
+							}).then((result: any) => {
+								if (result.value) {
+									this.router.navigateByUrl("/auth/login", { skipLocationChange: true }) ;
+								}
+							});
+						}
+					}
+					else {
+						this.authNoticeService.setNotice(res.dados,'danger');
+					}
+					
+				}
+
+			}, (err) => {
+				console.log(err);
+				this.authNoticeService.setNotice('Erro no sistema','danger');
+			}
+		);
+		
+
+	}
+
+	private prepararUsuario() {
+		const controls = this.formulario.controls;
+		const _usuario: Usuario = new Usuario();
+
+		_usuario.nome = controls.nome.value;
+		_usuario.email = controls.email.value;
+		_usuario.senha = controls.senha.value;
+		_usuario.status = 'A';
+		_usuario.cpf = controls.cpf.value;
+		_usuario.dataNascimento = controls.dataNascimento.value;
+		_usuario.rua = controls.stepEndereco.get('rua').value;
+		_usuario.complemento = controls.stepEndereco.get('complemento').value;
+		_usuario.bairro = controls.stepEndereco.get('bairro').value;
+		_usuario.cidade = controls.stepEndereco.get('cidade').value;
+		_usuario.estado = controls.stepEndereco.get('estado').value;
+		_usuario.numero = controls.stepEndereco.get('numero').value;
+		_usuario.cep = controls.stepEndereco.get('cep').value;
+		_usuario.telefoneCelular = controls.telefoneCelular.value;
+		_usuario.telefoneFixo = controls.telefoneFixo.value;
+		_usuario.tipoAcesso = controls.tipoAcesso.value;
+
+		_usuario.congregacaoId = controls.stepOutrasInfo.get('congregacaoId').value;
+		_usuario.congregaHaQuantoTempo = controls.stepOutrasInfo.get('congregaHaQuantoTempo').value;
+		_usuario.recebePastoreiro = controls.stepOutrasInfo.get('recebePastoreiro').value;
+		_usuario.quemPastoreia = controls.stepOutrasInfo.get('quemPastoreia').value;
+		_usuario.frequentaCelula = controls.stepOutrasInfo.get('frequentaCelula').value;
+		_usuario.quemLider = controls.stepOutrasInfo.get('quemLider').value;
+		return _usuario;
 	}
 
 	buscarTodasCongregacoesAtivas() {
@@ -144,6 +305,14 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 				return res.dados;
 			})
 		);
+	}
+
+	buscarTodosCursosLiberados() {
+		this.listaCursosLiberados$ = this.processoInscricaoService.buscarCursosLiberados().pipe(
+			   map( res => {
+				   return res.dados;
+			   })
+		   );
 	}
 
 	onChangeSenhaPadrao(){
@@ -169,7 +338,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 
 		if (step === ''){
 			Object.keys(controls).forEach(controlName =>{
-				if (controlName !== 'stepEndereco')
+				if (controlName !== 'stepEndereco' && controlName !== 'stepOutrasInfo')
 					if (!controls[controlName].valid){
 						controls[controlName].markAsTouched();
 						validaDados = false;

@@ -62,6 +62,11 @@ namespace CursoIgrejaApi
                 };
             });
 
+            //Ignora o circle recursivo
+             services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+             );
+
             //Servico da documentacao do Swagger
             services.AddSwaggerGen(c =>
             {
@@ -144,6 +149,12 @@ namespace CursoIgrejaApi
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IUsuariosRepository, UsuariosRepository>();
             services.AddScoped<ICongregacaoRepository, CongregacaoRepository>();
+            services.AddScoped<ICursoRepository, CursoRepository>();
+            services.AddScoped<IProcessoInscricaoRepository, ProcessoInscricaoRepository>();
+            services.AddScoped<IInscricaoUsuarioRepository, InscricaoUsuarioRepository>();
+            services.AddScoped<IMeioPagamentoRepository, MeioPagamentoRepository>();
+            services.AddScoped<IParametroSistemaRepository, ParametroSistemaRepository>();
+
         }
     }
 }

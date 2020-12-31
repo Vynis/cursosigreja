@@ -41,6 +41,8 @@ namespace CursoIgreja.Domain.Models
         public int CongregacaoId { get; set; }
         public Congregacao Congregacao { get; set; }
 
+        public List<InscricaoUsuario> InscricaoUsuarios { get; set; }
+
     }
 }
 

@@ -53,6 +53,8 @@ import * as typescript from 'highlight.js/lib/languages/typescript';
 import * as scss from 'highlight.js/lib/languages/scss';
 import * as xml from 'highlight.js/lib/languages/xml';
 import * as json from 'highlight.js/lib/languages/json';
+import { ProcessoInscricaoService } from './core/processo-inscricao/_services/processoInscricao.service';
+import { InscricaoUsuarioService } from './core/inscricao-usuario/_services/inscricaoUsuario.service';
 
 
 // tslint:disable-next-line:class-name
@@ -106,6 +108,8 @@ export function hljsLanguages(): HighlightLanguage[] {
 	providers: [
 		AuthService,
 		InscricaoService,
+		ProcessoInscricaoService,
+		InscricaoUsuarioService,
 		LayoutConfigService,
 		LayoutRefService,
 		MenuConfigService,
