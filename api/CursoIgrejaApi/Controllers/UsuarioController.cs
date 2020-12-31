@@ -38,7 +38,7 @@ namespace CursoIgreja.Api.Controllers
                 else
                     verficaCadastro = _usuarioRepository.Buscar(x => x.Cpf.Equals(usuario.Cpf)).Result.FirstOrDefault();
 
-                if (verficaCadastro == null)
+                if (verficaCadastro != null)
                     return Response("Cadastro já se encontra na base de dados!", false);
 
                 usuario.Senha = SenhaHashService.CalculateMD5Hash(usuario.Senha);

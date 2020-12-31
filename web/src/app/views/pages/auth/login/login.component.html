@@ -1,7 +1,7 @@
 <!--begin::Head-->
 <div class="kt-login__head">
 	<span class="kt-login__signup-label">Não está cadastrado?</span>&nbsp;&nbsp;
-	<a href="javascript:;" routerLink="/auth/register" class="kt-link kt-login__signup-link">Cadastra-se</a>
+	<a href="javascript:;" routerLink="/auth/inscricao" class="kt-link kt-login__signup-link">Cadastra-se</a>
 </div>
 <!--end::Head-->
 
@@ -10,20 +10,17 @@
 	<!--begin::Signin-->
 	<div class="kt-login__form">
 		<div class="kt-login__title">
-			<h3>Bem vindo ao Curso da Igreja</h3>
+			<h3>Bem vindo a EmPower School</h3>
 		</div>
 
 		<!--begin::Form-->
 		<form class="kt-form" [formGroup]="loginForm" autocomplete="off">
 			<div class="form-group">
 				<mat-form-field>
-					<mat-label>E-mail</mat-label>
+					<mat-label>E-mail ou Cpf</mat-label>
 					<input matInput type="email" placeholder="E-mail" formControlName="email" autocomplete="off"/>
 					<mat-error *ngIf="isControlHasError('email','required')">
-						<strong>E-mail obrigatorio</strong>
-					</mat-error>
-					<mat-error *ngIf="isControlHasError('email','email')">
-						<strong>E-mail invalido</strong>
+						<strong>E-mail ou Cpf obrigatório</strong>
 					</mat-error>
 				</mat-form-field>
 			</div>

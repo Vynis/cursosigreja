@@ -57,6 +57,12 @@
 
 					<kt-auth-notice ></kt-auth-notice>
 
+					<div class="row">
+						<div class="col-md-12" style="text-align: right;">
+							<em>(*) Campos obrigatórios</em>
+						</div>
+					</div>
+					
 					<!--begin: Form Wizard Step 1-->
 					<div class="kt-wizard-v1__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
 						<div class="kt-heading kt-heading--md">Informe seus dados</div>
@@ -84,7 +90,8 @@
 										<input type="text" class="form-control"
 										bsDatepicker
 										[ngClass]="{'is-invalid': formulario.get('dataNascimento').errors  && formulario.get('dataNascimento').touched}"
-										 name="dataNascimento" formControlName="dataNascimento" placeholder="" maxlength="12" >
+										 name="dataNascimento" formControlName="dataNascimento" maxlength="12" placeholder="" >
+										 <em>Ex: 01/01/2020 (DD/MM/YYYY)</em>
 										 <div *ngIf="formulario.get('dataNascimento').hasError('required')  && formulario.get('dataNascimento').touched" class="invalid-feedback">
 											A Data Nascimento é obrigatório.
 										</div>
@@ -100,9 +107,10 @@
 								<div class="row">
 									<div class="form-group col-xl-6">
 										<label>*Celular</label>
-										<input type="number" class="form-control"
+										<input type="text" class="form-control"
 										[ngClass]="{'is-invalid': formulario.get('telefoneCelular').errors  && formulario.get('telefoneCelular').touched}"
-										 name="telefoneCelular" placeholder="Ex: 62999999999" formControlName="telefoneCelular" placeholder="" maxlength="45" >
+										 name="telefoneCelular" placeholder="Ex: 62999999999" formControlName="telefoneCelular"  maxlength="45" >
+										 <em>Somente números</em>
 										 <div *ngIf="formulario.get('telefoneCelular').hasError('required')  && formulario.get('telefoneCelular').touched" class="invalid-feedback">
 											O celular é obrigatório.
 										</div>
@@ -115,9 +123,10 @@
 									</div>
 									<div class="form-group col-xl-6">
 										<label>Telefone Fixo</label>
-										<input type="number" class="form-control"
+										<input type="text" class="form-control"
 										[ngClass]="{'is-invalid': formulario.get('telefoneFixo').errors  && formulario.get('telefoneFixo').touched}"
-										 name="telefoneFixo" placeholder="Ex: 62999999999" formControlName="telefoneFixo" placeholder="" maxlength="45" >
+										 name="telefoneFixo" placeholder="Ex: 62999999999" formControlName="telefoneFixo"  maxlength="45" >
+										 <em>Somente números</em>
 										<div *ngIf="formulario.get('telefoneFixo').hasError('pattern')  && formulario.get('telefoneFixo').touched" class="invalid-feedback">
 											Número do telefone fixo inválido.
 										</div>
@@ -143,9 +152,10 @@
 								<div [hidden]="formulario.controls.tipoAcesso.value == null">
 									<div class="form-group" [hidden]="formulario.controls.tipoAcesso.value == 'E'">
 										<label>*Cpf</label>
-										<input type="number" class="form-control" 
+										<input type="text" class="form-control" 
 										[ngClass]="{'is-invalid': formulario.get('cpf').errors  && formulario.get('cpf').touched}"
-										 name="cpf" formControlName="cpf" placeholder="" maxlength="12" >
+										 name="cpf" formControlName="cpf" placeholder="Ex: 99999999999" maxlength="12" >
+										 <em>Somente números</em>
 										 <div *ngIf="formulario.get('cpf').hasError('required')  && formulario.get('cpf').touched" class="invalid-feedback">
 											O cpf é obrigatório.
 										</div>
@@ -154,6 +164,9 @@
 										</div>
 										<div *ngIf="formulario.get('cpf').hasError('maxlength')  && formulario.get('cpf').touched" class="invalid-feedback">
 											O cpf deve ter no máximo 11 caracteres.
+										</div>
+										<div *ngIf="formulario.get('cpf').hasError('pattern')  && formulario.get('cpf').touched" class="invalid-feedback">
+											Cpf inválido.
 										</div>
 									</div>
 	
@@ -217,8 +230,9 @@
 											<label>*Cep</label>
 											<input type="number"
 											[ngClass]="{'is-invalid': formulario.get('stepEndereco').get('cep').errors  && formulario.get('stepEndereco').get('cep').touched}"
-											 (blur)="consultaCEP($event.target.value)" maxlength="8" class="form-control" name="cep"
+											 (blur)="consultaCEP($event.target.value)" maxlength="8" class="form-control" name="cep" placeholder="74000000"
 												formControlName="cep" >
+												<em>Somente números</em>
 												<div *ngIf="formulario.get('stepEndereco').get('cep').hasError('required')  && formulario.get('stepEndereco').get('cep').touched" class="invalid-feedback">
 												O cep é obrigatório.
 												</div>	
@@ -321,7 +335,7 @@
 										</div>  
 									</div>
 									<div class="form-group col-md-6">
-										<label>*Congrega há quanto tempo?</label>
+										<label>Congrega há quanto tempo?</label>
 										<input type="text"
 										[ngClass]="{'is-invalid': formulario.get('stepOutrasInfo').get('congregaHaQuantoTempo').errors  && formulario.get('stepOutrasInfo').get('congregaHaQuantoTempo').touched}"
 										 maxlength="100" class="form-control" 
@@ -424,54 +438,9 @@
 				</form>
 				<!--end: Form Wizard Form-->
 			</div>
-		</div>
-		<div *ngIf="etapaPagamento">
-			<div class="row">
-				<div class="col-md-12" >
-					<h3 class="card-title">Como deseja realizar o pagamento?</h3>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-3" >
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Boleto</h5>
-							<div class="btn btn-success">Pagamento</div>
-						  </div>
-					</div>
-				</div>
 
-				<div class="col-md-3" >
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Cartão de Crédido</h5>
-							<div class="btn btn-success">Pagamento</div>
-						  </div>
-					</div>
-				</div>
-
-				<div class="col-md-3" >
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Transferência Bancária</h5>
-							<div class="btn btn-success">Pagamento</div>
-						  </div>
-					</div>
-				</div>
-
-				<div class="col-md-3" >
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">Pix</h5>
-							<div class="btn btn-success">Pagamento</div>
-						  </div>
-					</div>
-				</div>
-			</div>
 			<div class="row">
-				<div class="col-md-12" >
-					<div class="btn btn-primary">Voltar</div>
-				</div>
+				<div (click)="redirecinaPaginaInicial()" class="btn btn-secondary">Voltar pra tela de Login</div>
 			</div>
 		</div>
 </div>

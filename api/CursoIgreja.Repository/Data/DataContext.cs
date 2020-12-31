@@ -11,7 +11,10 @@ namespace CursoIgreja.Repository.Data
     public class DataContext : DbContext
     {
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options)  {  }
+        public DataContext(DbContextOptions<DataContext> options) : base(options)  
+        {  
+            
+        }
 
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Congregacao> Congregacao { get; set; }
@@ -30,6 +33,8 @@ namespace CursoIgreja.Repository.Data
 
             foreach (var fk in cascadeFKs)
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
+
+            
 
             base.OnModelCreating(modelBuilder);
         }

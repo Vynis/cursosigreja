@@ -40,7 +40,6 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   listaestadosBrasileiros = EstadosBrasileiros;
   inscricaoUsuario: InscricaoUsuario = new InscricaoUsuario();
   token: string = '';
-  etapaPagamento = false;
 
   constructor(
 	private fb: FormBuilder,
@@ -91,11 +90,11 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 			estado: ['', Validators.required]
 		}),
 		stepOutrasInfo: this.fb.group({
-			congregacaoId: [this.usuario.congregacaoId, Validators.required ],
+			congregacaoId: [null, Validators.required ],
 			congregaHaQuantoTempo: [''],
-			recebePastoreiro: ['', Validators.required],
+			recebePastoreiro: [null, Validators.required],
 			quemPastoreia: [''],
-			frequentaCelula: ['', Validators.required],
+			frequentaCelula: [null, Validators.required],
 			quemLider: ['']
 		}),
 		stepSelecaoCurso: this.fb.group({
@@ -106,7 +105,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 
   onChangeTipoAcesso() {
 	  if (this.formulario.controls.tipoAcesso.value == 'C'){
-		this.formulario.controls['cpf'].setValidators([Validators.required,Validators.minLength(11), Validators.maxLength(11)]);
+		this.formulario.controls['cpf'].setValidators([Validators.required,Validators.minLength(11), Validators.maxLength(11), Validators.pattern("^[0-9]*$")]);
 		this.formulario.controls['email'].clearValidators();
 		this.formulario.controls['email'].setValue('');
 	  }
@@ -174,73 +173,22 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 		this.inscricaoUsuario.status = 'AG';
 		this.inscricaoUsuario.processoInscricaoId = idCurso;
 
+		this.cadastraUsuario(idCurso);
+	
+	}
+
+	private cadastraUsuario(idCurso: number) {
 		this.inscricaoService.cadastrar(this.usuario).subscribe(
 			res => {
-				
+
 				if (res.dados) {
 					if (res.success) {
 						let dadosCadastrados = res.dados;
 
 						if (idCurso !== 0) {
 							this.inscricaoUsuario.usuarioId = dadosCadastrados.id;
-
-							this.authService.login(this.usuario.email === '' ? this.usuario.cpf :  this.usuario.email, this.usuario.senha).subscribe(
-								res => {
-									if (res.success){
-										let dadosLogin = res.dados;
-										this.token = dadosLogin.token;
-										
-										this.inscricaoUsuarioService.cadastrar(this.inscricaoUsuario,dadosLogin.token).subscribe(
-											res => {
-												if (res.success){
-													let dadosInscriccao = res.dados;
-													this.inscricaoUsuario.id = dadosInscriccao.id;
-													this.inscricaoUsuario.processoInscricaoId = dadosInscriccao.processoInscricaoId;
-													this.inscricaoUsuario.usuarioId = dadosInscriccao.usuarioId;
-													
-													Swal.fire({
-														title: 'Seu cadastro voi realizado com sucesso',
-														text: 'Qual proximo passo?',
-														icon: 'success',
-														showCancelButton: true,
-														confirmButtonText: 'Realizar pagamento',
-														cancelButtonText: "Realizar o login",
-														reverseButtons: true,
-														allowOutsideClick: false
-													}).then((result: any) => {
-														if (result.value) {
-															
-															this.inscricaoUsuarioService.gerarPagamento(this.inscricaoUsuario.id,this.token).subscribe(
-																res => {
-																	if (res.success) {
-																		window.open(res.dados,'_blank');
-																		this.authNoticeService.setNotice(null);
-																		this.router.navigateByUrl("/auth/login", { skipLocationChange: true }) ;
-																	}
-																	else {
-																		this.authNoticeService.setNotice(null);
-																		this.router.navigateByUrl("/auth/login", { skipLocationChange: true }) ;
-																	}
-																}
-															)
-
-														}
-													});
-												}
-												else {
-													this.authNoticeService.setNotice(res.dados,'danger');
-												}
-											}
-										);
-									} 
-									else {
-										this.authNoticeService.setNotice(res.dados,'danger');
-									}
-								}
-							)
+							this.autenticaUsuario();
 						} else {
-							this.etapaPagamento = false;
-
 							Swal.fire({
 								title: 'Seu cadastro voi realizado com sucesso',
 								text: 'Realize o login para ter acesso a nossa plataforma.',
@@ -249,24 +197,93 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 								allowOutsideClick: false
 							}).then((result: any) => {
 								if (result.value) {
-									this.router.navigateByUrl("/auth/login", { skipLocationChange: true }) ;
+									this.redirecinaPaginaInicial();
 								}
 							});
 						}
 					}
 					else {
-						this.authNoticeService.setNotice(res.dados,'danger');
+						this.authNoticeService.setNotice(res.dados, 'danger');
 					}
-					
 				}
 
 			}, (err) => {
 				console.log(err);
-				this.authNoticeService.setNotice('Erro no sistema','danger');
+				this.authNoticeService.setNotice('Erro no sistema', 'danger');
 			}
 		);
-		
+	}
 
+	private autenticaUsuario() {
+		this.authService.login(this.usuario.email === '' ? this.usuario.cpf : this.usuario.email, this.usuario.senha).subscribe(
+			res => {
+				if (res.success) {
+					let dadosLogin = res.dados;
+					this.token = dadosLogin.token;
+
+					this.cadastraInscricaoUsuario(dadosLogin);
+				}
+				else {
+					this.authNoticeService.setNotice(res.dados, 'danger');
+				}
+			}
+		);
+	}
+
+	private cadastraInscricaoUsuario(dadosLogin: any) {
+		this.inscricaoUsuarioService.cadastrar(this.inscricaoUsuario, dadosLogin.token).subscribe(
+			res => {
+				if (res.success) {
+					let dadosInscriccao = res.dados;
+					this.inscricaoUsuario.id = dadosInscriccao.id;
+					this.inscricaoUsuario.processoInscricaoId = dadosInscriccao.processoInscricaoId;
+					this.inscricaoUsuario.usuarioId = dadosInscriccao.usuarioId;
+
+					this.geraPagamentoInscricao();
+				}
+				else {
+					this.authNoticeService.setNotice(res.dados, 'danger');
+				}
+			}
+		);
+	}
+
+	private geraPagamentoInscricao() {
+		Swal.fire({
+			title: 'Seu cadastro voi realizado com sucesso',
+			text: 'Qual proximo passo?',
+			icon: 'success',
+			showCancelButton: true,
+			confirmButtonText: 'Realizar pagamento',
+			cancelButtonText: "Realizar o login",
+			reverseButtons: true,
+			allowOutsideClick: false
+		}).then((result: any) => {
+			if (result.value) {
+				this.authNoticeService.setNotice('Aguarde.. Abrindo ambiente de pagamento.','primary');
+				this.inscricaoUsuarioService.gerarPagamento(this.inscricaoUsuario.id, this.token).subscribe(
+					res => {
+						if (res.success) {
+							window.open(res.dados, '_blank');
+							this.authNoticeService.setNotice(null);
+							this.redirecinaPaginaInicial();
+						}
+						else {
+							this.authNoticeService.setNotice(null);
+							this.authNoticeService.setNotice('Erro ao gerar o pagamento','danger');
+						}
+					}
+				);
+			}
+			else {
+				this.authNoticeService.setNotice(null);
+				this.redirecinaPaginaInicial();
+			}
+		});
+	}
+
+	private redirecinaPaginaInicial() {
+		this.router.navigateByUrl("/auth/login");
 	}
 
 	private prepararUsuario() {

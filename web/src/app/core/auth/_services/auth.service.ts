@@ -29,7 +29,11 @@ export class AuthService {
             })
         );
     }
-//Teste
+
+    check(): boolean{
+        return localStorage.getItem('usuario') ? true : false;
+    }
+
     getUserByToken(): Observable<User> {
         const userToken = localStorage.getItem(environment.authTokenKey);
         const httpHeaders = new HttpHeaders();
