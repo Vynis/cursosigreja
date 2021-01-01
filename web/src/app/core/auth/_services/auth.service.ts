@@ -34,13 +34,6 @@ export class AuthService {
         return localStorage.getItem('usuario') ? true : false;
     }
 
-    getUserByToken(): Observable<User> {
-        const userToken = localStorage.getItem(environment.authTokenKey);
-        const httpHeaders = new HttpHeaders();
-        httpHeaders.set('Authorization', 'Bearer ' + userToken);
-        return this.http.get<User>(API_USERS_URL, { headers: httpHeaders });
-    }
-
     register(user: User): Observable<any> {
         const httpHeaders = new HttpHeaders();
         httpHeaders.set('Content-Type', 'application/json');
@@ -55,6 +48,14 @@ export class AuthService {
             );
     }
 
+    getUser(): Usuario {
+        return localStorage.getItem('usuario') ? JSON.parse(atob(localStorage.getItem('usuario'))) : new User();
+      }
+
+      logout(): void {
+        localStorage.clear(); 
+      }
+
     /*
      * Submit forgot password request
      *
@@ -66,95 +67,6 @@ export class AuthService {
     		.pipe(catchError(this.handleError('forgot-password', []))
 	    );
     }
-
-
-    getAllUsers(): Observable<User[]> {
-		return this.http.get<User[]>(API_USERS_URL);
-    }
-
-    getUserById(userId: number): Observable<User> {
-		return this.http.get<User>(API_USERS_URL + `/${userId}`);
-	}
-
-
-    // DELETE => delete the user from the server
-	deleteUser(userId: number) {
-		const url = `${API_USERS_URL}/${userId}`;
-		return this.http.delete(url);
-    }
-
-    // UPDATE => PUT: update the user on the server
-	updateUser(_user: User): Observable<any> {
-        const httpHeaders = new HttpHeaders();
-        httpHeaders.set('Content-Type', 'application/json');
-		      return this.http.put(API_USERS_URL, _user, { headers: httpHeaders });
-	}
-
-    // CREATE =>  POST: add a new user to the server
-	createUser(user: User): Observable<User> {
-    	const httpHeaders = new HttpHeaders();
-     httpHeaders.set('Content-Type', 'application/json');
-		   return this.http.post<User>(API_USERS_URL, user, { headers: httpHeaders});
-	}
-
-    // Method from server should return QueryResultsModel(items: any[], totalsCount: number)
-	// items => filtered/sorted result
-	findUsers(queryParams: QueryParamsModel): Observable<QueryResultsModel> {
-        const httpHeaders = new HttpHeaders();
-        httpHeaders.set('Content-Type', 'application/json');
-		      return this.http.post<QueryResultsModel>(API_USERS_URL + '/findUsers', queryParams, { headers: httpHeaders});
-    }
-
-    // Permission
-    getAllPermissions(): Observable<Permission[]> {
-		return this.http.get<Permission[]>(API_PERMISSION_URL);
-    }
-
-    getRolePermissions(roleId: number): Observable<Permission[]> {
-        return this.http.get<Permission[]>(API_PERMISSION_URL + '/getRolePermission?=' + roleId);
-    }
-
-    // Roles
-    getAllRoles(): Observable<Role[]> {
-        return this.http.get<Role[]>(API_ROLES_URL);
-    }
-
-    getRoleById(roleId: number): Observable<Role> {
-		return this.http.get<Role>(API_ROLES_URL + `/${roleId}`);
-    }
-
-    // CREATE =>  POST: add a new role to the server
-	createRole(role: Role): Observable<Role> {
-		// Note: Add headers if needed (tokens/bearer)
-        const httpHeaders = new HttpHeaders();
-        httpHeaders.set('Content-Type', 'application/json');
-		      return this.http.post<Role>(API_ROLES_URL, role, { headers: httpHeaders});
-	}
-
-    // UPDATE => PUT: update the role on the server
-	updateRole(role: Role): Observable<any> {
-        const httpHeaders = new HttpHeaders();
-        httpHeaders.set('Content-Type', 'application/json');
-		      return this.http.put(API_ROLES_URL, role, { headers: httpHeaders });
-	}
-
-	// DELETE => delete the role from the server
-	deleteRole(roleId: number): Observable<Role> {
-		const url = `${API_ROLES_URL}/${roleId}`;
-		return this.http.delete<Role>(url);
-	}
-
-    // Check Role Before deletion
-    isRoleAssignedToUsers(roleId: number): Observable<boolean> {
-        return this.http.get<boolean>(API_ROLES_URL + '/checkIsRollAssignedToUser?roleId=' + roleId);
-    }
-
-    findRoles(queryParams: QueryParamsModel): Observable<QueryResultsModel> {
-        // This code imitates server calls
-        const httpHeaders = new HttpHeaders();
-        httpHeaders.set('Content-Type', 'application/json');
-		      return this.http.post<QueryResultsModel>(API_ROLES_URL + '/findRoles', queryParams, { headers: httpHeaders});
-	}
 
  	/*
  	 * Handle Http operation that failed.

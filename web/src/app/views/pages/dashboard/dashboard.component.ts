@@ -50,28 +50,34 @@ export class DashboardComponent implements OnInit {
 		// @ts-ignore
 		this.widget4_1 = shuffle([
 			{
-				pic: './assets/media/files/doc.svg',
-				title: 'Metronic Documentation',
+				//pic: './assets/media/files/doc.svg',
+				title: 'Nova Criatura',
+				desc: 'Descricao do curso',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/jpg.svg',
-				title: 'Project Launch Evgent',
+				//pic: './assets/media/files/jpg.svg',
+				title: 'Familia Cristã',
+				desc: 'Descricao do curso',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/pdf.svg',
+				//pic: './assets/media/files/pdf.svg',
 				title: 'Full Developer Manual For 4.7',
+				desc: 'Descricao do curso',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/javascript.svg',
+				//pic: './assets/media/files/javascript.svg',
 				title: 'Make JS Development',
+				desc: 'Descricao do curso',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/zip.svg',
+				//pic: './assets/media/files/zip.svg',
 				title: 'Download Ziped version OF 5.0',
+				desc: 'Descricao do curso',
 				url: 'https://keenthemes.com.my/metronic',
 			}, {
-				pic: './assets/media/files/pdf.svg',
+				//pic: './assets/media/files/pdf.svg',
 				title: 'Finance Report 2016/2017',
+				desc: 'Descricao do curso',
 				url: 'https://keenthemes.com.my/metronic',
 			},
 		]);

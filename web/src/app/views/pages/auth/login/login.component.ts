@@ -92,13 +92,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 	 * Default params, validators
 	 */
 	initLoginForm() {
-		// demo message to show
-		if (!this.authNoticeService.onNoticeChanged$.getValue()) {
-			const initialNotice = `Use account
-			<strong>${DEMO_PARAMS.EMAIL}</strong> and password
-			<strong>${DEMO_PARAMS.PASSWORD}</strong> to continue.`;
-			this.authNoticeService.setNotice(initialNotice, 'info');
-		}
 
 		this.loginForm = this.fb.group({
 			email: [DEMO_PARAMS.EMAIL, Validators.compose([
@@ -135,24 +128,20 @@ export class LoginComponent implements OnInit, OnDestroy {
 			email: controls.email.value,
 			password: controls.password.value
 		};
-		// this.auth
-		// 	.login(authData.email, authData.password)
-		// 	.pipe(
-		// 		tap(user => {
-		// 			if (user) {
-		// 				this.store.dispatch(new Login({authToken: user.accessToken}));
-		// 				this.router.navigateByUrl(this.returnUrl); // Main page
-		// 			} else {
-		// 				this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
-		// 			}
-		// 		}),
-		// 		takeUntil(this.unsubscribe),
-		// 		finalize(() => {
-		// 			this.loading = false;
-		// 			this.cdr.markForCheck();
-		// 		})
-		// 	)
-		// 	.subscribe();
+
+		this.auth.login(authData.email, authData.password).subscribe((res) => {
+			if (res.success) {
+				localStorage.setItem('token', res.dados.token);
+				localStorage.setItem('usuario', btoa(JSON.stringify(res.dados.usuario)));
+				this.router.navigateByUrl(this.returnUrl);
+				this.loading = false;
+			} else {
+				this.authNoticeService.setNotice('Login inválido. Email/Cpf ou Senha estão incorreto!', 'danger');
+				this.loading = false;
+			}
+		});
+
+
 	}
 
 	/**

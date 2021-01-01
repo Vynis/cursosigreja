@@ -282,7 +282,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	private redirecinaPaginaInicial() {
+	 redirecinaPaginaInicial() {
 		this.router.navigateByUrl("/auth/login");
 	}
 
