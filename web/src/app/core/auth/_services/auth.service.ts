@@ -4,11 +4,12 @@ import { Observable, of } from 'rxjs';
 import { User } from '../_models/user.model';
 import { Permission } from '../_models/permission.model';
 import { Role } from '../_models/role.model';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, delay, map, tap } from 'rxjs/operators';
 import { QueryParamsModel, QueryResultsModel } from '../../_base/crud';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { Usuario } from '../_models/usurario.model';
+import { ModeloBase } from '../../_base/crud/models/modelo-base';
 
 const API_USERS_URL = 'api/users';
 const API_PERMISSION_URL = 'api/permissions';
@@ -50,11 +51,15 @@ export class AuthService {
 
     getUser(): Usuario {
         return localStorage.getItem('usuario') ? JSON.parse(atob(localStorage.getItem('usuario'))) : new User();
-      }
+    }
 
-      logout(): void {
+    logout(): void {
         localStorage.clear(); 
-      }
+    }
+
+    verificaUsuario(emailOuCpf: string) : Observable<ModeloBase | undefined> {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}usuario/verifica-cadastro/${emailOuCpf}`).pipe();
+    }
 
     /*
      * Submit forgot password request

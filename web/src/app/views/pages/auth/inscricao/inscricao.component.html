@@ -144,8 +144,8 @@
 									[ngClass]="{'is-invalid': formulario.get('tipoAcesso').errors  && formulario.get('tipoAcesso').touched}"
 									class="form-control" formControlName="tipoAcesso">
 									<option [ngValue]="null" disabled>Selecione</option>
-										<option value="C">CPF</option>
 										<option value="E">E-mail</option>
+										<option value="C">CPF</option>
 									</select>
 								</div>
 
@@ -174,7 +174,7 @@
 										<label>*E-mail</label>
 										<input type="text" class="form-control"
 										[ngClass]="{'is-invalid': formulario.get('email').errors  && formulario.get('email').touched}"
-										 name="email" formControlName="email" placeholder="" maxlength="101" >
+										 name="email" formControlName="email" placeholder="" maxlength="101" (change)='onKeyValidaDadosUsuario()'  >
 										<div *ngIf="formulario.get('email').hasError('required')  && formulario.get('email').touched" class="invalid-feedback">
 											O e-mail é obrigatório.
 										</div>
@@ -187,7 +187,7 @@
 										<label>*Senha</label>
 										<input type="password" class="form-control"
 										[ngClass]="{'is-invalid': formulario.get('senha').errors  && formulario.get('senha').touched}"
-										 name="senha" formControlName="senha" placeholder="" maxlength="45" >
+										 name="senha" formControlName="senha" placeholder="" maxlength="45" (change)='onKeyValidaDadosUsuario()' >
 
 										 <div *ngIf="formulario.get('senha').hasError('required')  && formulario.get('senha').touched" class="invalid-feedback">
 											A senha é obrigatório.
@@ -430,9 +430,9 @@
 						<div (click)="onSubmit()" class="btn btn-success btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-submit">
 							Enviar
 						</div>
-						<div class="btn btn-brand btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-next">
+						<button class="btn btn-brand btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-next">
 							Proxima
-						</div>
+						</button>
 					</div>
 					<!--end: Form Actions -->
 				</form>
@@ -452,4 +452,3 @@
 	<p>Form Status: {{formulario.status | json}}</p>
 	<p>Congregacao: {{listaCongregacoes$ | async | json}}</p>
 </div>
-

@@ -154,6 +154,7 @@ namespace CursoIgrejaApi
             services.AddScoped<IInscricaoUsuarioRepository, InscricaoUsuarioRepository>();
             services.AddScoped<IMeioPagamentoRepository, MeioPagamentoRepository>();
             services.AddScoped<IParametroSistemaRepository, ParametroSistemaRepository>();
+            services.AddScoped<ITransacaoInscricaoRepository, TransacaoInscricaoRepository>();
 
         }
     }

@@ -1,10 +1,6 @@
 ﻿using CursoIgreja.Domain.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CursoIgreja.Repository.Data
 {
@@ -13,7 +9,6 @@ namespace CursoIgreja.Repository.Data
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)  
         {  
-            
         }
 
         public DbSet<Usuarios> Usuarios { get; set; }
@@ -23,6 +18,7 @@ namespace CursoIgreja.Repository.Data
         public DbSet<InscricaoUsuario> InscricaoUsuario { get; set; }
         public DbSet<MeioPagamento> MeiosPagamentos { get; set; }
         public DbSet<ParametroSistema> ParametroSistema { get; set; }
+        public DbSet<TransacaoInscricao> TransacaoInscricoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,11 +28,13 @@ namespace CursoIgreja.Repository.Data
             .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
 
             foreach (var fk in cascadeFKs)
-                fk.DeleteBehavior = DeleteBehavior.Restrict;
-
-            
+                fk.DeleteBehavior = DeleteBehavior.Restrict;  
 
             base.OnModelCreating(modelBuilder);
+
+
+
         }
+
     }
 }

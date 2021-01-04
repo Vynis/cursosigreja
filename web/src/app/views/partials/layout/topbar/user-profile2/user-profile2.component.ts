@@ -2,6 +2,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 // RxJS
 import { Observable } from 'rxjs';
+import { Usuario } from '../../../../../core/auth/_models/usurario.model';
 
 @Component({
 	selector: 'kt-user-profile2',
@@ -13,6 +14,7 @@ export class UserProfile2Component implements OnInit {
 	@Input() greeting = true;
 	@Input() badge: boolean;
 	@Input() icon: boolean;
+	user$: Usuario;
 
 	/**
 	 * Component constructor

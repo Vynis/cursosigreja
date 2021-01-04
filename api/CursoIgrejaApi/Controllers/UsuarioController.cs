@@ -57,5 +57,32 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
+        [HttpGet("verifica-cadastro/{emailOuCpf}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> VerificaCadastro(string emailOuCpf) 
+        {
+            try
+            {
+                var verficaCadastro = new Usuarios();
+
+                verficaCadastro = _usuarioRepository.Buscar(x => x.Email.Equals(emailOuCpf)).Result.FirstOrDefault();
+
+                if (verficaCadastro != null)
+                    return Response("Cadastro já se encontra na base de dados!", false);
+
+                verficaCadastro = _usuarioRepository.Buscar(x => x.Cpf.Equals(emailOuCpf)).Result.FirstOrDefault();
+
+                if (verficaCadastro != null)
+                    return Response("Cadastro já se encontra na base de dados!", false);
+
+                return Response(true);
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
     }
 }

@@ -18,15 +18,21 @@ namespace CursoIgreja.Api.Controllers
         private readonly IMeioPagamentoRepository _meioPagamentoRepository;
         private readonly ICursoRepository _cursoRepository;
         private readonly IParametroSistemaRepository _parametroSistemaRepository;
+        private readonly ITransacaoInscricaoRepository _transacaoInscricaoRepository;
         private string urlWsPagueSeguro = "";
         private string urlSitePagueSeguro = "";
 
-        public InscricaoUsuarioController(IInscricaoUsuarioRepository inscricaoUsuarioRepository, IMeioPagamentoRepository meioPagamentoRepository, ICursoRepository cursoRepository, IParametroSistemaRepository parametroSistemaRepository)
+        public InscricaoUsuarioController(IInscricaoUsuarioRepository inscricaoUsuarioRepository,
+                                          IMeioPagamentoRepository meioPagamentoRepository, 
+                                          ICursoRepository cursoRepository, 
+                                          IParametroSistemaRepository parametroSistemaRepository,
+                                          ITransacaoInscricaoRepository transacaoInscricaoRepository)
         {
             _inscricaoUsuarioRepository = inscricaoUsuarioRepository;
             _meioPagamentoRepository = meioPagamentoRepository;
             _cursoRepository = cursoRepository;
             _parametroSistemaRepository = parametroSistemaRepository;
+            _transacaoInscricaoRepository = transacaoInscricaoRepository;
             urlSitePagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SitePagueSeguro")).Result.FirstOrDefault().Valor;
             urlWsPagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("WsPagueSeguro")).Result.FirstOrDefault().Valor;
          }
@@ -103,6 +109,23 @@ namespace CursoIgreja.Api.Controllers
                 var apiPagSeguro = new PagSeguroAPI();
 
                 var retornoApiPagSeguro = apiPagSeguro.Checkout(emailPagSeguro, tokenPagSeguro, urlCheckout, listaItensPedido, dadosComprador, referencia);
+
+                if (!string.IsNullOrEmpty(retornoApiPagSeguro))
+                {
+                    var transacao = new TransacaoInscricao()
+                    {
+                        Codigo = retornoApiPagSeguro,
+                        InscricaoUsuarioId = id
+                    };
+
+                    var registraTransacao = await _transacaoInscricaoRepository.Adicionar(transacao);
+
+                    if (!registraTransacao)
+                        return Response("Erro na transação de pagamento", false);
+                } else
+                {
+                    return Response("Erro ao fazer a comunicação de pagamento", false);
+                }
 
                 var paymentUrl = string.Concat($"{urlSitePagueSeguro}/v2/checkout/payment.html?code=", retornoApiPagSeguro);
 

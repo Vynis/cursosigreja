@@ -1,13 +1,13 @@
 import { RtlScrollAxisType } from '@angular/cdk/platform';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { Usuario } from '../../../../core/auth/_models/usurario.model';
 import { AuthNoticeService, AuthService, Congregacao, InscricaoService } from '../../../../core/auth';
 import { map } from 'rxjs/internal/operators/map';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ConfirmPasswordValidator } from '../register/confirm-password.validator';
 import { EstadosBrasileiros } from '../../../../core/utils/estados-brasileiros.enum';
 import { ConsultaCepService } from '../../../../core/_base/consulta-cep.service';
@@ -19,6 +19,9 @@ import { InscricaoUsuario } from '../../../../core/inscricao-usuario/_models/ins
 import { InscricaoUsuarioService } from '../../../../core/inscricao-usuario/_services/inscricaoUsuario.service';
 import Swal from 'sweetalert2'
 import { ActivatedRoute, Router } from '@angular/router';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { ModeloBase } from '../../../../core/_base/crud/models/modelo-base';
+import { GenericValidator } from '../../../../core/utils/generic-validator';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -40,6 +43,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   listaestadosBrasileiros = EstadosBrasileiros;
   inscricaoUsuario: InscricaoUsuario = new InscricaoUsuario();
   token: string = '';
+  usuarioValido: boolean = true;
 
   constructor(
 	private fb: FormBuilder,
@@ -51,7 +55,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 	private authService: AuthService,
 	private inscricaoUsuarioService: InscricaoUsuarioService,
 	private route: ActivatedRoute,
-	private router: Router,
+	private router: Router
   ) { 
 	  this.localeService.use('pt-br');
   }
@@ -110,7 +114,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 		this.formulario.controls['email'].setValue('');
 	  }
 	  else{
-		this.formulario.controls['email'].setValidators([Validators.required,Validators.email]);
+		this.formulario.controls['email'].setValidators([Validators.required,Validators.email ]);
 		this.formulario.controls['cpf'].clearValidators();
 		this.formulario.controls['cpf'].setValue('');
 	  }
@@ -119,7 +123,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 	 this.formulario.get('cpf').updateValueAndValidity();
   }
 
-  ngAfterViewInit(): void {
+    ngAfterViewInit(): void {
 		// Initialize form wizard
 		const wizard = new KTWizard(this.el.nativeElement, {
 			startStep: 1
@@ -127,7 +131,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 
     
 		// Validation before going to next page
-		wizard.on('beforeNext', (wizardObj) => {
+	 wizard.on('beforeNext', async (wizardObj) => {
 
 			this.authNoticeService.setNotice(null);
 
@@ -135,6 +139,10 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 				case 1:
 					if (!this.setpMeusDados())
 						wizardObj.stop();
+					if (!this.usuarioValido){
+						this.authNoticeService.setNotice('Cpf ou Email já consta cadastrado na base de dados','danger');
+						wizardObj.stop();
+					}	
 					break;
 				case 2:
 					if (!this.setpMeusDados('stepEndereco'))
@@ -209,7 +217,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 
 			}, (err) => {
 				console.log(err);
-				this.authNoticeService.setNotice('Erro no sistema', 'danger');
+				this.redirecinaPaginaInicial()
 			}
 		);
 	}
@@ -226,7 +234,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 				else {
 					this.authNoticeService.setNotice(res.dados, 'danger');
 				}
-			}
+			} , ( erro => this.redirecinaPaginaInicial() )
 		);
 	}
 
@@ -244,7 +252,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 				else {
 					this.authNoticeService.setNotice(res.dados, 'danger');
 				}
-			}
+			}, ( erro => this.redirecinaPaginaInicial() )
 		);
 	}
 
@@ -264,22 +272,32 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 				this.inscricaoUsuarioService.gerarPagamento(this.inscricaoUsuario.id, this.token).subscribe(
 					res => {
 						if (res.success) {
-							window.open(res.dados, '_blank');
-							this.authNoticeService.setNotice(null);
-							this.redirecinaPaginaInicial();
+
+							window.open(res.dados, '_blank');	
+
+							Swal.fire({
+								title: 'O pagamento foi gerado com sucesso',
+								icon: 'success',
+								confirmButtonText: 'Acessar login',
+								allowOutsideClick: false,
+								html : `Caso a página de pagamento não foi aberta pelo seu navegador <a href=\'${res.dados}\'  target="_blank"  >clique aqui.</a>`
+							}).then((result: any) => { 
+								this.authNoticeService.setNotice(null);
+								this.redirecinaPaginaInicial();
+							});
 						}
 						else {
 							this.authNoticeService.setNotice(null);
 							this.authNoticeService.setNotice('Erro ao gerar o pagamento','danger');
 						}
-					}
+					},  ( erro => this.redirecinaPaginaInicial() )
 				);
 			}
 			else {
 				this.authNoticeService.setNotice(null);
 				this.redirecinaPaginaInicial();
 			}
-		});
+		}).catch( () => this.redirecinaPaginaInicial() );
 	}
 
 	 redirecinaPaginaInicial() {
@@ -404,5 +422,25 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 		} 
 	  }
 
+	  async onKeyValidaDadosUsuario() {
+		if (this.formulario.controls.tipoAcesso.value == 'C'){
+			if (this.formulario.controls.cpf.valid) 
+			 await this.ValidaDadosUsuarioService(this.formulario.controls.cpf.value);
+		} else {
+			if (this.formulario.controls.email.valid) 
+			 await this.ValidaDadosUsuarioService(this.formulario.controls.email.value);
+		}
+	  }
 
+	  async ValidaDadosUsuarioService(emailOuCpf: string) {
+		const responseApi  =  await this.authService.verificaUsuario(emailOuCpf).toPromise();
+
+		this.usuarioValido = responseApi.success;
+
+		this.authNoticeService.setNotice(null);
+
+		if (!responseApi.success) {
+			this.authNoticeService.setNotice('Cpf ou Email já consta cadastrado na base de dados','danger');
+		}
+	  }
 }

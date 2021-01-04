@@ -23,12 +23,20 @@ namespace CursoIgreja.Api.Controllers
         private readonly IUsuariosRepository _usuarioRepository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly IParametroSistemaRepository _parametroSistemaRepository;
+        private string urlEmailConfig = "";
+        private string senhaEmailConfig = "";
+        private string smtpEmailConfig = "";
 
-        public AutenticacaoController(IUsuariosRepository usuariosRepository, IConfiguration configuration, IMapper mapper)
+        public AutenticacaoController(IUsuariosRepository usuariosRepository, IConfiguration configuration, IMapper mapper, IParametroSistemaRepository parametroSistemaRepository)
         {
             _usuarioRepository = usuariosRepository;
             _configuration = configuration;
             _mapper = mapper;
+            _parametroSistemaRepository = parametroSistemaRepository;
+            urlEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("Email")).Result.FirstOrDefault().Valor;
+            senhaEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SenhaEmail")).Result.FirstOrDefault().Valor;
+            smtpEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SmtpEmail")).Result.FirstOrDefault().Valor;
         }
 
         [HttpPost()]
@@ -63,6 +71,10 @@ namespace CursoIgreja.Api.Controllers
         {
             try
             {
+
+                //return Response(CriptografiaService.Criptografar("130986"));
+                //return Response(CriptografiaService.Descriptografar("MTMwOTg2"));
+
                 //var response = await _usuarioRepository.Buscar(x => (x.Email.Equals(EmailOuCpf) || x.Cpf.Equals(EmailOuCpf)) && x.Status.Equals("A"));
 
                 //var usuario = response.FirstOrDefault();
@@ -82,29 +94,28 @@ namespace CursoIgreja.Api.Controllers
                 if (string.IsNullOrEmpty(usuario.Email))
                 {
                     possuiEmail = false;
-                    usuario.Email = "cursoigrejacristobra@cursoigrejacristobrasil.kinghost.net";
+                    usuario.Email = urlEmailConfig;
                 }
 
                 MailMessage mail = new MailMessage()
                 {
-                    From = new MailAddress("cursoigrejacristobra@cursoigrejacristobrasil.kinghost.net", "Curso Igreja")
+                    From = new MailAddress(urlEmailConfig, "Curso Igreja")
                 };
 
                 mail.To.Add(new MailAddress(usuario.Email));
-                mail.Subject = "Teste de recuperar senha.";
-                mail.Body = "Mensagem";
+                mail.Subject = "Empower - Recuperar Senha";
+                mail.Body = $"<a href=\"\">Clique aqui";
                 mail.IsBodyHtml = true;
                 mail.Priority = MailPriority.High;
 
 
-                using (SmtpClient smtp = new SmtpClient("smtp-web.kinghost.net", 587))
+                using (SmtpClient smtp = new SmtpClient(smtpEmailConfig, 587))
                 {
-                    smtp.Credentials = new NetworkCredential("cursoigrejacristobra@cursoigrejacristobrasil.kinghost.net", "@Vs130986");
-                    //smtp.EnableSsl = true;
+                    smtp.Credentials = new NetworkCredential(urlEmailConfig, senhaEmailConfig);
                     await smtp.SendMailAsync(mail);
                 }
 
-                return Response("Envio com sucesso!");
+                return Response( new { mensagem = "Envio com sucesso!", possuiEmail });
             }
             catch (Exception ex)
             {
