@@ -48,7 +48,7 @@
         "ngx-bootstrap": "^5.6.1",
         "ngx-clipboard": "^12.2.0",
         "ngx-highlightjs": "^3.0.3",
-        "ngx-mask": "^8.0.0",
+        "ngx-mask": "^8.2.0",
         "ngx-perfect-scrollbar": "^8.0.0",
         "ngx-permissions": "^7.0.3",
         "object-path": "^0.11.4",

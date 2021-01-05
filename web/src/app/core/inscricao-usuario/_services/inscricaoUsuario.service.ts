@@ -50,4 +50,8 @@ export class InscricaoUsuarioService {
             })
         );
     }
+
+    buscaCursoIsncrito() : Observable<ModeloBase> {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}inscricao-usuario/busca-curso-inscrito`);
+    }
 }

@@ -217,7 +217,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 
 			}, (err) => {
 				console.log(err);
-				this.redirecinaPaginaInicial()
+				this.redirecinaPaginaInicial();
 			}
 		);
 	}

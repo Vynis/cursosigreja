@@ -23,16 +23,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2020 16:22:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.deps.json">
-      <publishTime>01/02/2021 22:09:14</publishTime>
+      <publishTime>01/04/2021 19:40:45</publishTime>
     </File>
     <File Include="CursoIgreja.Api.dll">
-      <publishTime>01/02/2021 22:09:11</publishTime>
+      <publishTime>01/04/2021 19:40:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.exe">
-      <publishTime>01/02/2021 22:09:12</publishTime>
+      <publishTime>01/04/2021 19:40:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.pdb">
-      <publishTime>01/02/2021 22:09:11</publishTime>
+      <publishTime>01/04/2021 19:40:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.runtimeconfig.json">
       <publishTime>01/02/2021 17:29:06</publishTime>
@@ -50,10 +50,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/02/2021 17:15:19</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.dll">
-      <publishTime>01/02/2021 22:09:04</publishTime>
+      <publishTime>01/04/2021 17:46:47</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.pdb">
-      <publishTime>01/02/2021 22:09:04</publishTime>
+      <publishTime>01/04/2021 17:46:47</publishTime>
     </File>
     <File Include="EFCore.NamingConventions.dll">
       <publishTime>01/20/2020 09:43:22</publishTime>
@@ -194,7 +194,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/24/2019 19:49:50</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>01/02/2021 22:09:14</publishTime>
+      <publishTime>01/04/2021 19:40:45</publishTime>
     </File>
   </ItemGroup>
 </Project>

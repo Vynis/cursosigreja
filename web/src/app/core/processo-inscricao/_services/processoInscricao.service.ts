@@ -16,4 +16,5 @@ export class ProcessoInscricaoService {
     buscarCursosLiberados(): Observable<ModeloBase> {
         return this.http.get<ModeloBase>(`${this.caminhoApi}processo-inscricao/cursos-inscricoes-abertas`);
     }
+
 }

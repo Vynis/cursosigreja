@@ -6,6 +6,7 @@ using CursoIgreja.Domain.Models;
 using CursoIgreja.PagSeguro;
 using CursoIgreja.PagSeguro.TransferObjects;
 using CursoIgreja.Repository.Repository.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CursoIgreja.Api.Controllers
@@ -26,7 +27,8 @@ namespace CursoIgreja.Api.Controllers
                                           IMeioPagamentoRepository meioPagamentoRepository, 
                                           ICursoRepository cursoRepository, 
                                           IParametroSistemaRepository parametroSistemaRepository,
-                                          ITransacaoInscricaoRepository transacaoInscricaoRepository)
+                                          ITransacaoInscricaoRepository transacaoInscricaoRepository
+                                          )
         {
             _inscricaoUsuarioRepository = inscricaoUsuarioRepository;
             _meioPagamentoRepository = meioPagamentoRepository;
@@ -134,6 +136,22 @@ namespace CursoIgreja.Api.Controllers
             }
             catch (Exception ex)
             {
+                return ResponseErro(ex);
+            }
+        }
+
+        [HttpGet("busca-curso-inscrito")]
+        public async Task<IActionResult> BuscarCursosInscrito()
+        {
+            try
+            {
+                var resultado = await _inscricaoUsuarioRepository.Buscar(x => x.UsuarioId == Convert.ToInt32(User.Identity.Name) && !x.Status.Equals("CA"));
+
+                return Response(resultado);
+            }
+            catch (Exception ex)
+            {
+
                 return ResponseErro(ex);
             }
         }

@@ -70,13 +70,34 @@
 		<kt-portlet [class]="'kt-portlet--height-fluid'">
 			<kt-portlet-header [title]="'Cursos que estou inscrito'"></kt-portlet-header>
 			<kt-portlet-body>
-				Teste
+				<div class="row">
+					<div class="col-md-4" *ngFor="let lista of listaInscricaoCurso$ | async">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">{{lista.processoInscricao.curso.titulo}}</h5>
+								<em>Andamento: 0% concluído</em>
+							  </div>
+							  <div class="card-footer" style="text-align: center;" > 
+								  <div class="row">
+									<div class="col-md-6">
+										<div  class="btn btn-success">Pagamento</div>
+									</div>
+									<div class="col-md-6">
+										<div  class="btn btn-primary">Iniciar o curso</div>
+									</div>
+								  </div>
+								
+								
+							  </div>
+						</div>
+					</div>
+				</div>
 			</kt-portlet-body>
 		</kt-portlet>
 	</div>
 </div>
 
-<div class="row">
+<div [hidden]="true" class="row">
 	<div class="col-xl-6">
 		<kt-portlet [class]="'kt-portlet--height-fluid'">
 			<kt-portlet-header [title]="'Inscrições abertas'">
@@ -113,7 +134,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div [hidden]="true" class="row">
 	<div class="col-xl-12">
 		<kt-portlet [class]="'kt-portlet--height-fluid'">
 			<kt-portlet-header [title]="'Arquivos para download'">

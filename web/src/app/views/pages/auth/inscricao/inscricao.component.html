@@ -90,8 +90,8 @@
 										<input type="text" class="form-control"
 										bsDatepicker
 										[ngClass]="{'is-invalid': formulario.get('dataNascimento').errors  && formulario.get('dataNascimento').touched}"
-										 name="dataNascimento" formControlName="dataNascimento" maxlength="12" placeholder="" >
-										 <em>Ex: 01/01/2020 (DD/MM/YYYY)</em>
+										 name="dataNascimento" formControlName="dataNascimento" maxlength="12" placeholder=""  >
+										 <em>Ex: 00/00/0000</em>
 										 <div *ngIf="formulario.get('dataNascimento').hasError('required')  && formulario.get('dataNascimento').touched" class="invalid-feedback">
 											A Data Nascimento é obrigatório.
 										</div>
@@ -452,3 +452,4 @@
 	<p>Form Status: {{formulario.status | json}}</p>
 	<p>Congregacao: {{listaCongregacoes$ | async | json}}</p>
 </div>
+

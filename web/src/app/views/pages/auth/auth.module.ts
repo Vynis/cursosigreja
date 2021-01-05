@@ -20,6 +20,9 @@ import { AuthNoticeComponent } from './auth-notice/auth-notice.component';
 import { AuthGuard, AuthService } from '../../../core/auth';
 import { InscricaoComponent } from './inscricao/inscricao.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 const routes: Routes = [
 	{
@@ -67,7 +70,8 @@ const routes: Routes = [
 		MatSelectModule,
 		BsDatepickerModule.forRoot(),
 		MatSlideToggleModule,
-		MatRadioModule
+		MatRadioModule,
+		NgxMaskModule.forRoot()
 	],
 	providers: [
 		InterceptService,

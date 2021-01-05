@@ -25,7 +25,9 @@ namespace CursoIgreja.Repository.Repository.Class
             IQueryable<InscricaoUsuario> query = _dataContext.InscricaoUsuario
                                                                 .Where(predicado)
                                                                 .Include(c => c.Usuario)
-                                                                .Include(c => c.ProcessoInscricao);
+                                                                .Include(c => c.ProcessoInscricao)
+                                                                .Include(c =>c.ProcessoInscricao.Curso)
+                                                                .Include(c => c.TransacaoInscricoes);
 
             return await query.AsNoTracking().ToArrayAsync();
         }
@@ -34,7 +36,8 @@ namespace CursoIgreja.Repository.Repository.Class
         {
             IQueryable<InscricaoUsuario> query = _dataContext.InscricaoUsuario
                                                                 .Include(c => c.Usuario)
-                                                                .Include(c => c.ProcessoInscricao);
+                                                                .Include(c => c.ProcessoInscricao)
+                                                                .Include(c => c.TransacaoInscricoes);
 
             return await query.AsNoTracking().ToArrayAsync();
         }
@@ -43,7 +46,8 @@ namespace CursoIgreja.Repository.Repository.Class
         {
             IQueryable<InscricaoUsuario> query = _dataContext.InscricaoUsuario
                                                                 .Include(c => c.Usuario)
-                                                                .Include(c => c.ProcessoInscricao);
+                                                                .Include(c => c.ProcessoInscricao)
+                                                                .Include(c => c.TransacaoInscricoes);
 
             return await query.Where(c => c.Id == id).FirstOrDefaultAsync();
         }

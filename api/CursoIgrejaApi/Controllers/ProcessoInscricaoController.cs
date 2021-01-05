@@ -40,5 +40,23 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
+        [HttpGet("cursos-inscricoes-futuras")]
+        public async Task<IActionResult> CursosInscricoesFuturas()
+        {
+            try
+            {
+                var listaBd = await _processoInscricaoRepository.Buscar(x => x.Status.Equals("A") && x.DataFinal > DateTime.Now &&  x.DataFinal > DateTime.Now );
+
+                return Response(listaBd);
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+
+
     }
 }
