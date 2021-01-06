@@ -11,5 +11,5 @@ export class InscricaoUsuario {
 
     usuario: Usuario = new Usuario();
     processoInscricao: ProcessoInscricao = new ProcessoInscricao();
-    transacaoInscricao: TransacaoInscricao = new TransacaoInscricao();
+    transacaoInscricoes: TransacaoInscricao[];
 }

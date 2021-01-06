@@ -14,6 +14,8 @@ namespace CursoIgreja.Domain.Models
         public DateTime DataInscricao { get; set; }
         [Column("status")]
         public string Status { get; set; }
+        [Column("dataconfirmacao")]
+        public DateTime DataConfirmacao { get; set; }
 
         [Column("usuarioid")]
         public int UsuarioId { get; set; }

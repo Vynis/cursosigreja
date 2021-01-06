@@ -70,8 +70,11 @@
 		<kt-portlet [class]="'kt-portlet--height-fluid'">
 			<kt-portlet-header [title]="'Cursos que estou inscrito'"></kt-portlet-header>
 			<kt-portlet-body>
-				<div class="row">
-					<div class="col-md-4" *ngFor="let lista of listaInscricaoCurso$ | async">
+				<div class="row" *ngIf="listaInscricaoCurso$ | async as listaCurso;" >
+					<div *ngIf="listaCurso.length == 0">
+						Não possui nenhuma inscrição realizada!
+					</div>
+					<div class="col-md-4" *ngFor="let lista of listaCurso">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">{{lista.processoInscricao.curso.titulo}}</h5>
@@ -79,10 +82,13 @@
 							  </div>
 							  <div class="card-footer" style="text-align: center;" > 
 								  <div class="row">
-									<div class="col-md-6">
-										<div  class="btn btn-success">Pagamento</div>
+									<div *ngIf="lista.status == 'AG'" class="col-md-6">
+										<div (click)="gerarPagamento(lista)" class="btn btn-success">Pagamento</div>
 									</div>
-									<div class="col-md-6">
+									<div *ngIf="lista.status == 'AG'" class="col-md-6">
+										<div (click)="cancelarInscricao(lista.id)" class="btn btn-warning">Cancelar Inscrição</div>
+									</div>
+									<div *ngIf="lista.status == 'CO'" class="col-md-6">
 										<div  class="btn btn-primary">Iniciar o curso</div>
 									</div>
 								  </div>
@@ -92,43 +98,54 @@
 						</div>
 					</div>
 				</div>
+
 			</kt-portlet-body>
 		</kt-portlet>
 	</div>
 </div>
 
-<div [hidden]="true" class="row">
+<div [hidden]="false" class="row">
 	<div class="col-xl-6">
 		<kt-portlet [class]="'kt-portlet--height-fluid'">
 			<kt-portlet-header [title]="'Inscrições abertas'">
 			</kt-portlet-header>
 			<kt-portlet-body>
-				<kt-widget4 [data]="widget4_1">
-					<ng-template #actionTemplate let-item="item">
-						<div class="kt-widget4__tools">
-							<a href="javascript:;" class="btn btn-clean btn-icon btn-sm">
-								<i class="flaticon2-download-symbol-of-down-arrow-in-a-rectangle"></i>
-							</a>
+				<div *ngIf="listaProcessoInscricaoDisponivel$ | async as listaProcessoDisponivel">
+					<div *ngIf="listaProcessoDisponivel.length == 0">
+						Não possui nenhuma inscrição disponível!
+					</div>
+					<div *ngFor="let lista of listaProcessoDisponivel" class="row" style="padding-bottom: 10px;">
+						<div class="col-md-10" >
+							<b>{{lista.curso.titulo}}</b><br />
+							<em>Perído de Inscrição: <b> {{ lista.dataInicial | date:"dd/MM/yyyy"}} até {{ lista.dataFinal | date: "dd/MM/yyyy"}} </b> </em>
 						</div>
-					</ng-template>
-				</kt-widget4>
+						<div>
+							<div  class="col-md-">
+								<div  (click)="inscrever(lista.id)" class="btn btn-primary">Inscrever</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</kt-portlet-body>
 		</kt-portlet>
 	</div>
-	<div class="col-xl-6">
+	<div [hidden]="true" class="col-xl-6">
 		<kt-portlet [class]="'kt-portlet--height-fluid'">
 			<kt-portlet-header [title]="'Cursos futuros'">
 			</kt-portlet-header>
 			<kt-portlet-body>
-				<kt-widget4 [data]="widget4_1">
-					<ng-template #actionTemplate let-item="item">
-						<div class="kt-widget4__tools">
-							<a href="javascript:;" class="btn btn-clean btn-icon btn-sm">
-								<i class="flaticon2-download-symbol-of-down-arrow-in-a-rectangle"></i>
-							</a>
+				<div class="row" style="padding-bottom: 10px;">
+					<div class="col-md-10" >
+						Nome do Curso<br />
+						<em>Perído de Inscrição: 01/01/2000 até 01/01/2000 </em>
+					</div>
+					<div>
+						<div  class="col-md-">
+							<div   class="btn btn-primary">Inscrever</div>
 						</div>
-					</ng-template>
-				</kt-widget4>
+					</div>
+				</div>
 			</kt-portlet-body>
 		</kt-portlet>
 	</div>

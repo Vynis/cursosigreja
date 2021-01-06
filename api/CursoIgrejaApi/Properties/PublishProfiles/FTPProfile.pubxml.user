@@ -14,7 +14,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/26/2020 18:49:59</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>01/02/2021 17:24:39</publishTime>
+      <publishTime>01/05/2021 13:59:13</publishTime>
     </File>
     <File Include="AutoMapper.dll">
       <publishTime>07/01/2020 16:00:54</publishTime>
@@ -23,37 +23,37 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2020 16:22:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.deps.json">
-      <publishTime>01/04/2021 19:40:45</publishTime>
+      <publishTime>01/06/2021 15:32:40</publishTime>
     </File>
     <File Include="CursoIgreja.Api.dll">
-      <publishTime>01/04/2021 19:40:44</publishTime>
+      <publishTime>01/06/2021 15:32:38</publishTime>
     </File>
     <File Include="CursoIgreja.Api.exe">
-      <publishTime>01/04/2021 19:40:44</publishTime>
+      <publishTime>01/06/2021 15:32:39</publishTime>
     </File>
     <File Include="CursoIgreja.Api.pdb">
-      <publishTime>01/04/2021 19:40:44</publishTime>
+      <publishTime>01/06/2021 15:32:38</publishTime>
     </File>
     <File Include="CursoIgreja.Api.runtimeconfig.json">
       <publishTime>01/02/2021 17:29:06</publishTime>
     </File>
     <File Include="CursoIgreja.Domain.dll">
-      <publishTime>01/02/2021 22:09:02</publishTime>
+      <publishTime>01/06/2021 13:59:36</publishTime>
     </File>
     <File Include="CursoIgreja.Domain.pdb">
-      <publishTime>01/02/2021 22:09:02</publishTime>
+      <publishTime>01/06/2021 13:59:36</publishTime>
     </File>
     <File Include="CursoIgreja.PagSeguro.dll">
-      <publishTime>01/02/2021 17:15:19</publishTime>
+      <publishTime>01/06/2021 14:38:44</publishTime>
     </File>
     <File Include="CursoIgreja.PagSeguro.pdb">
-      <publishTime>01/02/2021 17:15:19</publishTime>
+      <publishTime>01/06/2021 14:38:44</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.dll">
-      <publishTime>01/04/2021 17:46:47</publishTime>
+      <publishTime>01/06/2021 13:59:37</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.pdb">
-      <publishTime>01/04/2021 17:46:47</publishTime>
+      <publishTime>01/06/2021 13:59:37</publishTime>
     </File>
     <File Include="EFCore.NamingConventions.dll">
       <publishTime>01/20/2020 09:43:22</publishTime>
@@ -194,7 +194,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/24/2019 19:49:50</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>01/04/2021 19:40:45</publishTime>
+      <publishTime>01/06/2021 15:32:40</publishTime>
     </File>
   </ItemGroup>
 </Project>

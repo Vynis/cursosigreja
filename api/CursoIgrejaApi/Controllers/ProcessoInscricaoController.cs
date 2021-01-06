@@ -7,6 +7,7 @@ using CursoIgreja.Domain.Models;
 using CursoIgreja.Repository.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace CursoIgreja.Api.Controllers
 {
@@ -16,11 +17,13 @@ namespace CursoIgreja.Api.Controllers
     {
         private readonly IProcessoInscricaoRepository _processoInscricaoRepository;
         private readonly IMapper _mapper;
+        private readonly IInscricaoUsuarioRepository _inscricaoUsuarioRepository;
 
-        public ProcessoInscricaoController(IProcessoInscricaoRepository processoInscricaoRepository, IMapper mapper)
+        public ProcessoInscricaoController(IProcessoInscricaoRepository processoInscricaoRepository, IMapper mapper, IInscricaoUsuarioRepository inscricaoUsuarioRepository)
         {
             _processoInscricaoRepository = processoInscricaoRepository;
             _mapper = mapper;
+            _inscricaoUsuarioRepository = inscricaoUsuarioRepository;
         }
 
         [HttpGet("cursos-inscricoes-abertas")]
@@ -48,6 +51,34 @@ namespace CursoIgreja.Api.Controllers
                 var listaBd = await _processoInscricaoRepository.Buscar(x => x.Status.Equals("A") && x.DataFinal > DateTime.Now &&  x.DataFinal > DateTime.Now );
 
                 return Response(listaBd);
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+        [HttpGet("cursos-inscricoes-disponivel")]
+        public async Task<IActionResult> CursosInscricoesDisponivel()
+        {
+            try
+            {
+                var listaBd = await _processoInscricaoRepository.Buscar(x => x.Status.Equals("A") && DateTime.Now >= x.DataInicial && DateTime.Now <= x.DataFinal);
+
+                var listaUsuario = await _inscricaoUsuarioRepository.Buscar(x => x.UsuarioId == Convert.ToInt32(User.Identity.Name));
+
+                var listaNova = new List<ProcessoInscricao>();
+
+                foreach (var lista in listaBd)
+                {
+                    var validaUsuario = listaUsuario.Where(x => x.ProcessoInscricaoId.Equals(lista.Id) && !x.Status.Equals("CA"));
+
+                    if (validaUsuario.Count() == 0)
+                        listaNova.Add(lista);
+                }
+
+                return Response(listaNova);
 
             }
             catch (Exception ex)

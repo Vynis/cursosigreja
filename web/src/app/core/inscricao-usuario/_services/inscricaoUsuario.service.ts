@@ -34,6 +34,19 @@ export class InscricaoUsuarioService {
             );
     }
 
+
+    cadastrarSemToken(inscricao: InscricaoUsuario): Observable<any> {
+        return this.http.post<InscricaoUsuario>(`${this.caminhoApi}inscricao-usuario/cadastrar`,inscricao)
+            .pipe(
+                tap((res: InscricaoUsuario) => {
+                    return res;
+                }),
+                catchError(err => {
+                    return null;
+                })
+            );
+    }
+
     gerarPagamento(idInscricao: number, userToken: string) : Observable<any> {
         const httpHeaders = new HttpHeaders({
             'Content-Type': 'application/json',
@@ -51,7 +64,20 @@ export class InscricaoUsuarioService {
         );
     }
 
+
+    gerarPagamentoSemToken(idInscricao: number) : Observable<ModeloBase> {
+        return this.http.post<ModeloBase>(`${this.caminhoApi}inscricao-usuario/gerar/${idInscricao}`, { id: idInscricao } );
+    }
+
     buscaCursoIsncrito() : Observable<ModeloBase> {
         return this.http.get<ModeloBase>(`${this.caminhoApi}inscricao-usuario/busca-curso-inscrito`);
+    }
+
+    buscaTransacao(idTransacao: string) : Observable<ModeloBase> {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}inscricao-usuario/buscar-transacao/${idTransacao}`);
+    }
+
+    cancelarInscricao(idInscricao: number) : Observable<ModeloBase> {
+        return this.http.put<ModeloBase>(`${this.caminhoApi}inscricao-usuario/cancelar-incricao/${idInscricao}`,  { id: idInscricao } );
     }
 }

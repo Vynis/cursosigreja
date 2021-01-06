@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CursoIgreja.Api.Dtos;
 using CursoIgreja.Domain.Models;
 using CursoIgreja.PagSeguro;
+using CursoIgreja.PagSeguro.Enum;
 using CursoIgreja.PagSeguro.TransferObjects;
 using CursoIgreja.Repository.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CursoIgreja.Api.Controllers
 {
@@ -20,14 +24,18 @@ namespace CursoIgreja.Api.Controllers
         private readonly ICursoRepository _cursoRepository;
         private readonly IParametroSistemaRepository _parametroSistemaRepository;
         private readonly ITransacaoInscricaoRepository _transacaoInscricaoRepository;
+        private readonly ILogNotificacoesRepository _logNotificacoesRepository;
+        private readonly IProcessoInscricaoRepository _processoInscricaoRepository;
         private string urlWsPagueSeguro = "";
         private string urlSitePagueSeguro = "";
 
         public InscricaoUsuarioController(IInscricaoUsuarioRepository inscricaoUsuarioRepository,
-                                          IMeioPagamentoRepository meioPagamentoRepository, 
-                                          ICursoRepository cursoRepository, 
+                                          IMeioPagamentoRepository meioPagamentoRepository,
+                                          ICursoRepository cursoRepository,
                                           IParametroSistemaRepository parametroSistemaRepository,
-                                          ITransacaoInscricaoRepository transacaoInscricaoRepository
+                                          ITransacaoInscricaoRepository transacaoInscricaoRepository,
+                                          ILogNotificacoesRepository logNotificacoesRepository,
+                                          IProcessoInscricaoRepository processoInscricaoRepository
                                           )
         {
             _inscricaoUsuarioRepository = inscricaoUsuarioRepository;
@@ -35,9 +43,11 @@ namespace CursoIgreja.Api.Controllers
             _cursoRepository = cursoRepository;
             _parametroSistemaRepository = parametroSistemaRepository;
             _transacaoInscricaoRepository = transacaoInscricaoRepository;
+            _logNotificacoesRepository = logNotificacoesRepository;
+           _processoInscricaoRepository = processoInscricaoRepository;
             urlSitePagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SitePagueSeguro")).Result.FirstOrDefault().Valor;
             urlWsPagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("WsPagueSeguro")).Result.FirstOrDefault().Valor;
-         }
+        }
 
         [HttpPost("cadastrar")]
         public async Task<IActionResult> Cadastrar(InscricaoUsuario inscricaoUsuario)
@@ -53,11 +63,16 @@ namespace CursoIgreja.Api.Controllers
                 inscricaoUsuario.DataInscricao = DateTime.Now;
                 inscricaoUsuario.Usuario = null;
                 inscricaoUsuario.ProcessoInscricao = null;
+                inscricaoUsuario.UsuarioId = Convert.ToInt32(User.Identity.Name);
 
                 var response = await _inscricaoUsuarioRepository.Adicionar(inscricaoUsuario);
 
                 if (response)
+                {
+                    inscricaoUsuario.ProcessoInscricao = await _processoInscricaoRepository.ObterPorId(inscricaoUsuario.ProcessoInscricaoId);
                     return Response(inscricaoUsuario);
+                }
+                    
 
                 return Response("Cadastro não realizado", false);
             }
@@ -65,6 +80,51 @@ namespace CursoIgreja.Api.Controllers
             {
                 return ResponseErro(ex);
             }
+        }
+
+        [HttpPut("cancelar-incricao/{id}")]
+        public async Task<IActionResult> CancelarInscricao(int id)
+        {
+            try
+            {
+                var buscarInscricao = await _inscricaoUsuarioRepository.ObterPorId(id);
+
+                if (buscarInscricao == null)
+                    Response("Inscrição nao existe", false);
+
+                buscarInscricao.Status = "CA";
+
+                var response = await _inscricaoUsuarioRepository.Atualizar(buscarInscricao);
+
+                if (!response)
+                    Response("Erro ao atualizar", false);
+
+                return Response(buscarInscricao);
+
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseErro(ex);
+            }
+        }
+
+        [HttpGet("buscar-transacao/{idTransacao}")]
+        public async Task<IActionResult> BuscarTransacao(string idTransacao)
+        {
+
+            try
+            {
+                var paymentUrl = string.Concat($"{urlSitePagueSeguro}/v2/checkout/payment.html?code=", idTransacao);
+
+                return Response(paymentUrl);
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseErro(ex);
+            }
+
         }
 
         [HttpPost("gerar/{id}")]
@@ -85,24 +145,24 @@ namespace CursoIgreja.Api.Controllers
                 var tokenPagSeguro = dadosConfigPagamento.FirstOrDefault().Token;
                 string urlCheckout = $"{urlWsPagueSeguro}/v2/checkout";
 
-                var listaItensPedido = new List<PagSeguroItemDTO> { 
+                var listaItensPedido = new List<PagSeguroItemDTO> {
                     new PagSeguroItemDTO {
                         itemId = id.ToString(),
                         itemQuantity = "1",
                         itemDescription = $"Inscrição para o curso: {dadosCurso.Titulo}",
                         itemAmount = inscricao.ProcessoInscricao.Valor.ToString("F").Replace(",","."),
                         itemWeight = "200"
-                    } 
+                    }
                 };
 
                 if (string.IsNullOrEmpty(inscricao.Usuario.Email))
-                    inscricao.Usuario.Email = "sememail@igrejadecristobrasil.com.br";
+                    inscricao.Usuario.Email = "sememail@cursoigrejacristobrasil.kinghost.net";
 
                 var dadosComprador = new PagSeguroCompradorDTO
                 {
                     SenderName = inscricao.Usuario.Nome.Length > 50 ? inscricao.Usuario.Nome.Substring(0, 50) : inscricao.Usuario.Nome,
                     senderEmail = inscricao.Usuario.Email.Length > 60 ? inscricao.Usuario.Nome.Substring(0, 60) : inscricao.Usuario.Email,
-                    senderPhone = inscricao.Usuario.TelefoneCelular.Length > 9 ? inscricao.Usuario.TelefoneCelular.Substring(0,9) : inscricao.Usuario.TelefoneCelular ,
+                    senderPhone = inscricao.Usuario.TelefoneCelular.Length > 9 ? inscricao.Usuario.TelefoneCelular.Substring(0, 9) : inscricao.Usuario.TelefoneCelular,
                     SenderAreaCode = "62"
                 };
 
@@ -155,6 +215,90 @@ namespace CursoIgreja.Api.Controllers
                 return ResponseErro(ex);
             }
         }
+
+        [HttpPost("notificacoes")]
+        [AllowAnonymous]
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<IActionResult> Notificacoes([FromForm] NotificacaoDto notificacaoDto)
+        {
+            try
+            {
+
+                //Inicia com log
+                var logNotificacoes = new LogNotificacao()
+                {
+                    Data = DateTime.Now,
+                    NotificationCode = notificacaoDto.NotificationCode,
+                    NotificationType = notificacaoDto.NotificationType
+                };
+
+                var response = await _logNotificacoesRepository.Adicionar(logNotificacoes);
+
+                //Busca os dados dados da transacao
+                var dadosConfigPagamento = await _meioPagamentoRepository.Buscar(x => x.Status.Equals("A"));
+                var emailPagSeguro = dadosConfigPagamento.FirstOrDefault().Email;
+                var tokenPagSeguro = dadosConfigPagamento.FirstOrDefault().Token;
+                string urlPagseguro = $"{urlWsPagueSeguro}/v3/transactions/notifications/";
+
+                var apiPagSeguro = new PagSeguroAPI();
+
+                var retornoApiPagSeguro = apiPagSeguro.ConsultaPorCodigoNotificacao(emailPagSeguro, tokenPagSeguro, urlPagseguro, notificacaoDto.NotificationCode);
+
+                if (!retornoApiPagSeguro.Status.Equals(Convert.ToInt32(StatusTransacaoEnum.Paga)) && !retornoApiPagSeguro.Status.Equals(Convert.ToInt32(StatusTransacaoEnum.Disponivel)))
+                    return Response("Não foi possível fazer operacao", false);
+
+                var dadosInscricao = await _inscricaoUsuarioRepository.Buscar(x => x.Id.Equals(Convert.ToInt32(retornoApiPagSeguro.Reference)));
+                var buscaDadosInscricao = dadosInscricao.FirstOrDefault();
+
+
+                //Atualiza o status da isncricao
+                if (!buscaDadosInscricao.Status.Equals("AG"))
+                    return Response("Não foi possível fazer operacao", false);
+
+                buscaDadosInscricao.Status = "CO";
+                buscaDadosInscricao.DataConfirmacao = DateTime.Now;
+                buscaDadosInscricao.ProcessoInscricao = null;
+                buscaDadosInscricao.TransacaoInscricoes = null;
+                buscaDadosInscricao.Usuario = null;
+
+                var atualizaInscricao = await _inscricaoUsuarioRepository.Atualizar(buscaDadosInscricao);
+
+                if (!atualizaInscricao)
+                    return Response("Erro ao atualizar inscrição", false);
+
+                return Response(buscaDadosInscricao);
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+
+        }
+
+        [HttpPost("notificacao-especifica")]
+        [AllowAnonymous]
+        public async Task<IActionResult> NotificacaoEspecificao(NotificacaoDto notificacaoDto)
+        {
+            try
+            {
+                //Busca os dados dados da transacao
+                var dadosConfigPagamento = await _meioPagamentoRepository.Buscar(x => x.Status.Equals("A"));
+                var emailPagSeguro = dadosConfigPagamento.FirstOrDefault().Email;
+                var tokenPagSeguro = dadosConfigPagamento.FirstOrDefault().Token;
+                string urlPagseguro = $"{urlWsPagueSeguro}/v3/transactions/notifications/";
+
+                var apiPagSeguro = new PagSeguroAPI();
+
+                var retornoApiPagSeguro = apiPagSeguro.ConsultaPorCodigoNotificacao(emailPagSeguro, tokenPagSeguro, urlPagseguro, notificacaoDto.NotificationCode);
+
+                return Response(retornoApiPagSeguro);
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
 
     }
 }

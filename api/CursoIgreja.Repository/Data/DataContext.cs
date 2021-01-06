@@ -19,6 +19,7 @@ namespace CursoIgreja.Repository.Data
         public DbSet<MeioPagamento> MeiosPagamentos { get; set; }
         public DbSet<ParametroSistema> ParametroSistema { get; set; }
         public DbSet<TransacaoInscricao> TransacaoInscricoes { get; set; }
+        public DbSet<LogNotificacao> LogNotificacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

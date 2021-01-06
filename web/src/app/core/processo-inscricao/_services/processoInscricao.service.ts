@@ -17,4 +17,8 @@ export class ProcessoInscricaoService {
         return this.http.get<ModeloBase>(`${this.caminhoApi}processo-inscricao/cursos-inscricoes-abertas`);
     }
 
+    buscarCursosDisponivel(): Observable<ModeloBase> {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}processo-inscricao/cursos-inscricoes-disponivel`);
+    }
+
 }

@@ -285,6 +285,148 @@ namespace CursoIgreja.PagSeguro
             return retorno;
         }
 
+        public ConsultaTransacaoPagSeguroTransactionDTO ConsultaPorCodigoNotificacao(string emailUsuario, string token, string urlConsultaTransacao, string codigoNotificacao)
+        {
+
+            //Variável de retorno.
+            ConsultaTransacaoPagSeguroTransactionDTO retorno = new ConsultaTransacaoPagSeguroTransactionDTO();
+
+            try
+            {
+
+                //uri de consulta da transação.
+                string uri = string.Concat(urlConsultaTransacao, codigoNotificacao, "?email=", emailUsuario, "&token=", token);
+
+                //Classe que irá fazer a requisição GET.
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+
+                //Método do webrequest.
+                request.Method = "GET";
+
+                //String que vai armazenar o xml de retorno.
+                string xmlString = null;
+
+                //Obtém resposta do servidor.
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    //Cria stream para obter retorno.
+                    using (Stream dataStream = response.GetResponseStream())
+                    {
+                        //Lê stream.
+                        using (StreamReader reader = new StreamReader(dataStream))
+                        {
+                            //Xml convertido para string.
+                            xmlString = reader.ReadToEnd();
+
+                            //Cria xml document para facilitar acesso ao xml.
+                            XmlDocument xmlDoc = new XmlDocument();
+
+                            //Carrega xml document através da string com XML.
+                            xmlDoc.LoadXml(xmlString);
+
+                            // Obtém lista de Transações.
+                            var listTransactions = xmlDoc.GetElementsByTagName("transaction")[0];
+
+                            //Usado para conversão de data W3C.
+                            string formatStringW3CDate = "yyyy-MM-ddTHH:mm:ss.fffzzz";
+                            System.Globalization.CultureInfo cInfoW3CDate = new System.Globalization.CultureInfo("en-US", true);
+
+                            if (listTransactions != null)
+                            {
+                                //Cria novo item de transação.
+                                var itemTransacao = new ConsultaTransacaoPagSeguroTransactionDTO();
+
+                                foreach (XmlNode childNode in listTransactions)
+                                {
+
+                                    if (childNode.Name == "date")
+                                    {
+                                        var date = System.DateTime.ParseExact(childNode.InnerText, formatStringW3CDate, cInfoW3CDate);
+                                        itemTransacao.Date = date;
+                                    }
+                                    else if (childNode.Name == "reference")
+                                    {
+                                        itemTransacao.Reference = childNode.InnerText;
+                                    }
+                                    else if (childNode.Name == "code")
+                                    {
+                                        itemTransacao.Code = childNode.InnerText;
+                                    }
+                                    else if (childNode.Name == "type")
+                                    {
+                                        itemTransacao.type = Convert.ToInt32(childNode.InnerText);
+                                    }
+                                    else if (childNode.Name == "status")
+                                    {
+                                        itemTransacao.Status = Convert.ToInt32(childNode.InnerText);
+                                    }
+                                    else if (childNode.Name == "paymentMethod")
+                                    {
+                                        foreach (XmlNode nodePaymentMethod in childNode.ChildNodes)
+                                        {
+                                            if (nodePaymentMethod.Name == "type")
+                                            {
+                                                itemTransacao.PaymentMethodType = Convert.ToInt32(childNode.InnerText);
+                                            }
+                                        }
+                                    }
+                                    else if (childNode.Name == "grossAmount")
+                                    {
+                                        itemTransacao.GrossAmount = Convert.ToDouble(childNode.InnerText, CultureInfo.InvariantCulture);
+                                    }
+                                    else if (childNode.Name == "discountAmount")
+                                    {
+                                        itemTransacao.DiscountAmount = Convert.ToDouble(childNode.InnerText, CultureInfo.InvariantCulture);
+                                    }
+                                    else if (childNode.Name == "feeAmount")
+                                    {
+                                        itemTransacao.FeeAmount = Convert.ToDouble(childNode.InnerText, CultureInfo.InvariantCulture);
+                                    }
+                                    else if (childNode.Name == "netAmount")
+                                    {
+                                        itemTransacao.NetAmount = Convert.ToDouble(childNode.InnerText, CultureInfo.InvariantCulture);
+                                    }
+                                    else if (childNode.Name == "extraAmount")
+                                    {
+                                        itemTransacao.ExtraAmount = Convert.ToDouble(childNode.InnerText, CultureInfo.InvariantCulture);
+                                    }
+                                    else if (childNode.Name == "lastEventDate")
+                                    {
+                                        var lastEventDate = System.DateTime.ParseExact(childNode.InnerText, formatStringW3CDate, cInfoW3CDate);
+                                        itemTransacao.LastEventDate = lastEventDate;
+                                    }
+                                    
+
+                                }
+
+
+                                //Adiciona item de transação.
+                                retorno = itemTransacao;
+                            }
+
+                            //Fecha reader.
+                            reader.Close();
+
+                            //Fecha stream.
+                            dataStream.Close();
+                        }
+                     }
+                 }
+
+
+                }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+            //Retorno.
+            return retorno;
+
+        }
+
         /// <summary>
         /// Cancela transação com status de "Aguardando Pagamento" ou "Em Análise".
         /// </summary>
