@@ -61,6 +61,14 @@ export class AuthService {
         return this.http.get<ModeloBase>(`${this.caminhoApi}usuario/verifica-cadastro/${emailOuCpf}`).pipe();
     }
 
+    validaRecuperacaoSenha(codigo: string) : Observable<ModeloBase | undefined> {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}auth/valida-recuperacao-senha/${codigo}`).pipe();
+    }
+
+    alterarSenha(codigo: string, senhaNova: string) : Observable<ModeloBase | undefined> {
+        return this.http.post<ModeloBase>(`${this.caminhoApi}auth/resetar-senha?codigo=${codigo}&novaSenha=${senhaNova}`, {codigo, senhaNova } ).pipe();
+    }
+
     /*
      * Submit forgot password request
      *
@@ -68,7 +76,7 @@ export class AuthService {
      * @returns {Observable<any>}
      */
     public requestPassword(email: string): Observable<any> {
-    	return this.http.get(API_USERS_URL + '/forgot?=' + email)
+    	return this.http.post(this.caminhoApi + 'auth/recuperar-senha/'+ email , { emailOuCpf: email })
     		.pipe(catchError(this.handleError('forgot-password', []))
 	    );
     }

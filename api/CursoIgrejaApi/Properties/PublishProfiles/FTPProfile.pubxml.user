@@ -23,16 +23,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2020 16:22:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.deps.json">
-      <publishTime>01/06/2021 15:32:40</publishTime>
+      <publishTime>01/08/2021 17:49:53</publishTime>
     </File>
     <File Include="CursoIgreja.Api.dll">
-      <publishTime>01/06/2021 15:32:38</publishTime>
+      <publishTime>01/08/2021 17:49:50</publishTime>
     </File>
     <File Include="CursoIgreja.Api.exe">
-      <publishTime>01/06/2021 15:32:39</publishTime>
+      <publishTime>01/08/2021 17:49:50</publishTime>
     </File>
     <File Include="CursoIgreja.Api.pdb">
-      <publishTime>01/06/2021 15:32:38</publishTime>
+      <publishTime>01/08/2021 17:49:50</publishTime>
     </File>
     <File Include="CursoIgreja.Api.runtimeconfig.json">
       <publishTime>01/02/2021 17:29:06</publishTime>
@@ -194,7 +194,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/24/2019 19:49:50</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>01/06/2021 15:32:40</publishTime>
+      <publishTime>01/08/2021 17:49:53</publishTime>
     </File>
   </ItemGroup>
 </Project>

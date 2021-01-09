@@ -1,0 +1,43 @@
+<!--begin::Body-->
+<div class="kt-login__body">
+	<!--begin::Signin-->
+	<div class="kt-login__form">
+		<div class="kt-login__title">
+			<h3>Recriar uma nova senha</h3>
+		</div>
+
+		<kt-auth-notice></kt-auth-notice>
+
+		<form class="kt-login__form kt-form" [formGroup]="registerForm" autocomplete="off">
+			<div class="form-group">
+				<mat-form-field>
+					<mat-label>Nova Senha</mat-label>
+					<input matInput type="password" placeholder="Nova Senha" formControlName="senha" autocomplete="off"/>
+					<mat-error *ngIf="isControlHasError('senha','required')">
+						<strong>Senha obrigatorio</strong>
+					</mat-error>
+				</mat-form-field>
+			</div>
+			<div class="form-group">
+				<mat-form-field>
+					<mat-label>Confirmar Senha</mat-label>
+					<input matInput type="password" placeholder="Confirmar Senha" formControlName="confirmarSenha" autocomplete="off"/>
+					<mat-error *ngIf="isControlHasError('confirmarSenha','required')">
+						<strong>Confirmacao obrigatorio</strong>
+					</mat-error>
+					<mat-error *ngIf="registerForm.get('confirmarSenha').errors && registerForm.get('confirmarSenha').errors.confirmarSenha">
+						<strong>Confirmação de senha incorreta</strong>
+					</mat-error>
+				</mat-form-field>
+			</div>
+
+			<!--begin::Action-->
+			<div class="kt-login__actions">
+				<button routerLink="/auth/login" [disabled]="loading" id="kt_login_signup_cancel" class="btn btn-secondary btn-elevate kt-login__btn-secondary">Voltar</button>
+				<div (click)="submit()" class="btn btn-success btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}">Enviar</div>
+			</div>
+			<!--end::Action-->
+		</form>
+	</div>
+</div>
+

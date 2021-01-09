@@ -25,8 +25,6 @@ namespace CursoIgreja.Api.Controllers
         private readonly IMapper _mapper;
         private readonly IParametroSistemaRepository _parametroSistemaRepository;
         private string urlEmailConfig = "";
-        private string senhaEmailConfig = "";
-        private string smtpEmailConfig = "";
 
         public AutenticacaoController(IUsuariosRepository usuariosRepository, IConfiguration configuration, IMapper mapper, IParametroSistemaRepository parametroSistemaRepository)
         {
@@ -35,8 +33,6 @@ namespace CursoIgreja.Api.Controllers
             _mapper = mapper;
             _parametroSistemaRepository = parametroSistemaRepository;
             urlEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("Email")).Result.FirstOrDefault().Valor;
-            senhaEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SenhaEmail")).Result.FirstOrDefault().Valor;
-            smtpEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SmtpEmail")).Result.FirstOrDefault().Valor;
         }
 
         [HttpPost()]
@@ -65,26 +61,16 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
-        [HttpPost("recuperar-senha")]
+        [HttpPost("recuperar-senha/{emailOuCpf}")]
         [AllowAnonymous]
-        public async Task<IActionResult> RecuperarSenha(string EmailOuCpf)
+        public async Task<IActionResult> RecuperarSenha(string emailOuCpf)
         {
             try
             {
 
-                //return Response(CriptografiaService.Criptografar("130986"));
-                //return Response(CriptografiaService.Descriptografar("MTMwOTg2"));
+                var response = await _usuarioRepository.Buscar(x => (x.Email.Equals(emailOuCpf) || x.Cpf.Equals(emailOuCpf)) && x.Status.Equals("A"));
 
-                //var response = await _usuarioRepository.Buscar(x => (x.Email.Equals(EmailOuCpf) || x.Cpf.Equals(EmailOuCpf)) && x.Status.Equals("A"));
-
-                //var usuario = response.FirstOrDefault();
-
-                var usuario = new Usuarios()
-                {
-                    Id = 999,
-                    Nome = "Vinicius Teste",
-                    Email = "vynis2005@gmail.com"
-                };
+                var usuario = response.FirstOrDefault();
 
                 if (usuario == null)
                     return Response("Email ou senha não cadastrado no banco de dados!", false);
@@ -97,23 +83,17 @@ namespace CursoIgreja.Api.Controllers
                     usuario.Email = urlEmailConfig;
                 }
 
-                MailMessage mail = new MailMessage()
-                {
-                    From = new MailAddress(urlEmailConfig, "Curso Igreja")
-                };
+                var linkAcesso = $"http://igrejadecristobrasil.com.br/empower/auth/reset/{ModificaValor(CriptografiaService.Criptografar(usuario.Id.ToString()))}";
+                var titulo = "Empower School";
+                var cabecalho = $"RECUPERAR SENHA - {usuario.Nome.ToUpper()}";
+                var mensagem = $"Olá {usuario.Nome} <br /> <br /> <a href=\"{linkAcesso}\">Clique aqui</a> para renovar sua acesso. <br /> <br /> Att,<br /> Equipe Empower Schoool ";
 
-                mail.To.Add(new MailAddress(usuario.Email));
-                mail.Subject = "Empower - Recuperar Senha";
-                mail.Body = $"<a href=\"\">Clique aqui";
-                mail.IsBodyHtml = true;
-                mail.Priority = MailPriority.High;
+                var enviaEmail = new EnviaEmail(_parametroSistemaRepository);
 
+                var retorno = await enviaEmail.Enviar(usuario.Email, cabecalho, mensagem, titulo);
 
-                using (SmtpClient smtp = new SmtpClient(smtpEmailConfig, 587))
-                {
-                    smtp.Credentials = new NetworkCredential(urlEmailConfig, senhaEmailConfig);
-                    await smtp.SendMailAsync(mail);
-                }
+                if (!retorno)
+                    Response("Erro ao enviar email", false);
 
                 return Response( new { mensagem = "Envio com sucesso!", possuiEmail });
             }
@@ -121,6 +101,68 @@ namespace CursoIgreja.Api.Controllers
             {
                 return ResponseErro(ex);
             }
+        }
+
+        [HttpGet("valida-recuperacao-senha/{codigo}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ValidaRecuperacaoSenha(string codigo)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(codigo))
+                    return Response("Favor preencher o codigo", false);
+
+                var usuarioId = CriptografiaService.Descriptografar(codigo);
+
+                var buscaUsuario = await _usuarioRepository.ObterPorId(Convert.ToInt32(usuarioId));
+
+                if (buscaUsuario == null)
+                    return Response("Usuario nao encontrado", false);
+
+                return Response("Usuario encontrado");
+
+            }
+            catch (Exception)
+            {
+                return Response("Usuario nao encontrado", false);
+            }
+        }
+   
+        [HttpPost("resetar-senha")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetarSenha(string codigo, string novaSenha)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(codigo))
+                    return Response("Favor preencher o codigo", false);
+
+                var usuarioId = CriptografiaService.Descriptografar(codigo);
+
+                var buscaUsuario = await _usuarioRepository.ObterPorId(Convert.ToInt32(usuarioId));
+
+                if (buscaUsuario == null)
+                    return Response("Usuario nao encontrado", false);
+
+                buscaUsuario.Senha = SenhaHashService.CalculateMD5Hash(novaSenha);
+
+                var response = await _usuarioRepository.Atualizar(buscaUsuario);
+
+                if (!response)
+                    return Response("Não foi possivel alterar a senha", false);
+
+                return Response("Alteração realizada com sucesso.");
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+        public static string ModificaValor(string valor)
+        {
+            return valor.Replace("=", "	%3D").Replace("%", "%25").Replace("#", "%23");
         }
 
     }

@@ -21,6 +21,7 @@ import { AuthGuard, AuthService } from '../../../core/auth';
 import { InscricaoComponent } from './inscricao/inscricao.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { ResetComponent } from './reset/reset.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -50,6 +51,10 @@ const routes: Routes = [
 			{
 				path: 'inscricao',
 				component: InscricaoComponent
+			},
+			{
+				path: 'reset/:id',
+				component: ResetComponent
 			}
 		]
 	}
@@ -88,7 +93,8 @@ const routes: Routes = [
 		RegisterComponent,
 		ForgotPasswordComponent,
 		AuthNoticeComponent,
-		InscricaoComponent
+		InscricaoComponent,
+		ResetComponent
 	]
 })
 

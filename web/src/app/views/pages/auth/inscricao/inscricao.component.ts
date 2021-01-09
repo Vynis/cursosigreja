@@ -61,6 +61,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+	localStorage.clear();
 	this.carregamentoInicial();
   }
 
@@ -198,7 +199,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 							this.autenticaUsuario();
 						} else {
 							Swal.fire({
-								title: 'Seu cadastro voi realizado com sucesso',
+								title: 'Seu cadastro foi realizado com sucesso',
 								text: 'Realize o login para ter acesso a nossa plataforma.',
 								icon: 'success',
 								confirmButtonText: 'Login',
@@ -258,7 +259,7 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 
 	private geraPagamentoInscricao() {
 		Swal.fire({
-			title: 'Seu cadastro voi realizado com sucesso',
+			title: 'Seu cadastro foi realizado com sucesso',
 			text: 'Qual proximo passo?',
 			icon: 'success',
 			showCancelButton: true,

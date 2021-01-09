@@ -72,7 +72,6 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 		this.forgotPasswordForm = this.fb.group({
 			email: ['', Validators.compose([
 				Validators.required,
-				Validators.email,
 				Validators.minLength(3),
 				Validators.maxLength(320) // https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
 			])
@@ -98,11 +97,14 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 		const email = controls.email.value;
 		this.authService.requestPassword(email).pipe(
 			tap(response => {
-				if (response) {
-					this.authNoticeService.setNotice(this.translate.instant('AUTH.FORGOT.SUCCESS'), 'success');
+				if (response.success) {
+					if (response.dados.possuiEmail)
+						this.authNoticeService.setNotice('Email enviado com sucesso!', 'success');
+					else
+						this.authNoticeService.setNotice('Foi enviado um solicitação para email de nossa equipe. Em breve entraremos em contato.', 'success');
 					this.router.navigateByUrl('/auth/login');
 				} else {
-					this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.NOT_FOUND', {name: this.translate.instant('AUTH.INPUT.EMAIL')}), 'danger');
+					this.authNoticeService.setNotice('Não existe Email/Cpf cadastrado em nossa base de dados.', 'danger');
 				}
 			}),
 			takeUntil(this.unsubscribe),

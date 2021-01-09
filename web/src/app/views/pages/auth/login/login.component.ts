@@ -101,9 +101,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 			])
 			],
 			password: [DEMO_PARAMS.PASSWORD, Validators.compose([
-				Validators.required,
-				Validators.minLength(3),
-				Validators.maxLength(100)
+				Validators.required
 			])
 			]
 		});

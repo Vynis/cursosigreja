@@ -1,3 +1,4 @@
+import { NumberFormatStyle } from "@angular/common";
 import { Curso } from "./curso.model";
 
 export class ProcessoInscricao {
@@ -9,4 +10,5 @@ export class ProcessoInscricao {
     status: string;
     cursoId: number;
     curso: Curso = new Curso();
+    valor: number;
 }
