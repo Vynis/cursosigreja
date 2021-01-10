@@ -247,8 +247,24 @@ export class InscricaoComponent implements OnInit, AfterViewInit {
 					this.inscricaoUsuario.id = dadosInscriccao.id;
 					this.inscricaoUsuario.processoInscricaoId = dadosInscriccao.processoInscricaoId;
 					this.inscricaoUsuario.usuarioId = dadosInscriccao.usuarioId;
+					
+					if (dadosInscriccao.processoInscricao.tipo === 'G' ){
 
-					this.geraPagamentoInscricao();
+						Swal.fire({
+							title: 'Seu cadastro foi realizado com sucesso',
+							text: 'Realize o login para ter acesso a nossa plataforma.',
+							icon: 'success',
+							confirmButtonText: 'Login',
+							allowOutsideClick: false
+						}).then((result: any) => {
+							if (result.value) {
+								this.redirecinaPaginaInicial();
+							}
+						});
+
+					}
+					else
+						this.geraPagamentoInscricao();
 				}
 				else {
 					this.authNoticeService.setNotice(res.dados, 'danger');

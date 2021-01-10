@@ -82,7 +82,7 @@
 							  </div>
 							  <div class="card-footer" style="text-align: center;" > 
 								  <div class="row">
-									<div *ngIf="lista.status == 'AG'" class="col-md-6">
+									<div *ngIf="lista.status == 'AG' && lista.processoInscricao.dataFinal <= dataAtual && lista.processoInscricao.tipo == 'P'" class="col-md-6">
 										<div (click)="gerarPagamento(lista)" class="btn btn-success">Pagamento</div>
 									</div>
 									<div *ngIf="lista.status == 'AG'" class="col-md-6">
@@ -121,7 +121,7 @@
 									<h5>{{lista.curso.titulo}}</h5><br />
 									<p>Descrição: {{lista.curso.descricao}}</p>
 									<p>Perído de Inscrição: <b> {{ lista.dataInicial | date:"dd/MM/yyyy"}} até {{ lista.dataFinal | date: "dd/MM/yyyy"}} </b> </p>
-									<em>Investimento: <b>{{lista.valor | currency:'BRL':true}}</b></em> <br>	
+									<em>Investimento: <b>{{	lista.tipo == 'P' ? (lista.valor | currency:'BRL':true ) : 'Gratuito' }}</b></em> <br>	
 								</div>
 								<div class="card-footer">
 									<div  (click)="inscrever(lista.id)" class="btn btn-primary">Inscrever</div>

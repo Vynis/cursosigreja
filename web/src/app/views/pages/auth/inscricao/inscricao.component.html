@@ -405,17 +405,17 @@
 						<div class="kt-heading kt-heading--md">Deseja se inscrever em algum desses cursos?</div>
 						<div class="kt-form__section kt-form__section--first">
 							<div class="kt-wizard-v1__form" formGroupName="stepSelecaoCurso">
-								<div *ngIf="listaCursosLiberados$ | async as listaCursosLiberados" class="row">
-									<div *ngIf="listaCursosLiberados.length == 0">
+								<div *ngIf="listaCursosLiberados$ | async as listaCL" class="row">
+									<div *ngIf="listaCL.length == 0">
 										Nenhum curso liberado para isncrição. Favor clique em enviar para finalizar seu cadastro.
-									</div>
-									<div *ngFor="let lista of listaCursosLiberados | async">
+									</div> 
+									<div *ngFor="let lista of listaCL">
 										<div class="col-md-12" >
 											<div class="card">
 												<div class="card-body">
 													<h5 class="card-title">{{lista.curso.titulo}}</h5>
 													<p class="card-text">{{lista.curso.descricao}}</p>
-													<em>Investimento: <b>{{lista.valor | currency:'BRL':true}}</b></em> <br>
+													<em>Investimento: <b>{{	lista.tipo == 'P' ? (lista.valor | currency:'BRL':true ) : 'Gratuito' }}</b></em> <br>
 												</div>
 												<div class="card-footer">
 													<div (click)="onSubmit(lista.id)" class="btn btn-primary">Inscrever</div>

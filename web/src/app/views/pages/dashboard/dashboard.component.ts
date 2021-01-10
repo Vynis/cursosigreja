@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
 	widget4_1: Widget4Data;
 	listaInscricaoCurso$: Observable<InscricaoUsuario[]>;
 	listaProcessoInscricaoDisponivel$ : Observable<ProcessoInscricao[]>
+	dataAtual: Date = new Date();
 
 
 	constructor(
