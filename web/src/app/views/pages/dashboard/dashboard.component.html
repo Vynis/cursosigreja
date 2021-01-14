@@ -78,11 +78,11 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title">{{lista.processoInscricao.curso.titulo}}</h5>
-								<em>Andamento: 0% concluído</em>
+								<p>Status: {{ lista.status == 'AG' ? 'Aguardando Pagamento' : 'Confirmado Pagamento' }}</p>
 							  </div>
 							  <div class="card-footer" style="text-align: center;" > 
 								  <div class="row">
-									<div *ngIf="lista.status == 'AG' && lista.processoInscricao.dataFinal <= dataAtual && lista.processoInscricao.tipo == 'P'" class="col-md-6">
+									<div *ngIf="lista.status == 'AG' && dataAtual <= lista.processoInscricao.dataFinal && lista.processoInscricao.tipo == 'P'" class="col-md-6">
 										<div (click)="gerarPagamento(lista)" class="btn btn-success">Pagamento</div>
 									</div>
 									<div *ngIf="lista.status == 'AG'" class="col-md-6">
