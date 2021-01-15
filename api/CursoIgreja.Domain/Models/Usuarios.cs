@@ -70,6 +70,8 @@ namespace CursoIgreja.Domain.Models
 
         public List<InscricaoUsuario> InscricaoUsuarios { get; set; }
 
+        public List<LogUsuario> logUsuario { get; set; }
+
     }
 }
 

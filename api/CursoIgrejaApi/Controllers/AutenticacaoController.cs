@@ -24,14 +24,16 @@ namespace CursoIgreja.Api.Controllers
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IParametroSistemaRepository _parametroSistemaRepository;
+        private readonly ILogUsuarioRepository _logUsuarioRepository;
         private string urlEmailConfig = "";
 
-        public AutenticacaoController(IUsuariosRepository usuariosRepository, IConfiguration configuration, IMapper mapper, IParametroSistemaRepository parametroSistemaRepository)
+        public AutenticacaoController(IUsuariosRepository usuariosRepository, IConfiguration configuration, IMapper mapper, IParametroSistemaRepository parametroSistemaRepository, ILogUsuarioRepository logUsuarioRepository)
         {
             _usuarioRepository = usuariosRepository;
             _configuration = configuration;
             _mapper = mapper;
             _parametroSistemaRepository = parametroSistemaRepository;
+            _logUsuarioRepository = logUsuarioRepository;
             urlEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("Email")).Result.FirstOrDefault().Valor;
         }
 
@@ -49,6 +51,8 @@ namespace CursoIgreja.Api.Controllers
 
                 if (usuario == null)
                     return Response("Usuário ou senha incorreto!", false);
+
+                var geraLog = new GeraLogUsuario(_logUsuarioRepository, _usuarioRepository, usuario.Id).Gerar("Autenticar", "Logou no sistema").Result;
 
                 var token = TokenService.GenerateToken(usuario, _configuration);
 
@@ -94,6 +98,8 @@ namespace CursoIgreja.Api.Controllers
 
                 if (!retorno)
                     Response("Erro ao enviar email", false);
+
+                var geraLog = new GeraLogUsuario(_logUsuarioRepository, _usuarioRepository, usuario.Id).Gerar("RecuperarSenha", "Solicitour recuperar a senha").Result;
 
                 return Response( new { mensagem = "Envio com sucesso!", possuiEmail });
             }
@@ -150,6 +156,8 @@ namespace CursoIgreja.Api.Controllers
 
                 if (!response)
                     return Response("Não foi possivel alterar a senha", false);
+
+                var geraLog = new GeraLogUsuario(_logUsuarioRepository, _usuarioRepository, buscaUsuario.Id).Gerar("ResetarSenha", "Solicitour recuperar a senha").Result;
 
                 return Response("Alteração realizada com sucesso.");
 

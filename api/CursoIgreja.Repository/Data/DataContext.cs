@@ -20,6 +20,7 @@ namespace CursoIgreja.Repository.Data
         public DbSet<ParametroSistema> ParametroSistema { get; set; }
         public DbSet<TransacaoInscricao> TransacaoInscricoes { get; set; }
         public DbSet<LogNotificacao> LogNotificacoes { get; set; }
+        public DbSet<LogUsuario> LogUsuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

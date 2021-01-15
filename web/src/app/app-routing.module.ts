@@ -9,7 +9,10 @@ import {AuthGuard} from './core/auth';
 
 const routes: Routes = [
 	{path: 'auth', loadChildren: () => import('app/views/pages/auth/auth.module').then(m => m.AuthModule)},
-
+	{
+		path: 'curso',
+		loadChildren: () => import('app/views/pages/curso/curso.module').then(m => m.CursoModule),
+	},
 	{
 		path: '',
 		component: BaseComponent,

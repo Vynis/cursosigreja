@@ -3,13 +3,6 @@ export class MenuConfig {
 		header: {
 			self: {},
 			items: [
-				{
-					title: 'Dashboards',
-					root: true,
-					alignment: 'left',
-					page: '/dashboard',
-					translate: 'MENU.DASHBOARD',
-		 		},
 		 	]
 		 },
 		aside: {
