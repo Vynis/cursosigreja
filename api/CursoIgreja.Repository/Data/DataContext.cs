@@ -21,6 +21,9 @@ namespace CursoIgreja.Repository.Data
         public DbSet<TransacaoInscricao> TransacaoInscricoes { get; set; }
         public DbSet<LogNotificacao> LogNotificacoes { get; set; }
         public DbSet<LogUsuario> LogUsuarios { get; set; }
+        public DbSet<Modulo> Modulos { get; set; }
+        public DbSet<Conteudo> Conteudos { get; set; }
+        public DbSet<Anexo> Anexos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

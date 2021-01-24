@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CursoIgreja.Api.Dtos;
 using CursoIgreja.Domain.Models;
@@ -49,6 +50,25 @@ namespace CursoIgreja.Api.Controllers
             urlWsPagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("WsPagueSeguro")).Result.FirstOrDefault().Valor;
         }
 
+        [HttpGet("processar-curso-inscrito/{id}")]
+        public async Task<IActionResult> ProcessarCursoInscrito(int id)
+        {
+            try
+            {
+                var response = await _inscricaoUsuarioRepository.ObterPorId(id);
+
+                if (response.UsuarioId != Convert.ToInt32(User.Identity.Name))
+                    return Response("Busca invalida", false);
+
+                return Response(response);
+                
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
         [HttpPost("cadastrar")]
         public async Task<IActionResult> Cadastrar(InscricaoUsuario inscricaoUsuario)
         {
@@ -90,14 +110,14 @@ namespace CursoIgreja.Api.Controllers
                 var buscarInscricao = await _inscricaoUsuarioRepository.ObterPorId(id);
 
                 if (buscarInscricao == null)
-                    Response("Inscrição nao existe", false);
+                    return Response("Inscrição nao existe", false);
 
                 buscarInscricao.Status = "CA";
 
                 var response = await _inscricaoUsuarioRepository.Atualizar(buscarInscricao);
 
                 if (!response)
-                    Response("Erro ao atualizar", false);
+                    return Response("Erro ao atualizar", false);
 
                 return Response(buscarInscricao);
 
@@ -160,15 +180,20 @@ namespace CursoIgreja.Api.Controllers
 
                 var dadosComprador = new PagSeguroCompradorDTO
                 {
-                    SenderName = inscricao.Usuario.Nome.Length > 50 ? inscricao.Usuario.Nome.Substring(0, 50) : inscricao.Usuario.Nome,
-                    senderEmail = inscricao.Usuario.Email.Length > 60 ? inscricao.Usuario.Nome.Substring(0, 60) : inscricao.Usuario.Email,
-                    senderPhone = inscricao.Usuario.TelefoneCelular.Length > 9 ? inscricao.Usuario.TelefoneCelular.Substring(0, 9) : inscricao.Usuario.TelefoneCelular,
+                    SenderName = inscricao.Usuario.Nome.Length > 50 ? inscricao.Usuario.Nome.Substring(0, 50).Trim() : inscricao.Usuario.Nome.Trim(),
+                    senderEmail = inscricao.Usuario.Email.Length > 60 ? inscricao.Usuario.Nome.Substring(0, 60).ToLower().Trim() : inscricao.Usuario.Email.ToLower().Trim(),
+                    senderPhone = inscricao.Usuario.TelefoneCelular.Length > 9 ? inscricao.Usuario.TelefoneCelular.Substring(0, 9).Trim() : inscricao.Usuario.TelefoneCelular.Trim(),
                     SenderAreaCode = "62"
                 };
 
                 var referencia = id.ToString();
 
                 var apiPagSeguro = new PagSeguroAPI();
+
+                //Retira os espaçõs entre o nome
+                Regex regex = new Regex(@"\s{2,}");
+                dadosComprador.SenderName = regex.Replace(dadosComprador.SenderName, " ");
+                dadosComprador.SenderName = dadosComprador.SenderName.Replace("\0", "");
 
                 var retornoApiPagSeguro = apiPagSeguro.Checkout(emailPagSeguro, tokenPagSeguro, urlCheckout, listaItensPedido, dadosComprador, referencia);
 

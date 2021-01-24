@@ -1,103 +1,117 @@
-<div class="row">
-	<div class="col-xl-12">
-    
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#"><img alt="logo" src="./assets/media/logos/logo-igreja-light.png"></a>
-      <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed"  [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed" >
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <h3>Curso: Autoridade Espiritual</h3>
-          </li>
-        </ul>
-        <div class="form-inline my-2 my-lg-0">
-          <span class="mr-sm-4">Progresso <p><ngb-progressbar type="success" textType="white" [value]="100" [showValue]="true"></ngb-progressbar></p></span>
-          <a class="btn btn-outline-success my-2 my-sm-0" routerLink="/dashboard" >Voltar</a>
+<div *ngIf="(carregou | async) == true" class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+
+
+
+  <mat-toolbar class="example-toolbar">
+    <button class="navbar-toggler" type="button" (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h3 class="example-app-name">Curso: {{curso.titulo}}</h3>
+    <span class="example-spacer"></span>
+    <a class="btn btn-outline-success my-2 my-sm-0" routerLink="/dashboard">Voltar</a>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0" opened>
+
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+      fixedTopGap="56">
+
+      <mat-nav-list style="width: 300px" dense>
+        <div class="row" >
+          <span class="col-xl-2" ></span>
+          <span class="col-xl-8" style="font-size: medium; text-align: center;"> Progresso <p>
+            <ngb-progressbar type="success" textType="white" [value]="100" [showValue]="true"></ngb-progressbar>
+          </p></span>
+          <span class="col-xl-2" ></span>
         </div>
-      </div>
-    </nav>
-    <mat-divider></mat-divider>
-  </div>
-  <div class="col-xl-8">
-    <kt-portlet [class]="'kt-portlet--height-fluid'">
+        <mat-expansion-panel *ngFor="let mod of modulos | orderBy: 'ordem'" [class.mat-elevation-z0]="true" dense>
+          <mat-expansion-panel-header>
+            {{mod.titulo}}
+          </mat-expansion-panel-header>
+          <mat-nav-list dense>
+            <div mat-list-item (click)="selecionarConteudo(cont)" *ngFor="let cont of mod.conteudos | orderBy: 'ordem'"
+              class="e" style="padding-bottom: 10px; padding-left: 23px; padding-top: 10px;">
+              {{cont.titulo}}
+              <!-- <mat-icon class="float-right">check_box</mat-icon> -->
+              <mat-icon class="float-right">check_box_outline_blank</mat-icon>
+            </div>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+      <mat-spinner *ngIf="(carregou | async) == false"></mat-spinner>
+
       <div class="row">
-        <div class="col-xl-6">
-          <div style="width: 100%;" class="btn btn-outline-danger my-2 my-sm-0" ><i class="fas fa-arrow-left"></i> Anterior</div>
-        </div>
-        <div class="col-xl-6" style="text-align: right;">
-          <div style="width: 100%;" class="btn btn-outline-success my-2 my-sm-0"  >Próximo 
-            <i class="fas fa-arrow-right"></i>
+        <div class="col-xl-12" style="background-color: white;">
+          <div class="row">
+            <div class="col-xl-6">
+              <button [disabled]="conteudoSelecionado.id == idConteudoInicial" (click)="selecionarConteudo(null, 'a')" style="width: 100%;" class="btn btn-outline-danger my-2 my-sm-0"><i class="fas fa-arrow-left"></i>
+                Anterior</button>
+            </div>
+            <div class="col-xl-6" style="text-align: right;">
+              <button [disabled]="conteudoSelecionado.id == idConteudoFinal" (click)="selecionarConteudo(null, 'p')" style="width: 100%;" class="btn btn-outline-success my-2 my-sm-0">Próximo
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+            <div class="col-xl-12">
+              <mat-divider></mat-divider>
+            </div>
+            <div *ngIf="conteudoSelecionado.id != 0" class="col-xl-12">
+              <div *ngIf="conteudoSelecionado.tipo == 'VI'">
+                <video *ngIf="conteudoSelecionado.tipo == 'VI'" width="100%" height="450px" controls>
+                  <source [src]="conteudoSelecionado.arquivo" type='video/mp4' />
+                </video>
+              </div>
+
+              <div *ngIf="conteudoSelecionado.tipo == 'VE'">
+                <iframe [src]="conteudoSelecionado.arquivo | safe: 'resourceUrl'" frameborder="0" width="100%"
+                  height="450px"></iframe>
+              </div>
+              <div *ngIf="conteudoSelecionado.tipo == 'DO'" style=" overflow-y: scroll;height: 450px;">
+                <pdf-viewer [src]="conteudoSelecionado.arquivo" [render-text]="true" style="display: block;">
+                </pdf-viewer>
+              </div>
+            </div>
+            <div class="col-xl-12">
+              <mat-divider></mat-divider>
+            </div>
+            <div *ngIf="conteudoSelecionado.id != 0" class="col-xl-12" style="margin: 10px;height: 450px;">
+              <span>
+                <h5>Aula: {{conteudoSelecionado.titulo}}</h5>
+              </span>
+              <mat-tab-group animationDuration="0ms">
+                <mat-tab label="Anexos"> 
+                  <div *ngIf="conteudoSelecionado.anexos.length > 0">
+                    <ul>
+                      <li *ngFor="let anexo of conteudoSelecionado.anexos">
+                        <a [href]=" localApi + 'arq_anexos/' + anexo.arquivo"  target="_blank" >{{anexo.titulo}}</a>
+                      </li>
+                    </ul>
+                    
+                  </div>
+                  <div *ngIf="conteudoSelecionado.anexos.length == 0 || conteudoSelecionado.anexos == null">
+                    Nenhum anexo para este contéudo.
+                  </div>
+                </mat-tab>
+                <mat-tab label="Observações">
+                  {{ conteudoSelecionado.descricao }}
+                </mat-tab>
+                <!-- <mat-tab label="Perguntas e respostas"> Perguntas e respostas </mat-tab> -->
+              </mat-tab-group>
+            </div>
           </div>
-        </div>
-        <div class="col-xl-12">
-          <mat-divider></mat-divider>
-        </div>
-        <div class="col-xl-12">
-          <iframe width="100%" height="450" src="https://www.youtube.com/embed/mECzdnUvHdU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class="col-xl-12">
-          <mat-divider></mat-divider>
-        </div>
-        <div class="col-xl-12">
-          <mat-tab-group>
-            <mat-tab label="Anexos"> Anexos </mat-tab>
-            <mat-tab label="Observações"> <ngb-rating ></ngb-rating> </mat-tab>
-            <mat-tab label="Perguntas e respostas"> Perguntas e respostas </mat-tab>
-          </mat-tab-group>
+
+
         </div>
       </div>
-      
-    </kt-portlet>
-  </div>
-  <div class="col-xl-4" style="height: 600px; overflow-y: scroll;">
-        <mat-accordion>
-          <mat-expansion-panel (opened)="panelOpenState = true"
-                               (closed)="panelOpenState = false">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Seção 1
-              </mat-panel-title>
-              <mat-panel-description>
-                Introdução do curso
-              </mat-panel-description>
-            </mat-expansion-panel-header>
 
-            <mat-nav-list>
-              <mat-list-item >
-                 <div matLine href="#">A</div>
-              </mat-list-item>
-              <mat-divider></mat-divider>
-              <mat-list-item >
-                <div matLine href="#">B</div>
-             </mat-list-item>
-             <mat-divider></mat-divider>
-            </mat-nav-list>
-          </mat-expansion-panel>
-          <mat-expansion-panel (opened)="panelOpenState = true"
-          (closed)="panelOpenState = false">
-<mat-expansion-panel-header>
-<mat-panel-title>
-Seção 2
-</mat-panel-title>
-<mat-panel-description>
-Apreendendo
-</mat-panel-description>
-</mat-expansion-panel-header>
 
-<mat-nav-list>
-<mat-list-item >
-<div matLine href="#">A</div>
-</mat-list-item>
-<mat-divider></mat-divider>
-<mat-list-item >
-<div matLine href="#">B</div>
-</mat-list-item>
-<mat-divider></mat-divider>
-</mat-nav-list>
-</mat-expansion-panel>
-        </mat-accordion>
 
-  </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
 </div>

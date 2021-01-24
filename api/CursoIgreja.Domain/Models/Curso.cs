@@ -24,5 +24,6 @@ namespace CursoIgreja.Domain.Models
         public string ArquivoImg { get; set; }
 
         public List<ProcessoInscricao> ProcessoInscricao { get; set; }
+        public List<Modulo> Modulo { get; set; }
     }
 }

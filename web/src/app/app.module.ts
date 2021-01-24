@@ -90,18 +90,18 @@ export function hljsLanguages(): HighlightLanguage[] {
 		BrowserModule,
 		AppRoutingModule,
 		HttpClientModule,
-		environment.isMockEnabled ? HttpClientInMemoryWebApiModule.forRoot(FakeApiService, {
-			passThruUnknownUrl: true,
-			dataEncapsulation: false
-		}) : [],
+		// environment.isMockEnabled ? HttpClientInMemoryWebApiModule.forRoot(FakeApiService, {
+		// 	passThruUnknownUrl: true,
+		// 	dataEncapsulation: false
+		// }) : [],
 		NgxPermissionsModule.forRoot(),
 		PartialsModule,
 		CoreModule,
-		OverlayModule,
+		// OverlayModule,
 		AuthModule.forRoot(),
 		TranslateModule.forRoot(),
 		MatProgressSpinnerModule,
-		InlineSVGModule.forRoot(),
+		//InlineSVGModule.forRoot(),
 		ThemeModule
 	],
 	exports: [],

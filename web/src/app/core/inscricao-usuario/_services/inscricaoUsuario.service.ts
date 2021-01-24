@@ -80,4 +80,8 @@ export class InscricaoUsuarioService {
     cancelarInscricao(idInscricao: number) : Observable<ModeloBase> {
         return this.http.put<ModeloBase>(`${this.caminhoApi}inscricao-usuario/cancelar-incricao/${idInscricao}`,  { id: idInscricao } );
     }
+
+    processarCursoInscrito(idInscricao: number) {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}inscricao-usuario/processar-curso-inscrito/${idInscricao}`);
+    }
 }
