@@ -1,4 +1,5 @@
 import { Anexo } from "./anexo.model";
+import { ConteudoUsuario } from "./conteudoUsuario.model";
 
 
 export class Conteudo {
@@ -15,6 +16,7 @@ export class Conteudo {
     minAcerto: number ;
     linkConteudoExterno: string ;
     moduloId: number;
+    conteudoConcluido: boolean;
 
-    anexos: Anexo[];  
+    anexos: Anexo[];
 }

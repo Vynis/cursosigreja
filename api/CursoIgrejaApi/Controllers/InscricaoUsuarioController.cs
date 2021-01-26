@@ -45,10 +45,11 @@ namespace CursoIgreja.Api.Controllers
             _parametroSistemaRepository = parametroSistemaRepository;
             _transacaoInscricaoRepository = transacaoInscricaoRepository;
             _logNotificacoesRepository = logNotificacoesRepository;
-           _processoInscricaoRepository = processoInscricaoRepository;
+            _processoInscricaoRepository = processoInscricaoRepository;
             urlSitePagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SitePagueSeguro")).Result.FirstOrDefault().Valor;
             urlWsPagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("WsPagueSeguro")).Result.FirstOrDefault().Valor;
         }
+
 
         [HttpGet("processar-curso-inscrito/{id}")]
         public async Task<IActionResult> ProcessarCursoInscrito(int id)
@@ -59,6 +60,12 @@ namespace CursoIgreja.Api.Controllers
 
                 if (response.UsuarioId != Convert.ToInt32(User.Identity.Name))
                     return Response("Busca invalida", false);
+
+
+                foreach (var modulo in response.ProcessoInscricao.Curso.Modulo)
+                   foreach (var conteudo in modulo.Conteudos)
+                        conteudo.ConteudoConcluido = conteudo.ConteudoUsuarios.Exists(x => x.ConteudoId == conteudo.Id && x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Concluido.Equals("S"));
+                   
 
                 return Response(response);
                 

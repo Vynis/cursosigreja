@@ -12,6 +12,8 @@ import { map, tap } from 'rxjs/operators';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { OrderPipe } from 'ngx-order-pipe';
 import { environment } from '../../../../environments/environment';
+import { ConteudoUsuario } from '../../../core/inscricao-usuario/_models/conteudoUsuario.model';
+import { result } from 'lodash';
 
 @Component({
   selector: 'kt-curso',
@@ -33,6 +35,7 @@ export class CursoComponent implements OnInit {
   public localApi: string = '';
   public idConteudoInicial = 0;
   public idConteudoFinal = 0;
+  public qtdProgresso = 0;
 
   constructor(
     public inscricaoUsuarioService: InscricaoUsuarioService,
@@ -83,12 +86,25 @@ export class CursoComponent implements OnInit {
           this.idConteudoFinal = this.modulos[this.modulos.length - 1].conteudos[this.modulos[this.modulos.length - 1].conteudos.length - 1].id;
 
           //Modulo inicial
+          this.calcularProgresso();
           this.selecionarConteudo(this.modulos[0].conteudos[0]);
+          this.buscarUltimoConteudoUsuario(dados.processoInscricao.cursoId);
 
           this.setCarregamento.next(true);
         }
       }
     )
+  }
+
+  buscarUltimoConteudoUsuario(idCurso: number) {
+    this.inscricaoUsuarioService.buscaConteudoUsuario(idCurso).subscribe( result => {
+      if (result.success) {
+        if (result.dados.length > 0){
+          let conteudoUsuario = this.orderPipe.transform(result.dados,'dataConclusao',true);
+          this.selecionarConteudo(conteudoUsuario[0].conteudo);
+        }
+      }
+    })
   }
 
   selecionarConteudo(conteudo: Conteudo, acao: string = '') {
@@ -133,9 +149,52 @@ export class CursoComponent implements OnInit {
         })
       }
 
+      this.salvarConteudoUsuario(this.conteudoSelecionado);
+
     } else {
+      this.salvarConteudoUsuario(conteudo);      
       this.conteudoSelecionado = conteudo;
     }
+  }
+
+  salvarConteudoUsuario(conteudo: Conteudo) {
+    var conteudoUsuario = new ConteudoUsuario();
+    conteudoUsuario.id = 0;
+    conteudoUsuario.conteudoId = conteudo.id;
+    conteudoUsuario.concluido = "S";
+    conteudoUsuario.dataConclusao = null;
+    conteudoUsuario.usuariosId = 0;
+    this.inscricaoUsuarioService.salvarConteudoUsuario(conteudoUsuario).subscribe( res => {
+      if (res){
+        this.atualizaModulos();
+      }
+    });
+  }
+
+  atualizaModulos() {
+    this.inscricaoUsuarioService.buscarModuloCurso(this.curso.id).subscribe(res => {
+      if (res.success) {
+        this.modulos = res.dados;
+        this.calcularProgresso();
+      }
+    })
+  }
+
+  calcularProgresso(){
+    var contGeral = 0;
+    var contConcluido = 0;
+
+    this.modulos.forEach( result => {
+      result.conteudos.forEach (conteudo => {
+        contGeral++;
+        if (conteudo.conteudoConcluido) {
+          contConcluido++;
+        }
+      })
+    })
+
+    this.qtdProgresso = (contConcluido * 100) / contGeral;
+
   }
 
 }

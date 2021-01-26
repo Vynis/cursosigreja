@@ -6,6 +6,7 @@ import { map } from 'rxjs/internal/operators/map';
 import { tap } from 'rxjs/internal/operators/tap';
 import { environment } from '../../../../environments/environment';
 import { ModeloBase } from '../../_base/crud/models/modelo-base';
+import { ConteudoUsuario } from '../_models/conteudoUsuario.model';
 import { InscricaoUsuario } from '../_models/inscricaoUsuario.model';
 
 
@@ -84,4 +85,18 @@ export class InscricaoUsuarioService {
     processarCursoInscrito(idInscricao: number) {
         return this.http.get<ModeloBase>(`${this.caminhoApi}inscricao-usuario/processar-curso-inscrito/${idInscricao}`);
     }
+
+    buscaConteudoUsuario(idCurso: number) {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}conteudo-usuario/busca-conteudo-usuario/${idCurso}`);
+    }
+
+    salvarConteudoUsuario(conteudoUsuario: ConteudoUsuario) {
+        return this.http.post<ConteudoUsuario>(`${this.caminhoApi}conteudo-usuario/salvar-conteudo-usuario`,  conteudoUsuario);
+    }
+
+    buscarModuloCurso(idCurso: number) {
+        return this.http.get<ModeloBase>(`${this.caminhoApi}modulo/buscar-modulo-curso/${idCurso}`)
+    }
+
+
 }

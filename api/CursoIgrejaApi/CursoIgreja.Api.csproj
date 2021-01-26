@@ -24,5 +24,9 @@
     <ProjectReference Include="..\CursoIgreja.Repository\CursoIgreja.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="arq_videos\" />
+  </ItemGroup>
+
 
 </Project>

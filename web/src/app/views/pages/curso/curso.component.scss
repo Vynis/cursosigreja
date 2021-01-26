@@ -3,6 +3,10 @@
         margin-left: 8px;
       }
 
+      .mat-nav-list div.active {
+        background: #DCDCDC;
+    }
+
       .example-container {
         display: flex;
         flex-direction: column;

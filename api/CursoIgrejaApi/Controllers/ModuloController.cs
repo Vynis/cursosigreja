@@ -34,5 +34,26 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
+
+        [HttpGet("buscar-modulo-curso/{idCurso}")]
+        public async Task<IActionResult> BuscarModuloCurso(int idCurso)
+        {
+            try
+            {
+                var retorno = await _moduloRepository.Buscar(x => x.CursoId.Equals(idCurso));
+
+                foreach (var modulo in retorno)
+                    foreach(var conteudo in modulo.Conteudos)
+                        conteudo.ConteudoConcluido = conteudo.ConteudoUsuarios.Exists(x => x.ConteudoId == conteudo.Id && x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Concluido.Equals("S"));
+
+                return Response(retorno);
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+
     }
 }

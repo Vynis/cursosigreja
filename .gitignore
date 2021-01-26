@@ -19,6 +19,7 @@ node_modules
 arq_propostas
 arq_marcas
 arq_logo_marcas
+arq_videos
 
 # profiling files
 chrome-profiler-events*.json

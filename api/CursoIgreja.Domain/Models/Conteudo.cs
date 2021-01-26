@@ -17,8 +17,8 @@ namespace CursoIgreja.Domain.Models
         public string Descricao { get; set; }
         public string Arquivo { get; set; }
         public string ArquivoTxt { get; set; }
-        public DateTime DataPeriodoVisualizacaoIni { get; set; }
-        public DateTime DataPeriodoVisualizacaoFim { get; set; }
+        public DateTime? DataPeriodoVisualizacaoIni { get; set; }
+        public DateTime? DataPeriodoVisualizacaoFim { get; set; }
         public string DefinePeriodoVisualizacao { get; set; }
         public int MinAcerto { get; set; }
         public string LinkConteudoExterno { get; set; }
@@ -26,5 +26,11 @@ namespace CursoIgreja.Domain.Models
         public Modulo Modulo { get; set; }
 
         public List<Anexo> Anexos { get; set; }
+        public List<ConteudoUsuario> ConteudoUsuarios { get; set; }
+
+        [NotMapped]
+        public bool ConteudoConcluido { get; set; }
+
+
     }
 }

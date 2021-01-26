@@ -25,6 +25,8 @@ namespace CursoIgreja.Repository.Repository.Class
             IQueryable<Modulo> query = _dataContext.Modulos
                                                                 .Where(predicado)
                                                                 .Include(c => c.Conteudos)
+                                                                .Include("Conteudos.Anexos")
+                                                                .Include("Conteudos.ConteudoUsuarios")
                                                                 .Include(c => c.Curso);
 
             return await query.AsNoTracking().OrderBy(c => c.Ordem).ToArrayAsync();

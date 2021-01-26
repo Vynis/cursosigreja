@@ -19,21 +19,21 @@
       <mat-nav-list style="width: 300px" dense>
         <div class="row" >
           <span class="col-xl-2" ></span>
-          <span class="col-xl-8" style="font-size: medium; text-align: center;"> Progresso <p>
-            <ngb-progressbar type="success" textType="white" [value]="100" [showValue]="true"></ngb-progressbar>
+          <span class="col-xl-8" style="font-size: medium; text-align: center;"> Progresso {{qtdProgresso}}<p>
+            <ngb-progressbar type="success" textType="white" [value]="qtdProgresso" [showValue]="true"></ngb-progressbar>
           </p></span>
           <span class="col-xl-2" ></span>
         </div>
-        <mat-expansion-panel *ngFor="let mod of modulos | orderBy: 'ordem'" [class.mat-elevation-z0]="true" dense>
+        <mat-expansion-panel [expanded]="mod.id == this.conteudoSelecionado.moduloId" *ngFor="let mod of modulos | orderBy: 'ordem'" [class.mat-elevation-z0]="true" dense>
           <mat-expansion-panel-header>
             {{mod.titulo}}
           </mat-expansion-panel-header>
           <mat-nav-list dense>
-            <div mat-list-item (click)="selecionarConteudo(cont)" *ngFor="let cont of mod.conteudos | orderBy: 'ordem'"
+            <div mat-list-item [class.active]="this.conteudoSelecionado.id == cont.id" (click)="selecionarConteudo(cont)" *ngFor="let cont of mod.conteudos | orderBy: 'ordem'"
               class="e" style="padding-bottom: 10px; padding-left: 23px; padding-top: 10px;">
               {{cont.titulo}}
-              <!-- <mat-icon class="float-right">check_box</mat-icon> -->
-              <mat-icon class="float-right">check_box_outline_blank</mat-icon>
+              <mat-icon *ngIf="cont.conteudoConcluido" class="float-right" style="color: green;">check_box</mat-icon>
+              <mat-icon *ngIf="!cont.conteudoConcluido" class="float-right">check_box_outline_blank</mat-icon>
             </div>
           </mat-nav-list>
         </mat-expansion-panel>
@@ -62,8 +62,9 @@
             </div>
             <div *ngIf="conteudoSelecionado.id != 0" class="col-xl-12">
               <div *ngIf="conteudoSelecionado.tipo == 'VI'">
+                {{localApi + 'arq_videos/' + conteudoSelecionado.arquivo}}
                 <video *ngIf="conteudoSelecionado.tipo == 'VI'" width="100%" height="450px" controls>
-                  <source [src]="conteudoSelecionado.arquivo" type='video/mp4' />
+                  <source [src]="localApi + 'arq_videos/' + conteudoSelecionado.arquivo" type='video/mp4' />
                 </video>
               </div>
 
@@ -72,7 +73,7 @@
                   height="450px"></iframe>
               </div>
               <div *ngIf="conteudoSelecionado.tipo == 'DO'" style=" overflow-y: scroll;height: 450px;">
-                <pdf-viewer [src]="conteudoSelecionado.arquivo" [render-text]="true" style="display: block;">
+                <pdf-viewer [src]="localApi + 'arq_arquivos/' +conteudoSelecionado.arquivo" [render-text]="true" style="display: block;">
                 </pdf-viewer>
               </div>
             </div>
@@ -99,6 +100,9 @@
                 </mat-tab>
                 <mat-tab label="Observações">
                   {{ conteudoSelecionado.descricao }}
+                  <div *ngIf="conteudoSelecionado.descricao == '' || conteudoSelecionado.descricao == null">
+                    Nenhuma observação.
+                  </div>
                 </mat-tab>
                 <!-- <mat-tab label="Perguntas e respostas"> Perguntas e respostas </mat-tab> -->
               </mat-tab-group>

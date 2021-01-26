@@ -152,6 +152,12 @@ namespace CursoIgrejaApi
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"arq_anexos")),
                 RequestPath = new PathString("/arq_anexos")
             });
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"arq_videos")),
+                RequestPath = new PathString("/arq_videos")
+            });
         }
 
 
@@ -170,6 +176,7 @@ namespace CursoIgrejaApi
             services.AddScoped<ILogUsuarioRepository, LogUsuarioRepository>();
             services.AddScoped<IModuloRepository, ModuloRepository>();
             services.AddScoped<IConteudoRepository, ConteudoRepository>();
+            services.AddScoped<IConteudoUsuarioRepository, ConteudoUsuarioRepository>();
 
         }
     }
