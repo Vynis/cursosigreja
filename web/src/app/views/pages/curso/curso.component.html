@@ -24,12 +24,12 @@
           </p></span>
           <span class="col-xl-2" ></span>
         </div>
-        <mat-expansion-panel [expanded]="mod.id == this.conteudoSelecionado.moduloId" *ngFor="let mod of modulos | orderBy: 'ordem'" [class.mat-elevation-z0]="true" dense>
+        <mat-expansion-panel [disabled]="conteudoSelecionado.tipo == 'PR'" [expanded]="mod.id == this.conteudoSelecionado.moduloId && conteudoSelecionado.tipo != 'PR'" *ngFor="let mod of modulos | orderBy: 'ordem'" [class.mat-elevation-z0]="true" dense>
           <mat-expansion-panel-header>
             {{mod.titulo}}
           </mat-expansion-panel-header>
           <mat-nav-list dense>
-            <div mat-list-item [class.active]="this.conteudoSelecionado.id == cont.id" (click)="selecionarConteudo(cont)" *ngFor="let cont of mod.conteudos | orderBy: 'ordem'"
+            <div mat-list-item [class.active]="conteudoSelecionado.id == cont.id" (click)="selecionarConteudo(cont)" *ngFor="let cont of mod.conteudos | orderBy: 'ordem'"
               class="e" style="padding-bottom: 10px; padding-left: 23px; padding-top: 10px;">
               {{cont.titulo}}
               <mat-icon *ngIf="cont.conteudoConcluido" class="float-right" style="color: green;">check_box</mat-icon>
@@ -49,11 +49,11 @@
         <div class="col-xl-12" style="background-color: white;">
           <div class="row">
             <div class="col-xl-6">
-              <button [disabled]="conteudoSelecionado.id == idConteudoInicial" (click)="selecionarConteudo(null, 'a')" style="width: 100%;" class="btn btn-outline-danger my-2 my-sm-0"><i class="fas fa-arrow-left"></i>
+              <button [hidden]="conteudoSelecionado.tipo == 'PR'" [disabled]="conteudoSelecionado.id == idConteudoInicial" (click)="selecionarConteudo(null, 'a')" style="width: 100%;" class="btn btn-outline-danger my-2 my-sm-0"><i class="fas fa-arrow-left"></i>
                 Anterior</button>
             </div>
             <div class="col-xl-6" style="text-align: right;">
-              <button [disabled]="conteudoSelecionado.id == idConteudoFinal" (click)="selecionarConteudo(null, 'p')" style="width: 100%;" class="btn btn-outline-success my-2 my-sm-0">Próximo
+              <button [hidden]="conteudoSelecionado.tipo == 'PR'" [disabled]="conteudoSelecionado.id == idConteudoFinal" (click)="selecionarConteudo(null, 'p')" style="width: 100%;" class="btn btn-outline-success my-2 my-sm-0">Próximo
                 <i class="fas fa-arrow-right"></i>
               </button>
             </div>
@@ -61,11 +61,12 @@
               <mat-divider></mat-divider>
             </div>
             <div *ngIf="conteudoSelecionado.id != 0" class="col-xl-12">
-              <div *ngIf="conteudoSelecionado.tipo == 'VI'">
-                {{localApi + 'arq_videos/' + conteudoSelecionado.arquivo}}
-                <video *ngIf="conteudoSelecionado.tipo == 'VI'" width="100%" height="450px" controls>
+              <div *ngIf="conteudoSelecionado.tipo == 'VI'" style="width: 100%; height: 450px;">
+                
+                <mat-video [title]="conteudoSelecionado.titulo" showFrameByFrame="true" [src]="localApi + 'arq_videos/' + conteudoSelecionado.arquivo"  ></mat-video>
+                <!-- <video [id]="conteudoSelecionado.id" *ngIf="conteudoSelecionado.tipo == 'VI'" width="100%" height="450px" controls>
                   <source [src]="localApi + 'arq_videos/' + conteudoSelecionado.arquivo" type='video/mp4' />
-                </video>
+                </video> -->
               </div>
 
               <div *ngIf="conteudoSelecionado.tipo == 'VE'">
@@ -76,15 +77,35 @@
                 <pdf-viewer [src]="localApi + 'arq_arquivos/' +conteudoSelecionado.arquivo" [render-text]="true" style="display: block;">
                 </pdf-viewer>
               </div>
+              <div *ngIf="conteudoSelecionado.tipo == 'PR'" style=" overflow-y: scroll;height: 450px;">
+                <div class="row">
+                  <div *ngFor="let prova of conteudoSelecionado.provas" class="col-xl-12">
+                      <h3>{{prova.pergunta}}</h3>
+                      <div *ngIf="prova.tipoComponente == 'E'">
+                        <mat-radio-group
+                          aria-labelledby="example-radio-group-label"
+                          class="example-radio-group"
+                        >
+                          <mat-radio-button class="example-radio-button" *ngFor="let itensProvas of prova.itensProvas" [value]="itensProvas">
+                            {{itensProvas.questao}}
+                          </mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <div *ngIf="prova.tipoComponente == 'M'">
+
+                      </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-xl-12">
               <mat-divider></mat-divider>
             </div>
-            <div *ngIf="conteudoSelecionado.id != 0" class="col-xl-12" style="margin: 10px;height: 450px;">
+            <div *ngIf="conteudoSelecionado.id != 0 && conteudoSelecionado.tipo != 'PR'"  class="col-xl-12" style="margin: 10px;height: 450px;">
               <span>
                 <h5>Aula: {{conteudoSelecionado.titulo}}</h5>
               </span>
-              <mat-tab-group animationDuration="0ms">
+              <mat-tab-group  animationDuration="0ms">
                 <mat-tab label="Anexos"> 
                   <div *ngIf="conteudoSelecionado.anexos.length > 0">
                     <ul>

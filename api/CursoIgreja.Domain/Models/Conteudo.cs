@@ -27,6 +27,8 @@ namespace CursoIgreja.Domain.Models
 
         public List<Anexo> Anexos { get; set; }
         public List<ConteudoUsuario> ConteudoUsuarios { get; set; }
+        public List<Prova> Provas { get; set; }
+
 
         [NotMapped]
         public bool ConteudoConcluido { get; set; }

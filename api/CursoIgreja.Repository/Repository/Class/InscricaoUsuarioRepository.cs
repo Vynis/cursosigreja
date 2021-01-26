@@ -52,6 +52,8 @@ namespace CursoIgreja.Repository.Repository.Class
                                                                 .Include("ProcessoInscricao.Curso.Modulo.Conteudos")
                                                                 .Include("ProcessoInscricao.Curso.Modulo.Conteudos.Anexos")
                                                                 .Include("ProcessoInscricao.Curso.Modulo.Conteudos.ConteudoUsuarios")
+                                                                .Include("ProcessoInscricao.Curso.Modulo.Conteudos.Provas")
+                                                                .Include("ProcessoInscricao.Curso.Modulo.Conteudos.Provas.ItensProvas")
                                                                 .Include(c => c.TransacaoInscricoes);
 
             return await query.Where(c => c.Id == id).FirstOrDefaultAsync();

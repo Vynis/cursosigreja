@@ -1,5 +1,6 @@
 import { Anexo } from "./anexo.model";
 import { ConteudoUsuario } from "./conteudoUsuario.model";
+import { Prova } from "./prova.model";
 
 
 export class Conteudo {
@@ -19,4 +20,5 @@ export class Conteudo {
     conteudoConcluido: boolean;
 
     anexos: Anexo[];
+    provas: Prova[];
 }

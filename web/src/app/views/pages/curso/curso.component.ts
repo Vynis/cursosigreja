@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Curso } from '../../../core/processo-inscricao/_models/curso.model';
 import { InscricaoUsuarioService } from '../../../core/inscricao-usuario/_services/inscricaoUsuario.service';
@@ -13,7 +13,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { OrderPipe } from 'ngx-order-pipe';
 import { environment } from '../../../../environments/environment';
 import { ConteudoUsuario } from '../../../core/inscricao-usuario/_models/conteudoUsuario.model';
-import { result } from 'lodash';
+
 
 @Component({
   selector: 'kt-curso',

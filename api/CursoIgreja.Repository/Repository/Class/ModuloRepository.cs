@@ -27,6 +27,8 @@ namespace CursoIgreja.Repository.Repository.Class
                                                                 .Include(c => c.Conteudos)
                                                                 .Include("Conteudos.Anexos")
                                                                 .Include("Conteudos.ConteudoUsuarios")
+                                                                .Include("Conteudos.Provas")
+                                                                .Include("Conteudos.Provas.ItensProvas")
                                                                 .Include(c => c.Curso);
 
             return await query.AsNoTracking().OrderBy(c => c.Ordem).ToArrayAsync();

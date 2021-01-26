@@ -12,6 +12,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
+import { MatVideoModule } from 'mat-video';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
+
 
 @NgModule({
 	imports: [
@@ -34,7 +38,10 @@ import {MatIconModule} from '@angular/material/icon';
 		MatProgressSpinnerModule,
 		MatSidenavModule,
 		MatToolbarModule,
-		MatIconModule
+		MatIconModule,
+		MatVideoModule,
+		MatCheckboxModule,
+		MatRadioModule
 	],
 	declarations: [CursoComponent]
 })

@@ -27,7 +27,9 @@ namespace CursoIgreja.Repository.Repository.Class
                                                                 .Include(c => c.Conteudo)
                                                                 .Include(c => c.Conteudo.Anexos)
                                                                 .Include(c => c.Usuarios)
-                                                                .Include(c => c.Conteudo.Modulo);
+                                                                .Include(c => c.Conteudo.Modulo)
+                                                                .Include(c => c.Conteudo.Provas)
+                                                                .Include("Conteudo.Provas.ItensProvas");
 
             return await query.AsNoTracking().ToArrayAsync();
         }

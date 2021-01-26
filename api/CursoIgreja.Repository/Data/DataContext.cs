@@ -25,6 +25,8 @@ namespace CursoIgreja.Repository.Data
         public DbSet<Conteudo> Conteudos { get; set; }
         public DbSet<Anexo> Anexos { get; set; }
         public DbSet<ConteudoUsuario> ConteudoUsuarios { get; set; }
+        public DbSet<Prova> Provas { get; set; }
+        public DbSet<ItemProva> ItemProvas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
