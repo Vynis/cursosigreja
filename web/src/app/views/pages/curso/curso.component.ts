@@ -13,6 +13,10 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { OrderPipe } from 'ngx-order-pipe';
 import { environment } from '../../../../environments/environment';
 import { ConteudoUsuario } from '../../../core/inscricao-usuario/_models/conteudoUsuario.model';
+import { ItemProva } from '../../../core/inscricao-usuario/_models/itemprova.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatCheckboxChange, MatRadioChange } from '@angular/material';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -36,6 +40,11 @@ export class CursoComponent implements OnInit {
   public idConteudoInicial = 0;
   public idConteudoFinal = 0;
   public qtdProgresso = 0;
+  public itensProvaSelecionado: ItemProva[];
+  @ViewChild('formulario', {static: false}) formulario;
+  checkboxValorSelecionado = {};
+  groupboxValorSelecionado = {};
+  exiteErro = false;
 
   constructor(
     public inscricaoUsuarioService: InscricaoUsuarioService,
@@ -43,7 +52,8 @@ export class CursoComponent implements OnInit {
     private sanitizer: DomSanitizer,
     media: MediaMatcher,
     changeDetectorRef: ChangeDetectorRef,
-    private orderPipe: OrderPipe
+    private orderPipe: OrderPipe,
+    private fb: FormBuilder
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -195,6 +205,121 @@ export class CursoComponent implements OnInit {
 
     this.qtdProgresso = (contConcluido * 100) / contGeral;
 
+  }
+
+  enviarProva(conteudo: Conteudo) {
+    console.log(this.checkboxValorSelecionado['item-7']);
+    console.log(this.groupboxValorSelecionado['conteudo-1']);
+    this.exiteErro = this.validaCampos();
+
+    if (this.exiteErro)
+      return;
+
+    Swal.fire({
+      title: 'Tem certeza que deseja enviar',
+      text: '',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: "Não",
+      reverseButtons: true,
+      allowOutsideClick: false
+    }).then( result => {
+      if (result.value) {
+
+
+
+      }
+    });
+
+    this.validaQuestoes();
+
+
+    //console.log(this.formulario.nativeElement['0'].value);
+  }
+
+  private validaQuestoes() {
+    let acertos = 0;
+    let erros = 0;
+    let acertosItensM = 0;
+    let errosItensM = 0;
+
+    this.conteudoSelecionado.provas.forEach(prov => {
+      if (prov.tipoComponente == "E") {
+        prov.itensProvas.forEach(itens => {
+          if (itens.questaoCorreta == 'S') {
+            if (this.groupboxValorSelecionado['conteudo-' + prov.id] == itens.id)
+              acertos++;
+
+            else
+              erros++;
+          }
+        });
+      }
+
+      if (prov.tipoComponente == "M") {
+        prov.itensProvas.forEach(itens => {
+          if (itens.questaoCorreta == 'S') {
+            if (this.checkboxValorSelecionado['item-' + itens.id] == true)
+              acertosItensM++;
+
+            else
+              errosItensM++;
+          }
+        });
+
+        if (errosItensM > 0)
+          erros++;
+
+        else
+          acertos++;
+
+      }
+
+    });
+
+
+    if(this.conteudoSelecionado.minAcerto > 0){
+      
+    }
+
+  }
+
+  private validaCampos() {
+
+    let exiteErro = false;
+
+    this.conteudoSelecionado.provas.forEach(prov => {
+      if (prov.tipoComponente == "E") {
+        if (this.groupboxValorSelecionado['conteudo-' + prov.id] == undefined || this.groupboxValorSelecionado['conteudo-' + prov.id] == '')
+          exiteErro = true;
+      }
+
+      if (prov.tipoComponente == "M") {
+        let validaItens = false;
+        prov.itensProvas.forEach(itens => {
+          if (this.checkboxValorSelecionado['item-' + itens.id] == true)
+            validaItens = true;
+        });
+        if (!validaItens)
+          exiteErro = true;
+      }
+
+      if (prov.tipoComponente == "T") {
+        if (this.formulario.nativeElement['conteudo-' + prov.id].value == '')
+         exiteErro = true;
+      }
+    });
+
+    return exiteErro;
+  }
+
+  atualizaChechkBoxSelecionado(event: MatCheckboxChange, name) {
+    this.checkboxValorSelecionado[name] = event.checked;
+  }
+
+  atualizaGroupBoxSelecionado(event: MatRadioChange, name) {
+    this.groupboxValorSelecionado[name] = event.value;
   }
 
 }

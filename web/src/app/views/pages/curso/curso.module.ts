@@ -15,6 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { MatVideoModule } from 'mat-video';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -41,7 +42,9 @@ import {MatRadioModule} from '@angular/material/radio';
 		MatIconModule,
 		MatVideoModule,
 		MatCheckboxModule,
-		MatRadioModule
+		MatRadioModule,
+		FormsModule,
+		ReactiveFormsModule
 	],
 	declarations: [CursoComponent]
 })
