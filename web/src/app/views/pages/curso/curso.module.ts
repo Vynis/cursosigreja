@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { MatDividerModule, MatExpansionModule,MatTabsModule,MatListModule } from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule } from 'ngx-order-pipe';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -16,6 +15,7 @@ import { MatVideoModule } from 'mat-video';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EmbedVideo } from 'ngx-embed-video';
 
 
 @NgModule({
@@ -35,7 +35,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 			}
 		]),
 		OrderModule,
-		PdfViewerModule,
 		MatProgressSpinnerModule,
 		MatSidenavModule,
 		MatToolbarModule,
@@ -44,8 +43,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 		MatCheckboxModule,
 		MatRadioModule,
 		FormsModule,
-		ReactiveFormsModule
-	],
+		ReactiveFormsModule,
+		EmbedVideo
+	],	
 	declarations: [CursoComponent]
 })
 export class CursoModule { }

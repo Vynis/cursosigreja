@@ -8,6 +8,7 @@ import { environment } from '../../../../environments/environment';
 import { ModeloBase } from '../../_base/crud/models/modelo-base';
 import { ConteudoUsuario } from '../_models/conteudoUsuario.model';
 import { InscricaoUsuario } from '../_models/inscricaoUsuario.model';
+import { ProvaUsuario } from '../_models/provaUsuario.model';
 
 
 @Injectable()
@@ -96,6 +97,10 @@ export class InscricaoUsuarioService {
 
     buscarModuloCurso(idCurso: number) {
         return this.http.get<ModeloBase>(`${this.caminhoApi}modulo/buscar-modulo-curso/${idCurso}`)
+    }
+
+    salvarProva(provaUsuario: ProvaUsuario[]) {
+        return this.http.post(`${this.caminhoApi}prova-usuario/salvar-prova`, {provaUsuario: provaUsuario});
     }
 
 

@@ -23,11 +23,15 @@ namespace CursoIgreja.Domain.Models
         [Column("valor")]
         public decimal  Valor { get; set; }
 
+        public DateTime? DataInicalPagto { get; set; }
+        public DateTime? DataFinalPagto { get; set; }
+
         [Column("cursoid")]
         public int CursoId { get; set; }
         public Curso Curso { get; set; }
 
         public List<InscricaoUsuario> InscricaoUsuarios { get; set; }
+        public List<LiberacaoModulo> LiberacaoModulos { get; set; }
 
     }
 }

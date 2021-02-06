@@ -1,4 +1,5 @@
 import { Conteudo } from "./conteudos.model";
+import { LiberacaoModulo } from "./liberacaoModulo.model";
 
 
 export class Modulo {
@@ -7,4 +8,5 @@ export class Modulo {
     ordem: number;
     cursoId: number;
     conteudos: Conteudo[];
+    liberacaoModulos: LiberacaoModulo[];
 }

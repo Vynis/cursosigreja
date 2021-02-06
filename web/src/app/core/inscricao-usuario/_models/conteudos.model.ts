@@ -1,5 +1,6 @@
 import { Anexo } from "./anexo.model";
 import { ConteudoUsuario } from "./conteudoUsuario.model";
+import { Modulo } from "./modulos.model";
 import { Prova } from "./prova.model";
 
 
@@ -18,6 +19,7 @@ export class Conteudo {
     linkConteudoExterno: string ;
     moduloId: number;
     conteudoConcluido: boolean;
+    modulo: Modulo;
 
     anexos: Anexo[];
     provas: Prova[];

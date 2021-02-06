@@ -20,5 +20,6 @@ namespace CursoIgreja.Domain.Models
         public Conteudo Conteudo { get; set; }
 
         public List<ItemProva> ItensProvas { get; set; }
+        public List<ProvaUsuario> ProvaUsuarios { get; set; }
     }
 }

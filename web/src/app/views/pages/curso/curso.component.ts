@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Curso } from '../../../core/processo-inscricao/_models/curso.model';
 import { InscricaoUsuarioService } from '../../../core/inscricao-usuario/_services/inscricaoUsuario.service';
 import { Modulo } from '../../../core/inscricao-usuario/_models/modulos.model';
@@ -16,7 +16,10 @@ import { ConteudoUsuario } from '../../../core/inscricao-usuario/_models/conteud
 import { ItemProva } from '../../../core/inscricao-usuario/_models/itemprova.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange, MatRadioChange } from '@angular/material';
-import Swal from 'sweetalert2';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { EmbedVideoService } from 'ngx-embed-video';
+import { ItemProvaUsuario } from '../../../core/inscricao-usuario/_models/itemprovaUsuario.model';
+import { ProvaUsuario } from '../../../core/inscricao-usuario/_models/provaUsuario.model';
 
 
 @Component({
@@ -35,7 +38,7 @@ export class CursoComponent implements OnInit {
   public setCarregamento = new Subject<boolean>();
   public carregou: Observable<boolean>;
   mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
+  // private _mobileQueryListener: () => void;
   public localApi: string = '';
   public idConteudoInicial = 0;
   public idConteudoFinal = 0;
@@ -45,19 +48,21 @@ export class CursoComponent implements OnInit {
   checkboxValorSelecionado = {};
   groupboxValorSelecionado = {};
   exiteErro = false;
+  urlVideoSelecionado = '';
+
+  @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
 
   constructor(
     public inscricaoUsuarioService: InscricaoUsuarioService,
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer,
-    media: MediaMatcher,
-    changeDetectorRef: ChangeDetectorRef,
+    private media: MediaMatcher,
+    // changeDetectorRef: ChangeDetectorRef,
     private orderPipe: OrderPipe,
-    private fb: FormBuilder
+    private router: Router
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+    // this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    // this.mobileQuery.addListener(this._mobileQueryListener);
     this.localApi = environment.api.replace('api/', '');
   }
 
@@ -73,14 +78,28 @@ export class CursoComponent implements OnInit {
 
     this.route.params.subscribe(param => {
       if (param['id']) {
-
         this.buscaDadosCurso(param['id']);
-
       } else {
-        console.log("sem id");
+        this.alertaSemConteudoCurso();
       }
     });
 
+    
+
+  }
+
+  alertaSemConteudoCurso() {
+    Swal.fire({
+      title: 'Atenção',
+      text: 'Não foi disponibilizado nenhum contéudo para o curso. Aguarde..',
+      icon: 'warning',
+      confirmButtonText: 'Voltar',
+      allowOutsideClick: false
+    }).then((result: any) => {
+      if (result.value) {
+        this.router.navigateByUrl('/dashboard');
+      }
+    });
   }
 
   buscaDadosCurso(idInscricao: number) {
@@ -88,20 +107,66 @@ export class CursoComponent implements OnInit {
       res => {
         // console.log(res);
         if (res.success) {
-          let dados = res.dados;
-          this.curso = dados.processoInscricao.curso;
-          this.modulos = this.orderPipe.transform(dados.processoInscricao.curso.modulo, 'ordem');
+          if (res.dados) {
+            let dados = res.dados;
+            this.curso = dados.processoInscricao.curso;
 
-          this.idConteudoInicial = this.modulos[0].conteudos[0].id;
-          this.idConteudoFinal = this.modulos[this.modulos.length - 1].conteudos[this.modulos[this.modulos.length - 1].conteudos.length - 1].id;
+            if (dados.processoInscricao.curso.modulo.length == 0)
+            {
+              this.alertaSemConteudoCurso();
+              return;
+            }
 
-          //Modulo inicial
-          this.calcularProgresso();
-          this.selecionarConteudo(this.modulos[0].conteudos[0]);
-          this.buscarUltimoConteudoUsuario(dados.processoInscricao.cursoId);
+            let listaModulos: Modulo[] = [];
 
-          this.setCarregamento.next(true);
+            dados.processoInscricao.curso.modulo.forEach(modulo => {
+              if (modulo.liberacaoModulos.length > 0) {
+                if (new Date() > new Date(modulo.liberacaoModulos[0].dataInicio))
+                  listaModulos.push(modulo);
+              }
+              else {
+                listaModulos.push(modulo);
+              }
+            });
+            
+            dados.processoInscricao.curso.modulo = listaModulos;
+
+            
+            if (dados.processoInscricao.curso.modulo.length == 0)
+            {
+              this.alertaSemConteudoCurso();
+              return;
+            }
+
+              
+            this.modulos = this.orderPipe.transform(dados.processoInscricao.curso.modulo, 'ordem');
+            
+            if (this.modulos[0].conteudos.length == 0){
+              this.alertaSemConteudoCurso();
+              return;
+            }
+              
+            this.idConteudoInicial = this.modulos[0].conteudos[0].id;
+            this.idConteudoFinal = this.modulos[this.modulos.length - 1].conteudos[this.modulos[this.modulos.length - 1].conteudos.length - 1].id;
+  
+            //Modulo inicial
+            this.calcularProgresso();
+            this.selecionarConteudo(this.modulos[0].conteudos[0], '', this.modulos[0]);
+            this.buscarUltimoConteudoUsuario(dados.processoInscricao.cursoId);
+  
+            this.setCarregamento.next(true);
+          }
+          else {
+            this.alertaSemConteudoCurso();
+          }
+
         }
+        else {
+          this.alertaSemConteudoCurso();
+        }
+      },
+      erro => {
+        this.alertaSemConteudoCurso();
       }
     )
   }
@@ -111,14 +176,15 @@ export class CursoComponent implements OnInit {
       if (result.success) {
         if (result.dados.length > 0){
           let conteudoUsuario = this.orderPipe.transform(result.dados,'dataConclusao',true);
-          this.selecionarConteudo(conteudoUsuario[0].conteudo);
+          console.log(result.dados);
+          this.selecionarConteudo(conteudoUsuario[0].conteudo,'', conteudoUsuario[0].conteudo.modulo);
         }
       }
     })
   }
 
-  selecionarConteudo(conteudo: Conteudo, acao: string = '') {
-
+  selecionarConteudo(conteudo: Conteudo, acao: string = '', modulo: Modulo = null) {
+    
     if (conteudo == null) {
 
       var ehProximoModulo = false;
@@ -135,8 +201,10 @@ export class CursoComponent implements OnInit {
             //Busa proximo dentro o proprio modulo
             const retornaProximo = mod.conteudos.find(cont => cont.ordem > this.conteudoSelecionado.ordem);
 
-            if (retornaProximo) 
+            if (retornaProximo) {
               this.conteudoSelecionado = retornaProximo;
+              this.conteudoSelecionado.modulo = mod;
+            }
             else 
               ehProximoModulo = true;  
           }
@@ -150,8 +218,10 @@ export class CursoComponent implements OnInit {
             //Busa anterior dentro o proprio modulo
             const retornaAnterior = mod.conteudos.find(cont => cont.ordem == (this.conteudoSelecionado.ordem - 1 ) );
 
-            if (retornaAnterior) 
+            if (retornaAnterior){
               this.conteudoSelecionado = retornaAnterior;
+              this.conteudoSelecionado.modulo = mod;
+            }
             else 
               this.conteudoSelecionado = this.modulos[i - 1].conteudos[this.modulos[i - 1].conteudos.length - 1]; 
           }
@@ -164,7 +234,14 @@ export class CursoComponent implements OnInit {
     } else {
       this.salvarConteudoUsuario(conteudo);      
       this.conteudoSelecionado = conteudo;
+      this.conteudoSelecionado.modulo = modulo;
     }
+
+    if (this.conteudoSelecionado.tipo == 'VE') {
+      if (this.videoplayer != undefined)
+        this.videoplayer.nativeElement.setAttribute('src', this.conteudoSelecionado.arquivo);
+    }
+
   }
 
   salvarConteudoUsuario(conteudo: Conteudo) {
@@ -184,7 +261,21 @@ export class CursoComponent implements OnInit {
   atualizaModulos() {
     this.inscricaoUsuarioService.buscarModuloCurso(this.curso.id).subscribe(res => {
       if (res.success) {
-        this.modulos = res.dados;
+        let dados = res.dados;
+
+        let listaModulos: Modulo[] = [];
+
+        dados.forEach(modulo => {
+          if (modulo.liberacaoModulos.length > 0) {
+            if (new Date() > new Date(modulo.liberacaoModulos[0].dataInicio))
+              listaModulos.push(modulo);
+          }
+          else {
+            listaModulos.push(modulo);
+          }
+        });
+
+        this.modulos = listaModulos;
         this.calcularProgresso();
       }
     })
@@ -203,20 +294,18 @@ export class CursoComponent implements OnInit {
       })
     })
 
-    this.qtdProgresso = (contConcluido * 100) / contGeral;
+    this.qtdProgresso = Math.round((contConcluido * 100) / contGeral);
 
   }
 
   enviarProva(conteudo: Conteudo) {
-    console.log(this.checkboxValorSelecionado['item-7']);
-    console.log(this.groupboxValorSelecionado['conteudo-1']);
     this.exiteErro = this.validaCampos();
 
     if (this.exiteErro)
       return;
 
     Swal.fire({
-      title: 'Tem certeza que deseja enviar',
+      title: 'Tem certeza que deseja enviar o teste',
       text: '',
       icon: 'success',
       showCancelButton: true,
@@ -226,16 +315,10 @@ export class CursoComponent implements OnInit {
       allowOutsideClick: false
     }).then( result => {
       if (result.value) {
-
-
-
+        this.validaQuestoes();
       }
     });
 
-    this.validaQuestoes();
-
-
-    //console.log(this.formulario.nativeElement['0'].value);
   }
 
   private validaQuestoes() {
@@ -243,6 +326,7 @@ export class CursoComponent implements OnInit {
     let erros = 0;
     let acertosItensM = 0;
     let errosItensM = 0;
+    let contDiscursiva = 0;
 
     this.conteudoSelecionado.provas.forEach(prov => {
       if (prov.tipoComponente == "E") {
@@ -250,7 +334,6 @@ export class CursoComponent implements OnInit {
           if (itens.questaoCorreta == 'S') {
             if (this.groupboxValorSelecionado['conteudo-' + prov.id] == itens.id)
               acertos++;
-
             else
               erros++;
           }
@@ -270,17 +353,89 @@ export class CursoComponent implements OnInit {
 
         if (errosItensM > 0)
           erros++;
-
         else
           acertos++;
 
       }
 
+      if (prov.tipoComponente == "T")
+        contDiscursiva++;
+
     });
 
+    let msg = '';
+    if (acertos == (this.conteudoSelecionado.provas.length - contDiscursiva) ) {
 
-    if(this.conteudoSelecionado.minAcerto > 0){
-      
+      msg = 'Você acertou todas as questões objetivas.';
+      if (contDiscursiva > 0)
+        msg += '<br>As questões discursivas será analisada pelo seu professor.'
+
+      this.salvarProva();
+
+      Swal.fire({
+        title: 'Parabéns!!',
+        html: msg,
+        icon: 'success',
+        confirmButtonText: 'Ir pra proxima etapa?',
+        allowOutsideClick: false
+      }).then((result: any) => {
+        if (result.value) {
+          this.selecionarConteudo(null, 'p');
+          location.reload();
+        }
+      });
+    }
+
+    if (erros > 0) {
+      msg = `Das ${this.conteudoSelecionado.provas.length} questões você acertou ${acertos}.`;
+
+      if (this.conteudoSelecionado.minAcerto > 0){
+        if (acertos <  this.conteudoSelecionado.minAcerto) {
+          msg+= `<br>E necessário acertar pelo menos ${this.conteudoSelecionado.minAcerto} questões para passar pra poxima etapa! `;
+          Swal.fire({
+            title: 'Ops!!',
+            html: msg,
+            icon: 'error',
+            confirmButtonText: 'Reveja suas respostas',
+          }).then(result => { 
+            if (result.value)
+              this.selecionarConteudo(this.conteudoSelecionado);
+          })
+        }
+        else {
+
+          this.salvarProva();
+    
+          Swal.fire({
+            title: 'Parabéns!!',
+            html: msg,
+            icon: 'success',
+            confirmButtonText: 'Ir pra proxima etapa?',
+            allowOutsideClick: false
+          }).then((result: any) => {
+            if (result.value) {
+              this.selecionarConteudo(null, 'p');
+              location.reload();
+            }
+          });
+
+        }
+      }
+      else {
+        msg+= '<br>É obrigatorio acertar todas as questões para passar pra proxima etapa!';
+        Swal.fire({
+          title: 'Ops!!',
+          html: msg,
+          icon: 'error',
+          confirmButtonText: 'Reveja suas respostas',
+          allowOutsideClick: false
+        }).then((result: any) => {
+          if (result.value) {
+            if (result.value)
+              this.selecionarConteudo(this.conteudoSelecionado);
+          }
+        });
+      }
     }
 
   }
@@ -313,6 +468,43 @@ export class CursoComponent implements OnInit {
 
     return exiteErro;
   }
+
+  salvarProva() {
+    var idItensProva = [];
+    var provaUsuario: ProvaUsuario[] = [];
+    
+
+    this.conteudoSelecionado.provas.forEach(prov => { 
+      var itensProvaUsuario: ItemProvaUsuario[] = [];
+
+      if (prov.tipoComponente == "E") { 
+        prov.itensProvas.forEach(itens => {
+          if (this.groupboxValorSelecionado['conteudo-' + prov.id] == itens.id)
+            itensProvaUsuario.push({ id: 0,  provaUsuarioId: 0, itensProvaId: itens.id});
+        });
+      }
+
+      if (prov.tipoComponente == "M") {
+        prov.itensProvas.forEach(itens => {
+            if (this.checkboxValorSelecionado['item-' + itens.id] == true)
+              itensProvaUsuario.push({ id: 0,  provaUsuarioId: 0, itensProvaId: itens.id});
+        });
+      }
+
+      var pergunta = '';
+
+      if (prov.tipoComponente == "T") {
+        pergunta = this.formulario.nativeElement['conteudo-' + prov.id].value;
+      }
+
+      provaUsuario.push({ id: 0, provaId: prov.id, itemProvaUsuarios: itensProvaUsuario, perguntaTexto: pergunta , usuarioId: 0 });
+    })
+
+    console.log(provaUsuario);
+
+    this.inscricaoUsuarioService.salvarProva(provaUsuario).subscribe();
+  }
+
 
   atualizaChechkBoxSelecionado(event: MatCheckboxChange, name) {
     this.checkboxValorSelecionado[name] = event.checked;

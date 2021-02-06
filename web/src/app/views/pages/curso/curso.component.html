@@ -19,20 +19,20 @@
       <mat-nav-list style="width: 300px" dense>
         <div class="row">
           <span class="col-xl-2"></span>
-          <span class="col-xl-8" style="font-size: medium; text-align: center;"> Progresso {{qtdProgresso}}<p>
+          <span class="col-xl-8" style="font-size: medium; text-align: center;"> Progresso<p>
               <ngb-progressbar type="success" textType="white" [value]="qtdProgresso" [showValue]="true">
               </ngb-progressbar>
             </p></span>
           <span class="col-xl-2"></span>
         </div>
-        <mat-expansion-panel [disabled]="conteudoSelecionado.tipo == 'PR'"
+        <mat-expansion-panel [disabled]="conteudoSelecionado.tipo == 'PR' && conteudoSelecionado.provas[0].provaUsuarios == null"
           [expanded]="mod.id == this.conteudoSelecionado.moduloId && conteudoSelecionado.tipo != 'PR'"
           *ngFor="let mod of modulos | orderBy: 'ordem'" [class.mat-elevation-z0]="true" dense>
           <mat-expansion-panel-header>
             {{mod.titulo}}
           </mat-expansion-panel-header>
           <mat-nav-list dense>
-            <div mat-list-item [class.active]="conteudoSelecionado.id == cont.id" (click)="selecionarConteudo(cont)"
+            <div mat-list-item [class.active]="conteudoSelecionado.id == cont.id" (click)="selecionarConteudo(cont,'', mod)"
               *ngFor="let cont of mod.conteudos | orderBy: 'ordem'" class="e"
               style="padding-bottom: 10px; padding-left: 23px; padding-top: 10px;">
               {{cont.titulo}}
@@ -78,71 +78,77 @@
                 </video> -->
               </div>
 
-              <div *ngIf="conteudoSelecionado.tipo == 'VE'">
-                <iframe [src]="conteudoSelecionado.arquivo | safe: 'resourceUrl'" frameborder="0" width="100%"
-                  height="450px"></iframe>
+              <div *ngIf="conteudoSelecionado.tipo == 'VE'" >
+                
+              
+                <video #videoPlayer autoplay controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
+                  <source src="{{conteudoSelecionado.arquivo}}" type='video/mp4'/>
+               </video> 
               </div>
               <div *ngIf="conteudoSelecionado.tipo == 'DO'" style=" overflow-y: scroll;height: 450px;">
-                <pdf-viewer [src]="localApi + 'arq_arquivos/' +conteudoSelecionado.arquivo" [render-text]="true"
-                  style="display: block;">
-                </pdf-viewer>
+                <a [href]="localApi + 'arq_arquivos/' +conteudoSelecionado.arquivo" target="_blank" >Clique aqui</a> para baixar o arquivo.
               </div>
 
               <div *ngIf="conteudoSelecionado.tipo == 'PR'" >
-                <form #formulario>
-                  <div class="row" style="padding-bottom: 15px; padding-top: 15px;">
-                    <div class="col-xl-12" style="text-align: center;">
-                      <h2>{{conteudoSelecionado.titulo}}</h2>
+                <div *ngIf="conteudoSelecionado.provas[0].provaUsuarios.length > 0" style="height: 450px; text-align: center; padding-top: 100px;" > 
+                 <h1>Parabéns.. Você já respondeu avaliação.</h1> 
+                </div>
+                <div *ngIf="conteudoSelecionado.provas[0].provaUsuarios.length == 0">
+                  <form  #formulario>
+                    <div class="row" style="padding-bottom: 15px; padding-top: 15px;">
+                      <div class="col-xl-12" style="text-align: center;">
+                        <h2>{{conteudoSelecionado.titulo}}</h2>
+                      </div>
                     </div>
-                  </div>
-
-                  <div *ngFor="let prova of conteudoSelecionado.provas; let i = index" class="row">
-                    <div class="col-xl-3"></div>
-                    <div class="col-xl-6">
-                      <h4>{{(i +1) + ') ' +prova.pergunta}}</h4>
-                      <div *ngIf="prova.tipoComponente == 'E'">
-                        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
-                          [id]="i">
-                          <mat-radio-button (change)="atualizaGroupBoxSelecionado($event,'conteudo-' + prova.id)" class="example-radio-button" *ngFor="let itensProvas of prova.itensProvas" [value]="itensProvas.id">
-                            {{itensProvas.questao}}
-                          </mat-radio-button>
-                        </mat-radio-group>
-                      </div>
-                      <div *ngIf="prova.tipoComponente == 'M'">
-                        <ul>
-                          <li style="padding-bottom: 5px;" *ngFor="let intensProvas of prova.itensProvas">
-                            <mat-checkbox [id]="intensProvas.id" (change)="atualizaChechkBoxSelecionado($event, 'item-' + intensProvas.id)">
-                              {{intensProvas.questao}}
-                            </mat-checkbox>
-                          </li>
-                        </ul>
-                      </div>
-                      <div *ngIf="prova.tipoComponente == 'T'">
-                        <div class="form-group">
-                          <textarea class="form-control" [id]="'conteudo-' + prova.id" cols="40" rows="5"></textarea>
+  
+                    <div *ngFor="let prova of conteudoSelecionado.provas; let i = index" class="row">
+                      <div class="col-xl-3"></div>
+                      <div class="col-xl-6">
+                        <h4>{{(i +1) + ') ' +prova.pergunta}}</h4>
+                        <div *ngIf="prova.tipoComponente == 'M'" style="text-align: right;"><span ><em>*Múltipla escolha</em></span></div>
+                        <div *ngIf="prova.tipoComponente == 'E'">
+                          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                            [id]="i">
+                            <mat-radio-button (change)="atualizaGroupBoxSelecionado($event,'conteudo-' + prova.id)" class="example-radio-button" *ngFor="let itensProvas of prova.itensProvas" [value]="itensProvas.id">
+                              {{itensProvas.questao}}
+                            </mat-radio-button>
+                          </mat-radio-group>
                         </div>
+                        <div *ngIf="prova.tipoComponente == 'M'">
+                          <ul>
+                            <li style="padding-bottom: 5px;" *ngFor="let intensProvas of prova.itensProvas">
+                              <mat-checkbox [id]="intensProvas.id" (change)="atualizaChechkBoxSelecionado($event, 'item-' + intensProvas.id)">
+                                {{intensProvas.questao}}
+                              </mat-checkbox>
+                            </li>
+                          </ul>
+                        </div>
+                        <div *ngIf="prova.tipoComponente == 'T'">
+                          <div class="form-group">
+                            <textarea class="form-control" [id]="'conteudo-' + prova.id" cols="40" rows="5"></textarea>
+                          </div>
+                        </div>
+                        <mat-divider style="padding-bottom: 15px;"></mat-divider>
                       </div>
-                      <mat-divider style="padding-bottom: 15px;"></mat-divider>
+                      <div class="col-xl-3"></div>
                     </div>
-                    <div class="col-xl-3"></div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xl-3"></div>
-                    <div *ngIf="exiteErro" class="col-xl-6 alert alert-warning alert-dismissible fade show" style="text-align: center;" role="alert">
-                      Atenção responda todos itens do questionário.
+                    <div class="row">
+                      <div class="col-xl-3"></div>
+                      <div *ngIf="exiteErro" class="col-xl-6 alert alert-warning alert-dismissible fade show" style="text-align: center;" role="alert">
+                        Atenção responda todos itens do questionário.
+                      </div>
+                      <div class="col-xl-3"></div>
                     </div>
-                    <div class="col-xl-3"></div>
-                  </div>
-                  <div class="row" style="padding-bottom: 15px; padding-top: 15px;">
-                    
-                    <div class="col-xl-3"></div>
-                    <div class="col-xl-6" style="text-align: left;">
-                      <div (click)="enviarProva(conteudoSelecionado)" class="btn btn-primary">Enviar</div>
+                    <div class="row" style="padding-bottom: 15px; padding-top: 15px;">
+                      
+                      <div class="col-xl-3"></div>
+                      <div class="col-xl-6" style="text-align: left;">
+                        <div (click)="enviarProva(conteudoSelecionado)" class="btn btn-primary">Enviar</div>
+                      </div>
+                      <div class="col-xl-3"></div>
                     </div>
-                    <div class="col-xl-3"></div>
-                  </div>
-                </form>
-
+                  </form>
+                </div>
               </div>
             </div>
             <div class="col-xl-12">
@@ -151,7 +157,7 @@
             <div *ngIf="conteudoSelecionado.id != 0 && conteudoSelecionado.tipo != 'PR'" class="col-xl-12"
               style="margin: 10px;height: 450px;">
               <span>
-                <h5>Aula: {{conteudoSelecionado.titulo}}</h5>
+                <h5> {{ conteudoSelecionado.modulo.titulo }} - {{ conteudoSelecionado.titulo}}</h5>
               </span>
               <mat-tab-group animationDuration="0ms">
                 <mat-tab label="Anexos">

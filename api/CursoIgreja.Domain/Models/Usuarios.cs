@@ -73,6 +73,8 @@ namespace CursoIgreja.Domain.Models
         public List<LogUsuario> logUsuario { get; set; }
         public List<ConteudoUsuario> ConteudoUsuarios { get; set; }
 
+        public List<ProvaUsuario> ProvaUsuarios { get; set; }
+
     }
 }
 

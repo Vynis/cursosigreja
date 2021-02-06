@@ -145,19 +145,19 @@ namespace CursoIgrejaApi
                 endpoints.MapControllers();
             });
 
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"arq_anexos")),
-                RequestPath = new PathString("/arq_anexos")
-            });
+            //app.UseStaticFiles(new StaticFileOptions()
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"arq_anexos")),
+            //    RequestPath = new PathString("/arq_anexos")
+            //});
 
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"arq_videos")),
-                RequestPath = new PathString("/arq_videos")
-            });
+            //app.UseStaticFiles(new StaticFileOptions()
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"arq_videos")),
+            //    RequestPath = new PathString("/arq_videos")
+            //});
         }
 
 
@@ -177,6 +177,7 @@ namespace CursoIgrejaApi
             services.AddScoped<IModuloRepository, ModuloRepository>();
             services.AddScoped<IConteudoRepository, ConteudoRepository>();
             services.AddScoped<IConteudoUsuarioRepository, ConteudoUsuarioRepository>();
+            services.AddScoped<IProvaUsuarioRepository, ProvaUsuarioRepository>();
 
         }
     }

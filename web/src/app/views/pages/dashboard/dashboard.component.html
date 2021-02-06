@@ -82,14 +82,14 @@
 							  </div>
 							  <div class="card-footer" style="text-align: center;" > 
 								  <div class="row">
-									<div *ngIf="lista.status == 'AG' && dataAtual <= lista.processoInscricao.dataFinal && lista.processoInscricao.tipo == 'P'" class="col-md-6">
+									<div *ngIf="lista.status == 'AG' && ( dataAtual >= lista.processoInscricao.dataInicalPagto && dataAtual <= lista.processoInscricao.dataFinalPagto) && lista.processoInscricao.tipo == 'P'" class="col-md-6">
 										<div (click)="gerarPagamento(lista)" class="btn btn-success">Pagamento</div>
 									</div>
 									<div *ngIf="lista.status == 'AG'" class="col-md-6">
 										<div (click)="cancelarInscricao(lista.id)" class="btn btn-warning">Cancelar Inscrição</div>
 									</div>
-									<div *ngIf="lista.status == 'CO'" class="col-md-6">
-										<div  class="btn btn-primary">Iniciar o curso</div>
+									<div *ngIf="lista.status == 'CO'" class="col-md-6" style="text-align: left;">
+										<a [routerLink]="['/curso/' + lista.id]"  class="btn btn-primary">Iniciar o curso</a>
 									</div>
 								  </div>
 								

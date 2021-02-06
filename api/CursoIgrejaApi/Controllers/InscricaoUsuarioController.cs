@@ -65,9 +65,8 @@ namespace CursoIgreja.Api.Controllers
                 foreach (var modulo in response.ProcessoInscricao.Curso.Modulo)
                    foreach (var conteudo in modulo.Conteudos)
                         conteudo.ConteudoConcluido = conteudo.ConteudoUsuarios.Exists(x => x.ConteudoId == conteudo.Id && x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Concluido.Equals("S"));
-                   
 
-                return Response(response);
+               return Response(response);
                 
             }
             catch (Exception ex)

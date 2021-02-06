@@ -17,5 +17,6 @@ namespace CursoIgreja.Domain.Models
         public Curso Curso { get; set; }
 
         public List<Conteudo> Conteudos { get; set; }
+        public List<LiberacaoModulo> LiberacaoModulos { get; set; }
     }
 }

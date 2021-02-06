@@ -27,6 +27,9 @@ namespace CursoIgreja.Repository.Data
         public DbSet<ConteudoUsuario> ConteudoUsuarios { get; set; }
         public DbSet<Prova> Provas { get; set; }
         public DbSet<ItemProva> ItemProvas { get; set; }
+        public DbSet<ProvaUsuario> ProvaUsuarios { get; set; }
+        public DbSet<ItemProvaUsuario> ItemProvaUsuarios { get; set; }
+        public DbSet<LiberacaoModulo> LiberacaoModulos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,8 +42,6 @@ namespace CursoIgreja.Repository.Data
                 fk.DeleteBehavior = DeleteBehavior.Restrict;  
 
             base.OnModelCreating(modelBuilder);
-
-
 
         }
 

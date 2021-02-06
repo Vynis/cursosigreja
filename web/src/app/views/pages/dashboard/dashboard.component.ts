@@ -52,6 +52,8 @@ export class DashboardComponent implements OnInit {
 				dados.forEach(element => {
 					element.processoInscricao.dataFinal = new Date(element.processoInscricao.dataFinal);
 					element.processoInscricao.dataInicial = new Date(element.processoInscricao.dataInicial);
+					element.processoInscricao.dataInicalPagto = new Date(element.processoInscricao.dataInicalPagto);
+					element.processoInscricao.dataFinalPagto = new Date(element.processoInscricao.dataFinalPagto);
 				});
 				return dados;
 			})
@@ -69,14 +71,24 @@ export class DashboardComponent implements OnInit {
 	}
 
 	gerarPagamento(inscricao: InscricaoUsuario) {
-		if (inscricao.transacaoInscricoes.length > 0){
-			this.inscricaoUsuarioService.buscaTransacao(inscricao.transacaoInscricoes[0].codigo).subscribe(
-				res => {
-					if (res.success) {
-						this.mensagemTransacao(res);
+		if (inscricao.transacaoInscricoes){
+			if (inscricao.transacaoInscricoes.length > 0){
+				this.inscricaoUsuarioService.buscaTransacao(inscricao.transacaoInscricoes[0].codigo).subscribe(
+					res => {
+						if (res.success) {
+							this.mensagemTransacao(res);
+						}
 					}
-				}
-			)
+				)
+			} else {
+				this.inscricaoUsuarioService.gerarPagamentoSemToken(inscricao.id).subscribe(
+					res => {
+						if (res.success) {
+							this.mensagemTransacao(res);
+						}
+					}
+				);
+			}
 		} else {
 			this.inscricaoUsuarioService.gerarPagamentoSemToken(inscricao.id).subscribe(
 				res => {
@@ -86,6 +98,7 @@ export class DashboardComponent implements OnInit {
 				}
 			);
 		}
+
 	}
 
 	private mensagemTransacao(res: ModeloBase) {
