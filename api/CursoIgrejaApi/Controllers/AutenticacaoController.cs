@@ -37,6 +37,21 @@ namespace CursoIgreja.Api.Controllers
             urlEmailConfig = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("Email")).Result.FirstOrDefault().Valor;
         }
 
+        [HttpGet("gerar-senha")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GerarSenha(string senha)
+        {
+            try
+            {
+                return Response(SenhaHashService.CalculateMD5Hash(senha));
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseErro(ex);
+            }
+        }
+
         [HttpPost()]
         [AllowAnonymous]
         public async Task<IActionResult> Autenticar(AutenticarDto autenticarDto)
@@ -167,6 +182,8 @@ namespace CursoIgreja.Api.Controllers
                 return ResponseErro(ex);
             }
         }
+
+
 
         public static string ModificaValor(string valor)
         {

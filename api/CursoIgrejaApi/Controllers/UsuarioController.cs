@@ -34,7 +34,7 @@ namespace CursoIgreja.Api.Controllers
                 var verficaCadastro = new Usuarios();
 
                 if (!string.IsNullOrEmpty(usuario.Email))
-                    verficaCadastro = _usuarioRepository.Buscar(x => x.Email.Equals(usuario.Email)).Result.FirstOrDefault();
+                    verficaCadastro = _usuarioRepository.Buscar(x => x.Email.ToLower().Equals(usuario.Email.ToLower())).Result.FirstOrDefault();
                 else
                     verficaCadastro = _usuarioRepository.Buscar(x => x.Cpf.Equals(usuario.Cpf)).Result.FirstOrDefault();
 
