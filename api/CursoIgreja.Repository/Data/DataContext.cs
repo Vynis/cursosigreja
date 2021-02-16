@@ -30,6 +30,12 @@ namespace CursoIgreja.Repository.Data
         public DbSet<ProvaUsuario> ProvaUsuarios { get; set; }
         public DbSet<ItemProvaUsuario> ItemProvaUsuarios { get; set; }
         public DbSet<LiberacaoModulo> LiberacaoModulos { get; set; }
+        public DbSet<UsuarioSistema> UsuarioSistemas { get; set; }
+        public DbSet<Perfil> Perfis { get; set; }
+        public DbSet<Permissoes> Permissoes { get; set; }
+        public DbSet<UsuarioPerfis> UsuarioPerfis { get; set; }
+        public DbSet<PerfilPermissoes> PerfilPermissoes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

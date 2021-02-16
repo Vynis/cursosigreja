@@ -81,7 +81,7 @@
               <div *ngIf="conteudoSelecionado.tipo == 'VE'" >
                 
               
-                <video #videoPlayer autoplay controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
+                <video #videoPlayer preload="auto"  poster="../../../../assets/media/video.png" controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
                   <source src="{{conteudoSelecionado.arquivo}}" type='video/mp4'/>
                </video> 
               </div>

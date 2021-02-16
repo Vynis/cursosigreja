@@ -62,7 +62,7 @@ namespace CursoIgreja.Api.Controllers
 
                 var response = await _usuarioRepository.Buscar(x =>( x.Email.Equals(autenticarDto.Email) || x.Cpf.Equals(autenticarDto.Email)) && x.Senha.Equals(autenticarDto.Senha) && x.Status.Equals("A"));
 
-                var usuario = response.FirstOrDefault();
+                var usuario = _mapper.Map<UsuarioAutDto>(response.FirstOrDefault());
 
                 if (usuario == null)
                     return Response("Usuário ou senha incorreto!", false);
