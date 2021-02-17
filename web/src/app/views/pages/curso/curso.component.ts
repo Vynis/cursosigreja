@@ -49,6 +49,8 @@ export class CursoComponent implements OnInit {
   groupboxValorSelecionado = {};
   exiteErro = false;
   urlVideoSelecionado = '';
+  provaUsuario = [];
+  provaRealizada = false;
 
   @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
 
@@ -148,7 +150,9 @@ export class CursoComponent implements OnInit {
               
             this.idConteudoInicial = this.modulos[0].conteudos[0].id;
             this.idConteudoFinal = this.modulos[this.modulos.length - 1].conteudos[this.modulos[this.modulos.length - 1].conteudos.length - 1].id;
-  
+            this.provaUsuario = dados.usuario.provaUsuarios;
+
+
             //Modulo inicial
             this.calcularProgresso();
             this.selecionarConteudo(this.modulos[0].conteudos[0], '', this.modulos[0]);
@@ -176,7 +180,6 @@ export class CursoComponent implements OnInit {
       if (result.success) {
         if (result.dados.length > 0){
           let conteudoUsuario = this.orderPipe.transform(result.dados,'dataConclusao',true);
-          console.log(result.dados);
           this.selecionarConteudo(conteudoUsuario[0].conteudo,'', conteudoUsuario[0].conteudo.modulo);
         }
       }
@@ -241,6 +244,19 @@ export class CursoComponent implements OnInit {
       if (this.videoplayer != undefined)
         this.videoplayer.nativeElement.setAttribute('src', this.conteudoSelecionado.arquivo);
     }
+
+    if (this.conteudoSelecionado.tipo == 'PR') {
+      this.provaRealizada = false;
+
+      if (this.provaUsuario) {
+        this.provaUsuario.forEach( res => {
+          if (res.prova !== null)
+            if (res.prova.conteudoId === this.conteudoSelecionado.id)
+              this.provaRealizada = true;
+        })
+      }  
+    }
+
 
   }
 
@@ -499,8 +515,6 @@ export class CursoComponent implements OnInit {
 
       provaUsuario.push({ id: 0, provaId: prov.id, itemProvaUsuarios: itensProvaUsuario, perguntaTexto: pergunta , usuarioId: 0 });
     })
-
-    console.log(provaUsuario);
 
     this.inscricaoUsuarioService.salvarProva(provaUsuario).subscribe();
   }

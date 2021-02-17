@@ -81,7 +81,7 @@
               <div *ngIf="conteudoSelecionado.tipo == 'VE'" >
                 
               
-                <video #videoPlayer autoplay controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
+                <video #videoPlayer preload="auto"  poster="../../../../assets/media/video.png" controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
                   <source src="{{conteudoSelecionado.arquivo}}" type='video/mp4'/>
                </video> 
               </div>
@@ -90,10 +90,10 @@
               </div>
 
               <div *ngIf="conteudoSelecionado.tipo == 'PR'" >
-                <div *ngIf="conteudoSelecionado.provas[0].provaUsuarios.length > 0" style="height: 450px; text-align: center; padding-top: 100px;" > 
+                <div *ngIf="provaRealizada" style="height: 450px; text-align: center; padding-top: 100px;" > 
                  <h1>Parabéns.. Você já respondeu avaliação.</h1> 
                 </div>
-                <div *ngIf="conteudoSelecionado.provas[0].provaUsuarios.length == 0">
+                <div *ngIf="!provaRealizada">
                   <form  #formulario>
                     <div class="row" style="padding-bottom: 15px; padding-top: 15px;">
                       <div class="col-xl-12" style="text-align: center;">
