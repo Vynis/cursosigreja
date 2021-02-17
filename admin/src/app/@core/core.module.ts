@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthModule, NbDummyAuthStrategy, NbPasswordAuthStrategy } from '@nebular/auth';
+import { NbAuthJWTInterceptor, NbAuthModule, NbDummyAuthStrategy, NbPasswordAuthStrategy } from '@nebular/auth';
 import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf } from 'rxjs';
 
@@ -53,6 +53,7 @@ import { VisitorsAnalyticsService } from './mock/visitors-analytics.service';
 import { SecurityCamerasService } from './mock/security-cameras.service';
 import { MockDataModule } from './mock/mock-data.module';
 import { environment } from '../../environments/environment';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 const socialLinks = [
   {
@@ -109,16 +110,31 @@ export const NB_CORE_PROVIDERS = [
     strategies: [
       NbPasswordAuthStrategy.setup({
         name: 'email',
+        token: {
+          key: 'dados.token'
+        },
         baseEndpoint: environment.api,
         login: {
-          endpoint: '',
-          method: 'post'
+          endpoint: '/authadmin',
+          method: 'post',
+          defaultErrors: ['Email/Senha estão incorreto.'],
+          defaultMessages: ['Logado com sucesso.'],
         }
       }),
     ],
     forms: {
       login: {
         socialLinks: null,
+        strategy: 'email',
+        rememberMe: false,
+        showMessages: {
+          success: true,
+          error: true,
+        },
+        redirect: {
+          success: '/',
+          failure: null
+        }
       },
     },
   }).providers,
@@ -165,7 +181,7 @@ export class CoreModule {
     return {
       ngModule: CoreModule,
       providers: [
-        ...NB_CORE_PROVIDERS,
+        ...NB_CORE_PROVIDERS
       ],
     };
   }

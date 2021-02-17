@@ -33,16 +33,16 @@ namespace CursoIgreja.Api.Controllers
         {
             try
             {
-                autenticarDto.Senha = SenhaHashService.CalculateMD5Hash(autenticarDto.Senha);
+                autenticarDto.Senha = SenhaHashService.CalculateMD5Hash(autenticarDto.Password);
 
                 var response = await _usuarioSistemaRepository.Buscar(x => x.Email.Equals(autenticarDto.Email)  && x.Senha.Equals(autenticarDto.Senha) && x.Status.Equals("A"));
 
                 var usuario = _mapper.Map<UsuarioAutDto>(response.FirstOrDefault());
 
                 if (usuario == null)
-                    return Response("Usuário ou senha incorreto!", false);
+                    return BadRequest();
 
-                var token = TokenService.GenerateToken(usuario, _configuration, true);
+                var token = TokenService.GenerateToken(usuario, _configuration);
 
                 return Response(new { usuario, token });
 

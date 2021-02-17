@@ -1,14 +1,20 @@
 import { of as observableOf,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Contacts, RecentUsers, UserData } from '../data/users';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class UserService extends UserData {
 
   private time: Date = new Date;
 
+  constructor(private http: HttpClient) {
+    super()
+  }
+
   private users = {
-    nick: { name: 'Nick Jones', picture: 'assets/images/nick.png' },
+    nick: { name: 'Nick', picture: 'assets/images/nick.png' },
     eva: { name: 'Eva Moor', picture: 'assets/images/eva.png' },
     jack: { name: 'Jack Williams', picture: 'assets/images/jack.png' },
     lee: { name: 'Lee Wong', picture: 'assets/images/lee.png' },
@@ -39,8 +45,9 @@ export class UserService extends UserData {
     { user: this.users.jack, type: this.types.mobile, time: this.time.setHours(8, 0)},
   ];
 
+
   getUsers(): Observable<any> {
-    return observableOf(this.users);
+    return this.http.get(`${environment.api}/usuario-sistema/buscar-dados-usuario`);
   }
 
   getContacts(): Observable<Contacts[]> {

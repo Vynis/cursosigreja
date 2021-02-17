@@ -11,10 +11,10 @@ namespace CursoIgreja.Api.Services
 {
     public static class TokenService
     {
-        public static string GenerateToken(UsuarioAutDto usuario, IConfiguration _config, bool ehSistema = false)
+        public static string GenerateToken(UsuarioAutDto usuario, IConfiguration _config)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(ehSistema ? _config.GetSection("AppSettings:TokenSistema").Value : _config.GetSection("AppSettings:Token").Value);
+            var key = Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Token").Value);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
