@@ -90,10 +90,10 @@
               </div>
 
               <div *ngIf="conteudoSelecionado.tipo == 'PR'" >
-                <div *ngIf="conteudoSelecionado.provas[0].provaUsuarios.length > 0" style="height: 450px; text-align: center; padding-top: 100px;" > 
+                <div *ngIf="provaRealizada" style="height: 450px; text-align: center; padding-top: 100px;" > 
                  <h1>Parabéns.. Você já respondeu avaliação.</h1> 
                 </div>
-                <div *ngIf="conteudoSelecionado.provas[0].provaUsuarios.length == 0">
+                <div *ngIf="!provaRealizada">
                   <form  #formulario>
                     <div class="row" style="padding-bottom: 15px; padding-top: 15px;">
                       <div class="col-xl-12" style="text-align: center;">
