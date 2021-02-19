@@ -1,0 +1,39 @@
+<div class="example-container">
+  <mat-table 
+  matSort  
+  #sort1="matSort"
+  matSortActive="id" 
+  matSortDirection="asc" 
+  matSortDisableClear 
+  [dataSource]="dataSource">
+
+    <ng-container *ngFor="let col of colunas" [matColumnDef]="col.propriedade">
+      <mat-header-cell [ngStyle]="{'max-width.px': col.maxwidth }"  mat-header-cell *matHeaderCellDef mat-sort-header> {{ col.titulo }} </mat-header-cell>
+      <div *ngIf="!col.usarImg" >
+        <mat-cell [ngStyle]="{'max-width.px': col.maxwidth }" *matCellDef="let element"><span [ngStyle]="{'color': 'blue' }" > {{ col.cell(element) }} </span> </mat-cell>
+      </div>
+      <div *ngIf="col.usarImg" >
+        <mat-cell [ngStyle]="{'max-width.px': col.maxwidth}" *matCellDef="let element"> <img  class="imgjogador" src="{{ col.cell(element) }}" alt="">    </mat-cell>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="acoes.length > 0" matColumnDef="acoesheader" stickyEnd>
+      <mat-header-cell [ngStyle]="{'max-width.px': 200, 'justify-content': 'center'}" *matHeaderCellDef>
+        Ações
+      </mat-header-cell>
+      <mat-cell [ngStyle]="{'max-width.px': 200, 'justify-content': 'center'}" *matCellDef="let row">
+        <span *ngFor="let acao of acoes">
+          <button type="button" (click)="acao.evento(row); $event.stopPropagation(); selected = [row]"
+            *ngIf="acao.visivel ? acao.visivel(row) : true" mat-icon-button [color]="acao.color"
+            [matTooltip]="acao.toolTip">
+            <mat-icon style="width: 17px; padding: 0%; height: 17px;  ">{{acao.icone}}</mat-icon>
+          </button>&nbsp;
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row"></mat-row>
+  </mat-table>
+</div>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

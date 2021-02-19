@@ -69,6 +69,10 @@ const routes: Routes = [{
         .then(m => m.MiscellaneousModule),
     },
     {
+      path: 'cursos',
+      loadChildren: () => import('./cursos/cursos.module').then(m => m.CursosModule),
+    },
+    {
       path: '',
       redirectTo: 'dashboard',
       pathMatch: 'full',
