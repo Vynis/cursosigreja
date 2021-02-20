@@ -1,4 +1,4 @@
-﻿using CursoIgreja.Domain.Models;
+﻿    using CursoIgreja.Domain.Models;
 using CursoIgreja.Repository.Data;
 using CursoIgreja.Repository.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
