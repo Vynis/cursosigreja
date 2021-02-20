@@ -27,6 +27,7 @@ namespace CursoIgreja.Api.Controllers
         private readonly ITransacaoInscricaoRepository _transacaoInscricaoRepository;
         private readonly ILogNotificacoesRepository _logNotificacoesRepository;
         private readonly IProcessoInscricaoRepository _processoInscricaoRepository;
+        private readonly IProvaUsuarioRepository _provaUsuarioRepository;
         private string urlWsPagueSeguro = "";
         private string urlSitePagueSeguro = "";
 
@@ -36,7 +37,8 @@ namespace CursoIgreja.Api.Controllers
                                           IParametroSistemaRepository parametroSistemaRepository,
                                           ITransacaoInscricaoRepository transacaoInscricaoRepository,
                                           ILogNotificacoesRepository logNotificacoesRepository,
-                                          IProcessoInscricaoRepository processoInscricaoRepository
+                                          IProcessoInscricaoRepository processoInscricaoRepository,
+                                          IProvaUsuarioRepository provaUsuarioRepository
                                           )
         {
             _inscricaoUsuarioRepository = inscricaoUsuarioRepository;
@@ -46,6 +48,7 @@ namespace CursoIgreja.Api.Controllers
             _transacaoInscricaoRepository = transacaoInscricaoRepository;
             _logNotificacoesRepository = logNotificacoesRepository;
             _processoInscricaoRepository = processoInscricaoRepository;
+            _provaUsuarioRepository = provaUsuarioRepository;
             urlSitePagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("SitePagueSeguro")).Result.FirstOrDefault().Valor;
             urlWsPagueSeguro = _parametroSistemaRepository.Buscar(x => x.Status.Equals("A") && x.Titulo.Equals("WsPagueSeguro")).Result.FirstOrDefault().Valor;
         }
@@ -61,9 +64,23 @@ namespace CursoIgreja.Api.Controllers
                 if (response.UsuarioId != Convert.ToInt32(User.Identity.Name))
                     return Response("Busca invalida", false);
 
+                var listaProvaUsuario = await _provaUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)));
+
                 foreach (var modulo in response.ProcessoInscricao.Curso.Modulo)
                    foreach (var conteudo in modulo.Conteudos)
-                        conteudo.ConteudoConcluido = conteudo.ConteudoUsuarios.Exists(x => x.ConteudoId == conteudo.Id && x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Concluido.Equals("S"));
+                    {
+                        if (conteudo.Tipo.Equals("PR")) {
+                            var provaUsuario = listaProvaUsuario.Where(x => x.Prova.ConteudoId.Equals(conteudo.Id)).ToList();
+
+                            if (provaUsuario.Count > 0)
+                                conteudo.ConteudoConcluido = true;
+                            else
+                                conteudo.ConteudoConcluido = false;
+                        }
+                        else
+                            conteudo.ConteudoConcluido = conteudo.ConteudoUsuarios.Exists(x => x.ConteudoId == conteudo.Id && x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Concluido.Equals("S"));
+                    }
+                       
 
                return Response(response);
                 

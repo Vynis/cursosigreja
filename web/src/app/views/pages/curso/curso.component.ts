@@ -186,12 +186,50 @@ export class CursoComponent implements OnInit {
     })
   }
 
+  validaProvaUsuario()  {
+
+    var validaDados = true;
+
+    this.modulos.forEach(mod => {
+      var validaProva = true;
+      var conteudoProva: any;
+
+      mod.conteudos.forEach(conte => {
+        if (conte.tipo == 'PR' && !conte.conteudoConcluido)  {
+          conteudoProva = conte;
+          validaProva = false;
+        }
+      })
+
+      if (!validaProva) {
+
+        if (this.conteudoSelecionado.modulo.ordem > mod.ordem) {
+          validaDados = false;
+          var msg = `<br>Para visualizar este contéudo e necessário concluir a avaliação no modulo: ${mod.titulo} `;
+          Swal.fire({
+            title: 'Ops!!',
+            html: msg,
+            icon: 'error',
+            confirmButtonText: 'Ok',
+          }).then(result => { 
+            if (result.value)
+              location.reload();
+          })
+
+        }
+
+      }
+
+    });
+
+    return validaDados;
+  }
+
   selecionarConteudo(conteudo: Conteudo, acao: string = '', modulo: Modulo = null) {
     
     if (conteudo == null) {
 
       var ehProximoModulo = false;
-      var ehAnteriorModulo = false;
 
       if (acao == 'p') {
         this.modulos.forEach(mod => {
@@ -232,12 +270,15 @@ export class CursoComponent implements OnInit {
         })
       }
 
-      this.salvarConteudoUsuario(this.conteudoSelecionado);
+      if (this.validaProvaUsuario())
+        this.salvarConteudoUsuario(this.conteudoSelecionado);
 
     } else {
-      this.salvarConteudoUsuario(conteudo);      
       this.conteudoSelecionado = conteudo;
       this.conteudoSelecionado.modulo = modulo;
+
+      if (this.validaProvaUsuario())
+        this.salvarConteudoUsuario(conteudo);      
     }
 
     if (this.conteudoSelecionado.tipo == 'VE') {

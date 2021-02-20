@@ -25,7 +25,7 @@
             </p></span>
           <span class="col-xl-2"></span>
         </div>
-        <mat-expansion-panel [disabled]="conteudoSelecionado.tipo == 'PR' && conteudoSelecionado.provas[0].provaUsuarios == null"
+        <mat-expansion-panel
           [expanded]="mod.id == this.conteudoSelecionado.moduloId && conteudoSelecionado.tipo != 'PR'"
           *ngFor="let mod of modulos | orderBy: 'ordem'" [class.mat-elevation-z0]="true" dense>
           <mat-expansion-panel-header>
