@@ -5,11 +5,12 @@ import { CursosListaComponent } from './cursos-lista/cursos-lista.component';
 import { CursosCadastroComponent } from './cursos-cadastro/cursos-cadastro.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NbButtonModule, NbCardModule, NbInputModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbInputModule, NbSelectModule, NbTabsetModule } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ComponentsModule } from '../components/components.module';
 import { CursosService } from '../../@core/services/cursos.service';
 import { InterceptService } from '../../@core/utils/intercept.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
 	{
@@ -49,7 +50,10 @@ const routes: Routes = [
     NbCardModule,
 	ComponentsModule,
 	NbInputModule,
-	NbButtonModule
+	NbButtonModule,
+	NbSelectModule,
+	NbTabsetModule,
+	ReactiveFormsModule
   ],
   declarations: [
     CursosComponent,

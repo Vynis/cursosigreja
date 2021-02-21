@@ -11,9 +11,9 @@ namespace FiltrDinamico.Core.Interpreters
 
         internal override Expression CreateExpression(MemberExpression property, ConstantExpression constant)
         {
-            var method = typeof(string).GetMethod(nameof(string.CaseInsensitiveContains), new[] { typeof(string) });
+            var method = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
 
             return Expression.Call(property, method, constant);
-        }
+        } 
     }
 }

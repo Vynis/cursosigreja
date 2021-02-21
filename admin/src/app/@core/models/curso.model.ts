@@ -6,4 +6,11 @@ export class CursoModel {
     descricao: string ;
     cargaHoraria: string ;
     arquivoImg: string ;
+    
+    /**
+     *
+     */
+    constructor() {
+        this.status = 'A';        
+    }
 }

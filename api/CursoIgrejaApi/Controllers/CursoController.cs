@@ -38,6 +38,9 @@ namespace CursoIgreja.Api.Controllers
         {
             try
             {
+                if (filtro.Filtro.Count() == 0)
+                    return Response(await _cursoRepository.ObterTodos());
+
                 return Response(await _cursoRepository.BuscaFiltroDinamico(filtro));
             }
             catch (Exception ex)

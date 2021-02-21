@@ -1,3 +1,69 @@
-<p>
-  cursos-cadastro works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>
+        Cadastro de Cursos
+      </nb-card-header>
+      <nb-card-body>
+        <nb-tabset>
+          <nb-tab tabTitle="Dados básicos">
+            <form [formGroup]="formulario">
+              
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="titulo" class="label">Titulo</label>
+                    <input type="text" class="form-control"
+                    [ngClass]="{'is-invalid': formulario.get('titulo').errors  && formulario.get('titulo').touched}"
+                    nbInput fullWidth id="titulo" placeholder="Titulo" formControlName="titulo" >
+                    <div *ngIf="formulario.get('titulo').hasError('required')  && formulario.get('titulo').touched" class="invalid-feedback">
+                      O titulo é obrigatório.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="cargaHoraria" class="label">Carga Horária</label>
+                    <input type="text" class="form-control" nbInput fullWidth id="cargaHoraria" formControlName="cargaHoraria" placeholder="Carga Horária">
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                    <label for="status" class="label">Status</label><br>
+                    <nb-select id="status" formControlName="status"  selected="A">
+                      <nb-option value="A">Ativo</nb-option>
+                      <nb-option value="I">Inativo</nb-option>
+                    </nb-select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12 col-lg-12">
+                  <div class="form-group">
+                    <label for="descricao" class="label">Descrição</label>
+                    <textarea rows="5" formControlName="descricao"  nbInput fullWidth shape="round" id="descricao" placeholder="Descrição"></textarea>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </nb-tab>
+          <nb-tab tabTitle="Professores">
+            Professores
+          </nb-tab>
+          <nb-tab tabTitle="Modulos">
+            Modulos
+          </nb-tab>
+        </nb-tabset> 
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="row">
+          <div class="col-sm-1">
+            <button type="submit" nbButton status="success">Enviar</button>
+          </div>
+          <div class="col-sm-1">
+            <button type="submit"ghost nbButton status="danger">Voltar</button>
+          </div>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </div>
+</div>
