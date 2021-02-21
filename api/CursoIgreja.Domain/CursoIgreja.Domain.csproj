@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FiltrDinamico.Core\FiltrDinamico.Core.csproj" />
+  </ItemGroup>
+
 </Project>

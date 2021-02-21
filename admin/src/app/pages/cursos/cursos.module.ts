@@ -5,7 +5,7 @@ import { CursosListaComponent } from './cursos-lista/cursos-lista.component';
 import { CursosCadastroComponent } from './cursos-cadastro/cursos-cadastro.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NbCardModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbInputModule } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ComponentsModule } from '../components/components.module';
 import { CursosService } from '../../@core/services/cursos.service';
@@ -47,7 +47,9 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forChild(routes),
     NbCardModule,
-	ComponentsModule
+	ComponentsModule,
+	NbInputModule,
+	NbButtonModule
   ],
   declarations: [
     CursosComponent,

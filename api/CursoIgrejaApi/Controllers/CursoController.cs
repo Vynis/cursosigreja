@@ -1,4 +1,5 @@
-﻿using CursoIgreja.Repository.Repository.Interfaces;
+﻿using CursoIgreja.Domain.Models;
+using CursoIgreja.Repository.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,21 @@ namespace CursoIgreja.Api.Controllers
                 return ResponseErro(ex);
             }
         }
+
+
+        [HttpPost("busca-com-filtro")]
+        public async Task<IActionResult> BuscarComFiltro([FromBody]PaginationFilter filtro)
+        {
+            try
+            {
+                return Response(await _cursoRepository.BuscaFiltroDinamico(filtro));
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
 
     }
 }

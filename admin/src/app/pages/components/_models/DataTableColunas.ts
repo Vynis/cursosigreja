@@ -7,5 +7,4 @@ export interface DataTableColunas {
     usarImg?:boolean;
     urlImg?:string;
     maxwidth?:number;
-    cor?: (row) => string;
 }

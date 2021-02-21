@@ -8,6 +8,8 @@ using AutoMapper;
 using CursoIgreja.Repository.Data;
 using CursoIgreja.Repository.Repository.Class;
 using CursoIgreja.Repository.Repository.Interfaces;
+using FiltrDinamico.Core;
+using FiltrDinamico.Core.Interpreters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -163,6 +165,8 @@ namespace CursoIgrejaApi
 
         private static void CarregaInjecaoDependencia(IServiceCollection services)
         {
+            services.AddScoped<IFiltroDinamico, FiltroDinamico>();
+            services.AddScoped<IFilterInterpreterFactory, FilterInterpreterFactory>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IUsuariosRepository, UsuariosRepository>();
             services.AddScoped<ICongregacaoRepository, CongregacaoRepository>();
@@ -179,7 +183,6 @@ namespace CursoIgrejaApi
             services.AddScoped<IConteudoUsuarioRepository, ConteudoUsuarioRepository>();
             services.AddScoped<IProvaUsuarioRepository, ProvaUsuarioRepository>();
             services.AddScoped<IUsuarioSistemaRepository, UsuarioSistemaRepository>();
-
         }
     }
 }

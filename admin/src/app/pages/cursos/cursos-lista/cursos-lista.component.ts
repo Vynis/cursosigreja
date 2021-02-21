@@ -14,7 +14,7 @@ export class CursosListaComponent implements OnInit {
   colunas: DataTableColunas[] = [
     { propriedade: 'id', titulo: 'Id', disabled: false, maxwidth: 100 , cell: (row:  CursoModel) => `${row.id}` },
     { propriedade: 'titulo', titulo: 'Título', disabled: false, cell: (row:  CursoModel) => `${row.titulo}` },
-    { propriedade: 'status', titulo: 'Status', disabled: false, maxwidth: 50 , cell: (row:  CursoModel) => row.status == 'A' ? 'Ativo' : 'Inativo' , cor: (row: CursoModel) => row.status == 'A' ? 'blue' : 'red' },
+    { propriedade: 'status', titulo: 'Status', disabled: false, maxwidth: 50 , cell: (row:  CursoModel) => row.status == 'A' ? 'Ativo' : 'Inativo' },
   ];
 
   acoes: DataTableAcoes[] = [

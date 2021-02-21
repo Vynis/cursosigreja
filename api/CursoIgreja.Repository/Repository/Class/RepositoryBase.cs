@@ -1,5 +1,7 @@
-﻿using CursoIgreja.Repository.Data;
+﻿using CursoIgreja.Domain.Models;
+using CursoIgreja.Repository.Data;
 using CursoIgreja.Repository.Repository.Interfaces;
+using FiltrDinamico.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -11,10 +13,12 @@ namespace CursoIgreja.Repository.Repository.Class
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
     {
         private readonly DataContext _dataContext;
+        private readonly IFiltroDinamico _filtroDinamico;
 
-        public RepositoryBase(DataContext dataContext)
+        public RepositoryBase(DataContext dataContext, IFiltroDinamico filtroDinamico)
         {
             _dataContext = dataContext;
+            _filtroDinamico = filtroDinamico;
         }
 
         public virtual async Task<bool> SaveChangesAsync()
@@ -58,6 +62,13 @@ namespace CursoIgreja.Repository.Repository.Class
         public virtual async Task<TEntity[]> ObterPorDescricao(string Descricao)
         {
             return await Buscar(b => b.GetType().Name.Contains("Name"));
+        }
+
+        public virtual async Task<TEntity[]> BuscaFiltroDinamico(PaginationFilter paginationFilter)
+        {
+            var expressionDynamic = _filtroDinamico.FromFiltroItemList<TEntity>(paginationFilter.Filtro.ToList());
+
+            return await _dataContext.Set<TEntity>().Where(expressionDynamic).ToArrayAsync();
         }
     }
 }

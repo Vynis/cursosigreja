@@ -10,7 +10,7 @@
     <ng-container *ngFor="let col of colunas" [matColumnDef]="col.propriedade">
       <mat-header-cell [ngStyle]="{'max-width.px': col.maxwidth }"  mat-header-cell *matHeaderCellDef mat-sort-header> {{ col.titulo }} </mat-header-cell>
       <div *ngIf="!col.usarImg" >
-        <mat-cell [ngStyle]="{'max-width.px': col.maxwidth }" *matCellDef="let element"><span [ngStyle]="{'color': 'blue' }" > {{ col.cell(element) }} </span> </mat-cell>
+        <mat-cell [ngStyle]="{'max-width.px': col.maxwidth }" *matCellDef="let element">{{ col.cell(element) }}</mat-cell>
       </div>
       <div *ngIf="col.usarImg" >
         <mat-cell [ngStyle]="{'max-width.px': col.maxwidth}" *matCellDef="let element"> <img  class="imgjogador" src="{{ col.cell(element) }}" alt="">    </mat-cell>

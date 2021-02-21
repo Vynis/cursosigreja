@@ -1,6 +1,7 @@
 ﻿using CursoIgreja.Domain.Models;
 using CursoIgreja.Repository.Data;
 using CursoIgreja.Repository.Repository.Interfaces;
+using FiltrDinamico.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace CursoIgreja.Repository.Repository.Class
     {
         private readonly DataContext _dataContext;
 
-        public CursoRepository(DataContext dataContext) : base(dataContext)
+        public CursoRepository(DataContext dataContext, IFiltroDinamico filtroDinamico) : base(dataContext, filtroDinamico)
         {
             _dataContext = dataContext;
         }
