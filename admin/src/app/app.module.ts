@@ -23,6 +23,7 @@ import {
 import { AuthGuard } from './@core/utils/auth.guard';
 import { NbAuthJWTInterceptor } from '@nebular/auth';
 import { InterceptService } from './@core/utils/intercept.service';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,6 +43,7 @@ import { InterceptService } from './@core/utils/intercept.service';
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   bootstrap: [AppComponent],
   providers: [AuthGuard,

@@ -1,14 +1,14 @@
 <div class="row">
   <div class="col-md-12">
+    <form *ngIf="curso" [formGroup]="formulario">
     <nb-card>
       <nb-card-header>
-        Cadastro de Cursos
+       <h5>{{tituloPagina}}</h5> 
       </nb-card-header>
       <nb-card-body>
         <nb-tabset>
           <nb-tab tabTitle="Dados básicos">
-            <form [formGroup]="formulario">
-              
+            <!-- <form *ngIf="curso" [formGroup]="formulario"> -->
               <div class="row">
                 <div class="col-sm-6">
                   <div class="form-group">
@@ -24,7 +24,12 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="cargaHoraria" class="label">Carga Horária</label>
-                    <input type="text" class="form-control" nbInput fullWidth id="cargaHoraria" formControlName="cargaHoraria" placeholder="Carga Horária">
+                    <input type="text" class="form-control" 
+                    [ngClass]="{'is-invalid': formulario.get('cargaHoraria').errors  && formulario.get('cargaHoraria').touched}"
+                    nbInput fullWidth id="cargaHoraria" formControlName="cargaHoraria" placeholder="Carga Horária">
+                    <div *ngIf="formulario.get('cargaHoraria').hasError('required')  && formulario.get('cargaHoraria').touched" class="invalid-feedback">
+                      A carga horária é obrigatório.
+                    </div>
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -40,30 +45,63 @@
                 <div class="col-sm-12 col-lg-12">
                   <div class="form-group">
                     <label for="descricao" class="label">Descrição</label>
-                    <textarea rows="5" formControlName="descricao"  nbInput fullWidth shape="round" id="descricao" placeholder="Descrição"></textarea>
+                    <textarea class="form-control" 
+                    [ngClass]="{'is-invalid': formulario.get('descricao').errors  && formulario.get('descricao').touched}"
+                     rows="5" formControlName="descricao"  nbInput fullWidth shape="round" id="descricao" placeholder="Descrição"></textarea>
+                     <div *ngIf="formulario.get('descricao').hasError('required')  && formulario.get('descricao').touched" class="invalid-feedback">
+                      A descrição é obrigatório.
+                    </div>
                   </div>
                 </div>
               </div>
-            </form>
+            <!-- </form> -->
           </nb-tab>
           <nb-tab tabTitle="Professores">
             Professores
           </nb-tab>
           <nb-tab tabTitle="Modulos">
-            Modulos
+            <div class="row">
+              <div class="col-sm-6">
+                <a  (click)="addModulo()" nbButton status="primary">Adicionar Modulo</a>
+              </div>
+            </div>
+            <div formArrayName="modulo" *ngFor="let mod of modulo.controls; let i = index;">
+              <div class="row" [formGroupName]="i"  >
+                <div class="col-sm-6">
+                  <label for="titulo" class="label">Titulo</label>
+                  <input type="text" class="form-control"
+                  [ngClass]="{'is-invalid': formulario.get('titulo').errors  && formulario.get('titulo').touched}"
+                  nbInput fullWidth id="titulo" placeholder="Titulo" formControlName="titulo" >
+                  <div *ngIf="formulario.get('titulo').hasError('required')  && formulario.get('titulo').touched" class="invalid-feedback">
+                    O titulo é obrigatório.
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label for="titulo" class="label">Ordem</label>
+                  <input type="text" class="form-control"
+                  [ngClass]="{'is-invalid': formulario.get('titulo').errors  && formulario.get('titulo').touched}"
+                  nbInput fullWidth id="titulo" placeholder="Titulo" formControlName="titulo" >
+                </div>
+                <div class="col-sm-6">
+                  <a  (click)="remModulo(i)" nbButton status="danger">Remover Modulo</a>
+                </div>
+              </div>
+            </div>
+
           </nb-tab>
         </nb-tabset> 
       </nb-card-body>
       <nb-card-footer>
         <div class="row">
           <div class="col-sm-1">
-            <button type="submit" nbButton status="success">Enviar</button>
+            <button (click)="salvar()" type="submit" nbButton status="success">Enviar</button>
           </div>
           <div class="col-sm-1">
-            <button type="submit"ghost nbButton status="danger">Voltar</button>
+            <a ghost nbButton status="danger" routerLink="/pages/cursos/lista" >Voltar</a>
           </div>
         </div>
       </nb-card-footer>
     </nb-card>
+  </form>
   </div>
 </div>

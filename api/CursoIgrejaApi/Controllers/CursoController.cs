@@ -32,7 +32,6 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
-
         [HttpPost("busca-com-filtro")]
         public async Task<IActionResult> BuscarComFiltro([FromBody]PaginationFilter filtro)
         {
@@ -42,6 +41,60 @@ namespace CursoIgreja.Api.Controllers
                     return Response(await _cursoRepository.ObterTodos());
 
                 return Response(await _cursoRepository.BuscaFiltroDinamico(filtro));
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+        [HttpGet("buscar-por-id/{id}")]
+        public async Task<IActionResult> BuscaPorId(int id)
+        {
+            try
+            {
+                return Response(await _cursoRepository.ObterPorId(id));
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+        [HttpPost("adcionar")]
+        public async Task<IActionResult> Add(Curso curso)
+        {
+            try
+            {
+                var response = await _cursoRepository.Adicionar(curso);
+
+                if (!response)
+                    return Response("Erro ao cadastrar.", false);
+
+                return Response("Cadastro realizado com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+        [HttpPut("alterar")]
+        public async Task<IActionResult> Alt(Curso curso)
+        {
+            try
+            {
+                var valida = await _cursoRepository.ObterPorId(curso.Id);
+
+                if (valida == null)
+                    return Response("Id não enconrado", false);
+
+                var response = await _cursoRepository.Atualizar(curso);
+
+                if (!response)
+                    return Response("Erro ao atualizar.", false);
+
+                return Response("Atualização realizada com sucesso!");
             }
             catch (Exception ex)
             {

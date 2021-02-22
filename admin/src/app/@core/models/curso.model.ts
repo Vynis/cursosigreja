@@ -1,3 +1,5 @@
+import { ModuloModel } from "./modulos.model";
+
 export class CursoModel {
     id: number ;
     titulo: string ;
@@ -5,7 +7,8 @@ export class CursoModel {
     status: string ;
     descricao: string ;
     cargaHoraria: string ;
-    arquivoImg: string ;
+    arquivoImg: string;
+    modulo: ModuloModel[];
     
     /**
      *

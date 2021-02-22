@@ -1,5 +1,6 @@
 import { ElementRef, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CursoModel } from '../../../@core/models/curso.model';
 import { FiltroItemModel } from '../../../@core/models/filtroItem.model';
 import { PaginationfilterModel } from '../../../@core/models/paginationfilter.model';
@@ -28,7 +29,10 @@ export class CursosListaComponent implements OnInit {
 
   dadosTabela: CursoModel[] = [];
 
-  constructor(private cursoServices: CursosService) { }
+  constructor(
+    private cursoServices: CursosService,
+    private route: Router
+    ) { }
 
   ngOnInit() {
     this.obterDadosGrid();
@@ -53,8 +57,8 @@ export class CursosListaComponent implements OnInit {
     return listaFiltro;
   }
 
-  editar() {
-
+  editar(cursos: CursoModel) {
+    this.route.navigate([`pages/cursos/cadastro/edit/${cursos.id}`]);
   }
 
 }

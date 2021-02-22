@@ -8,6 +8,12 @@ namespace CursoIgreja.Domain.Models
     [Table("cursos")]
     public class Curso
     {
+
+        public Curso()
+        {
+            DataCadastro = DateTime.Now;
+        }
+
         [Column("id")]
         public int Id { get; set; }
         [Column("titulo")]

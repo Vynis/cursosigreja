@@ -41,7 +41,7 @@ namespace CursoIgreja.Repository.Repository.Class
             IQueryable<Curso> query = _dataContext.Cursos
                                                                 .Include(c => c.Modulo);
 
-            return await query.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return await query.AsNoTracking().Where(c => c.Id == id).FirstOrDefaultAsync();
         }
     }
 }
