@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CursoIgreja.Api.Dtos;
+using CursoIgreja.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +12,9 @@ namespace CursoIgreja.Api.AutoMapper
     {
         public AutoMapperProfiles()
         {
-            //CreateMap<Usuario, UsuarioAutDto>().ReverseMap();
-            //CreateMap<Usuario, UsuarioCadDto>().ReverseMap();
+            CreateMap<Conteudo, ConteudoDto>().ReverseMap();
+            CreateMap<Prova, ProvaDto>().ReverseMap();
+            CreateMap<ItemProva, ItemProvaDto>().ReverseMap();
         }
     }
 }
