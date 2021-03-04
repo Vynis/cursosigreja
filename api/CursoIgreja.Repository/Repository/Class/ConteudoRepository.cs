@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,13 +20,24 @@ namespace CursoIgreja.Repository.Repository.Class
             _dataContext = dataContext;
         }
 
+        public async override Task<Conteudo[]> Buscar(Expression<Func<Conteudo, bool>> predicado)
+        {
+            IQueryable<Conteudo> query = _dataContext.Conteudos.Where(predicado)
+                                    .Include(c => c.Provas)
+                                    .Include(c => c.Modulo)
+                                    .Include(c => c.Modulo.Curso);
+
+            return await query.AsNoTracking().ToArrayAsync();
+        }
+
         public async override Task<Conteudo> ObterPorId(int id)
         {
             IQueryable<Conteudo> query = _dataContext.Conteudos
                                                 .Include(c => c.Provas)
-                                                .Include(c => c.Modulo);
+                                                .Include(c => c.Modulo)
+                                                .Include(c => c.Modulo.Curso);
 
-            return await query.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return await query.AsNoTracking().Where(c => c.Id == id).FirstOrDefaultAsync();
         }
     }
 }

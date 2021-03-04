@@ -5,6 +5,8 @@ export class MenuModel {
     open: boolean;
     children: MenuModel[];
     conteudoConcluido: boolean;
+    idModulo?: number;
+    idConteudo?: number;
 
     constructor() {
         this.open = false;

@@ -7,7 +7,15 @@ const routes: Routes = [
   {
     path: '',
     component: CursoPage
-  }
+  },
+  {
+    path: ':id',
+    component: CursoPage
+  },
+  {
+    path: ':id/conteudo/:idConteudo',
+    component: CursoPage
+  },
 ];
 
 @NgModule({

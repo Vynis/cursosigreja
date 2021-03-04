@@ -32,7 +32,5 @@ namespace CursoIgreja.Domain.Models
 
         [NotMapped]
         public bool ConteudoConcluido { get; set; }
-
-
     }
 }

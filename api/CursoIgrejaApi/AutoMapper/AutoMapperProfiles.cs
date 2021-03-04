@@ -15,6 +15,9 @@ namespace CursoIgreja.Api.AutoMapper
             CreateMap<Conteudo, ConteudoDto>().ReverseMap();
             CreateMap<Prova, ProvaDto>().ReverseMap();
             CreateMap<ItemProva, ItemProvaDto>().ReverseMap();
+            CreateMap<Modulo, ModuloDto>().ReverseMap();
+            CreateMap<LiberacaoModulo, LiberacaoModuloDto>().ReverseMap();
+            CreateMap<Curso, CursoDto>().ReverseMap();
         }
     }
 }

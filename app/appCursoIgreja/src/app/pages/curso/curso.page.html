@@ -1,5 +1,5 @@
 
-<app-curso-menu [titulo]="nomeCurso" [pages]="menu" ></app-curso-menu>
+<app-curso-menu [qtdProgresso]="qtdProgresso" [titulo]="nomeCurso" [pages]="menu" (carregaPagina)="encaminhaPagina($event)" [conteudo]="conteudoSelecionado" ></app-curso-menu>
 
 <ion-header>
   <ion-toolbar color="dark">
@@ -9,31 +9,47 @@
     <ion-title>
       {{nomeCurso}}
     </ion-title>
-    <!-- <ion-buttons slot="start">
+    <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
-    </ion-buttons> -->
+    </ion-buttons>
   </ion-toolbar>
 </ion-header> 
 
 
 <ion-content>
-  <ion-grid>
-  <ion-row>
-    <ion-col size-md="6">
-      <ion-button expand="full">Anterior</ion-button>
-    </ion-col>
-    <ion-col size-md="6">
-      <ion-button expand="full" color="success"  >Próximo</ion-button>
-    </ion-col>
-  </ion-row>
-  <ion-row >
-    <ion-col size-md="12">
-      <video preload="auto"  controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
-        <source src="https://onedrive.live.com/download?cid=204CB7B8B10A0D51&resid=204CB7B8B10A0D51%2117600&authkey=AI3hNJgRgdfdoSk" type='video/mp4'/>
-     </video>
-    </ion-col>
-  </ion-row>
-
-</ion-grid>
-
+  <div *ngIf="conteudoSelecionado">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-md="6">
+          <ion-button [disabled]="conteudoSelecionado.id == idConteudoInicial" (click)="carregamentoBotoes(conteudoSelecionado.id,'A')" expand="full">
+            <ion-icon name="arrow-back-circle-outline"></ion-icon>Anterior
+          </ion-button>
+        </ion-col>
+        <ion-col size-md="6">
+          <ion-button [disabled]="conteudoSelecionado.id == idConteudoFinal" (click)="carregamentoBotoes(conteudoSelecionado.id,'P')" expand="full" color="success"  >
+            Próximo
+            <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row >
+        <ion-col size-md="12">
+          <div *ngIf="conteudoSelecionado.tipo == 'VE'" >
+            <video #videoPlayer id="videoPlayer" preload="auto"  controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
+              <source [src]="conteudoSelecionado.arquivo" type='video/mp4'/>
+           </video>
+          </div>
+    
+        </ion-col>
+      </ion-row>
+      <ion-row >
+        <ion-col size-md="12">
+          <ion-text >
+            <h5> {{ conteudoSelecionado.modulo.titulo }} - {{ conteudoSelecionado.titulo}}</h5>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    
+    </ion-grid>
+  </div>
 </ion-content> 

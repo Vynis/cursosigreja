@@ -19,7 +19,7 @@ export class Conteudo {
     linkConteudoExterno: string ;
     moduloId: number;
     conteudoConcluido: boolean;
-    modulo: Modulo;
+    modulo: Modulo = new Modulo();
 
     anexos: Anexo[];
     provas: Prova[];

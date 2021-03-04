@@ -18,6 +18,7 @@ namespace CursoIgreja.Api.Dtos
         public int MinAcerto { get; set; }
         public string LinkConteudoExterno { get; set; }
         public int ModuloId { get; set; }
+        public ModuloDto Modulo { get; set; }
         public bool ConteudoConcluido { get; set; }
         public List<ProvaDto> Provas { get; set; }
     }
