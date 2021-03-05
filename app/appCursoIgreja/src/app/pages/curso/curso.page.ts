@@ -2,7 +2,7 @@ import { Modulo } from './../../core/_models/modulos.model';
 import { CursoService } from './../../core/_services/curso.service';
 import { MenuModel } from './../../core/_models/menu.model';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Conteudo } from 'src/app/core/_models/conteudos.model';
 import { ProvaUsuario } from 'src/app/core/_models/provaUsuario.model';
@@ -33,7 +33,8 @@ export class CursoPage implements OnInit {
     private cursoService: CursoService,
     private route: ActivatedRoute,
     private router: Router,
-    public alertController: AlertController
+    public alertController: AlertController,
+    private navCtrl: NavController,
   ) { }
 
   ngOnInit() {
@@ -48,7 +49,6 @@ export class CursoPage implements OnInit {
   }
 
   async carregamentoInicial(id: number) {
-
     const loading = await this.loadCtrl.create({ message: 'Aguarde...' });
     loading.present();
 

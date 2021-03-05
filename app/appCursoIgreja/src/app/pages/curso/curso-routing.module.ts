@@ -12,10 +12,6 @@ const routes: Routes = [
     path: ':id',
     component: CursoPage
   },
-  {
-    path: ':id/conteudo/:idConteudo',
-    component: CursoPage
-  },
 ];
 
 @NgModule({

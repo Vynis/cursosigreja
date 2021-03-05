@@ -1,4 +1,5 @@
-<ion-menu>
+<ion-split-pane>
+<ion-menu side="start" menuId="first" contentId="main">
   <ion-content padding>
     <app-user-card></app-user-card>
     <ion-list lines="none">
@@ -12,4 +13,6 @@
   </ion-content>
 </ion-menu>
 
-<ion-router-outlet main></ion-router-outlet>
+<ion-router-outlet id="main"></ion-router-outlet>
+
+</ion-split-pane>
