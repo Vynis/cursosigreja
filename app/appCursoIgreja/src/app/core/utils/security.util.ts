@@ -5,8 +5,8 @@ export class SecurityUtil {
     public static set(dados: any) {
         const data = JSON.stringify(dados.usuario);
         localStorage.setItem('usuario', btoa(data));
-        const token = JSON.stringify(dados.token);
-        localStorage.setItem('token', btoa(token));
+        const token = dados.token;
+        localStorage.setItem('token', token);
     }
 
     public static getUsuario(): Usuario {
@@ -18,10 +18,10 @@ export class SecurityUtil {
         }
     }
 
-    public static getToken(): Usuario {
+    public static getToken(): string {
         const data = localStorage.getItem('token');
         if (data) {
-            return JSON.parse(atob(data));
+            return data;
         } else {
             return null;
         }

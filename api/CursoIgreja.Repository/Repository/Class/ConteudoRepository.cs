@@ -34,6 +34,7 @@ namespace CursoIgreja.Repository.Repository.Class
         {
             IQueryable<Conteudo> query = _dataContext.Conteudos
                                                 .Include(c => c.Provas)
+                                                .Include("Provas.ItensProvas")
                                                 .Include(c => c.Modulo)
                                                 .Include(c => c.Modulo.Curso);
 

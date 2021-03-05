@@ -2,6 +2,7 @@ import { ModeloBase } from './../_models/modelo-base';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { ProvaUsuario } from '../_models/provaUsuario.model';
 
 @Injectable()
 export class CursoService {
@@ -25,5 +26,9 @@ export class CursoService {
 
   carregaModuloCurso(id: number) {
     return this.http.get<ModeloBase>(`${this.caminhoApi}curso/carrega-modulo-curso/${id}`);
+  }
+
+  salvarProva(provaUsuario: ProvaUsuario[]) {
+    return this.http.post(`${this.caminhoApi}prova-usuario/salvar-prova`, {provaUsuario: provaUsuario});
   }
 }

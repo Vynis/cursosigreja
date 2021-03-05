@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  api: 'http://localhost:5555/api/'
+  //api: 'http://localhost:5555/api/'
+  api: 'http://www.cursoigrejacristobrasil.kinghost.net/api/'
 };
 
 /*

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CursoIgreja.Api.Dtos;
+using CursoIgreja.Domain.Models;
 using CursoIgreja.Repository.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -46,6 +47,9 @@ namespace CursoIgreja.Api.Controllers
                 if (retornoDadosInscricao.UsuarioId != Convert.ToInt32(User.Identity.Name))
                     return Response("Busca invalida", false);
 
+                //Obter lista prova realizado
+                var listaProvaUsuario = await _provaUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)));
+
                 //Busca o ultimo conteudo do usuario
                 var retornoConteudoUsuario = await _conteudoUsuarioRepository.Buscar(x => x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Conteudo.Modulo.CursoId == retornoDadosInscricao.ProcessoInscricao.CursoId);
 
@@ -53,10 +57,20 @@ namespace CursoIgreja.Api.Controllers
                 {
                     var ultimoConteudo = retornoConteudoUsuario.OrderByDescending(c => c.DataConclusao).Select(c => c.Conteudo).FirstOrDefault();
 
+                    await SalvarVisualizacaoUsuario(ultimoConteudo.Id);
+
+                    PreenchConteudoConcluido(ultimoConteudo, listaProvaUsuario);
+
                     return Response(_mapper.Map<ConteudoDto>(ultimoConteudo));
                 }
 
-                return Response(_mapper.Map<ConteudoDto>(retornoDadosInscricao.ProcessoInscricao.Curso.Modulo.FirstOrDefault().Conteudos[0]));
+                var ultimoConteudoVisualizado = retornoDadosInscricao.ProcessoInscricao.Curso.Modulo.FirstOrDefault().Conteudos[0];
+
+                await SalvarVisualizacaoUsuario(ultimoConteudoVisualizado.Id);
+
+                PreenchConteudoConcluido(ultimoConteudoVisualizado, listaProvaUsuario);
+
+                return Response(_mapper.Map<ConteudoDto>(ultimoConteudoVisualizado));
             }
             catch (Exception ex)
             {
@@ -76,6 +90,16 @@ namespace CursoIgreja.Api.Controllers
                     return Response("Busca invalida", false);
 
                 var response = await _conteudoRepository.ObterPorId(idConteudo);
+
+                //Obter lista prova realizado
+                var listaProvaUsuario = await _provaUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)));
+
+                PreenchConteudoConcluido(response, listaProvaUsuario);
+
+                if (!await ValidaConteudoExibicao(response, listaProvaUsuario))
+                    return Response(false);
+
+                await SalvarVisualizacaoUsuario(response.Id);
 
                 return Response(_mapper.Map<ConteudoDto>(response));
             }
@@ -113,7 +137,7 @@ namespace CursoIgreja.Api.Controllers
                 var listaProvaUsuario = await _provaUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)));
 
                 //Preenche o conteudo concluido
-                PreencheConteudoConcluido(obterModulosCurso, listaProvaUsuario);
+                PreencheModuloConteudoConcluido(obterModulosCurso, listaProvaUsuario);
 
                 if (string.IsNullOrEmpty(acao) || (acao != "P" && acao != "A"))
                     return Response("Ação não definida", false);
@@ -125,13 +149,25 @@ namespace CursoIgreja.Api.Controllers
                     var retornaProximo = moduloAtual.Conteudos.Where(x => x.Ordem > conteudoAtual.Ordem).FirstOrDefault();
 
                     if (retornaProximo != null)
+                    {
+                        
+                        if (!await ValidaConteudoExibicao(retornaProximo, listaProvaUsuario))
+                            return Response(false);
+
+
+                        await SalvarVisualizacaoUsuario(retornaProximo.Id);
                         return Response(_mapper.Map<ConteudoDto>(retornaProximo));
-
-
+                    }
+                       
                     var proximoModulo = obterModulosCurso.Where(c => c.Ordem > moduloAtual.Ordem).FirstOrDefault();
 
                     if (proximoModulo == null)
                         return Response("Ação Proxima não definida", false);
+
+                    if (!await ValidaConteudoExibicao(proximoModulo.Conteudos.FirstOrDefault(), listaProvaUsuario))
+                        return Response(false);
+
+                    await SalvarVisualizacaoUsuario(proximoModulo.Conteudos.FirstOrDefault().Id);
 
                     return Response(_mapper.Map<ConteudoDto>(proximoModulo.Conteudos.FirstOrDefault()));
                 }
@@ -140,12 +176,17 @@ namespace CursoIgreja.Api.Controllers
                     var retonraAnterior = moduloAtual.Conteudos.Where(x => x.Ordem < conteudoAtual.Ordem).LastOrDefault();
 
                     if (retonraAnterior != null)
+                    {
+                        await SalvarVisualizacaoUsuario(retonraAnterior.Id);
                         return Response(_mapper.Map<ConteudoDto>(retonraAnterior));
-
+                    }
+                        
                     var anteriorModulo = obterModulosCurso.Where(c => c.Ordem < moduloAtual.Ordem).LastOrDefault();
 
                     if (anteriorModulo == null)
                         return Response("Ação Anterior não definida", false);
+
+                    await SalvarVisualizacaoUsuario(anteriorModulo.Conteudos.LastOrDefault().Id);
 
                     return Response(_mapper.Map<ConteudoDto>(anteriorModulo.Conteudos.LastOrDefault()));
                 }
@@ -172,7 +213,7 @@ namespace CursoIgreja.Api.Controllers
 
                 var listaProvaUsuario = await _provaUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)));
 
-                PreencheConteudoConcluido(retorno, listaProvaUsuario);
+                PreencheModuloConteudoConcluido(retorno, listaProvaUsuario);
 
                 var listaLiberacaoModulo = new List<ModuloDto>();
 
@@ -196,23 +237,93 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
-        private void PreencheConteudoConcluido(Domain.Models.Modulo[] retorno, Domain.Models.ProvaUsuario[] listaProvaUsuario)
+        #region Engine
+
+        public async Task<bool> SalvarVisualizacaoUsuario(int idConteudo)
+        {
+            try
+            {
+                var valida = await _conteudoUsuarioRepository.Buscar(x => x.ConteudoId == idConteudo && x.UsuariosId == Convert.ToInt32(User.Identity.Name));
+
+                if (valida.Any())
+                    return false;
+
+                var conteudoUsuario = new ConteudoUsuario();
+
+                conteudoUsuario.DataConclusao = DateTime.Now;
+                conteudoUsuario.UsuariosId = Convert.ToInt32(User.Identity.Name);
+                conteudoUsuario.Concluido = "S";
+                conteudoUsuario.ConteudoId = idConteudo;
+
+                var retorno = await _conteudoUsuarioRepository.Adicionar(conteudoUsuario);
+
+                if (!retorno)
+                    return false;
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private void PreencheModuloConteudoConcluido(Domain.Models.Modulo[] retorno, Domain.Models.ProvaUsuario[] listaProvaUsuario)
         {
             foreach (var modulo in retorno)
                 foreach (var conteudo in modulo.Conteudos)
-                {
-                    if (conteudo.Tipo.Equals("PR") || conteudo.Tipo.Equals("PA"))
-                    {
-                        var provaUsuario = listaProvaUsuario.Where(x => x.Prova.ConteudoId.Equals(conteudo.Id)).ToList();
-
-                        if (provaUsuario.Count > 0)
-                            conteudo.ConteudoConcluido = true;
-                        else
-                            conteudo.ConteudoConcluido = false;
-                    }
-                    else
-                        conteudo.ConteudoConcluido = conteudo.ConteudoUsuarios.Exists(x => x.ConteudoId == conteudo.Id && x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Concluido.Equals("S"));
-                }
+                    PreenchConteudoConcluido(conteudo, listaProvaUsuario);
         }
+
+        private void PreenchConteudoConcluido(Conteudo conteudo, Domain.Models.ProvaUsuario[] listaProvaUsuario)
+        {
+            if (conteudo.Tipo.Equals("PR") || conteudo.Tipo.Equals("PA"))
+            {
+                var provaUsuario = listaProvaUsuario.Where(x => x.Prova.ConteudoId.Equals(conteudo.Id)).ToList();
+
+                if (provaUsuario.Count > 0)
+                    conteudo.ConteudoConcluido = true;
+                else
+                    conteudo.ConteudoConcluido = false;
+            }
+            else
+                if (conteudo.ConteudoUsuarios != null)
+                    conteudo.ConteudoConcluido = conteudo.ConteudoUsuarios.Exists(x => x.ConteudoId == conteudo.Id && x.UsuariosId == Convert.ToInt32(User.Identity.Name) && x.Concluido.Equals("S"));
+        }
+
+        private async Task<bool> ValidaConteudoExibicao(Conteudo conteudoSelecionado, Domain.Models.ProvaUsuario[] listaProvaUsuario)
+        {
+            try
+            {
+                //Obter todos os modulos do curso
+                var obterModulosCurso = await _moduloRepository.Buscar(x => x.CursoId == conteudoSelecionado.Modulo.CursoId);
+
+                PreencheModuloConteudoConcluido(obterModulosCurso, listaProvaUsuario);
+
+                foreach (var mod in obterModulosCurso)
+                {
+                    var validarProva = true;
+
+                    validarProva = mod.Conteudos.Where(c => (c.Tipo.Equals("PR") || c.Tipo.Equals("PA")) && !c.ConteudoConcluido).Count() > 0 ? false : true;
+
+                    if (!validarProva)
+                    {
+                        if (conteudoSelecionado.Modulo.Ordem > mod.Ordem)
+                            return false;
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+        
+
+        #endregion
     }
 }

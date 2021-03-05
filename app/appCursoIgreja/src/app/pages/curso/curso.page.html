@@ -35,16 +35,106 @@
       <ion-row >
         <ion-col size-md="12">
           <div *ngIf="conteudoSelecionado.tipo == 'VE'" >
-            <video #videoPlayer id="videoPlayer" preload="auto"  controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
+            <video #videoPlayer id="videoPlayer" poster="/assets/video.png" preload="auto"  controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
               <source [src]="conteudoSelecionado.arquivo" type='video/mp4'/>
            </video>
+          </div>
+
+          <div *ngIf="conteudoSelecionado.tipo == 'PR' || conteudoSelecionado.tipo == 'PA'">
+            <div *ngIf="conteudoSelecionado.conteudoConcluido" class="ion-text-start" >
+              <ion-text>
+                <h1>Parabéns.. Você já respondeu avaliação.</h1>
+              </ion-text>
+             </div>
+             <div *ngIf="!conteudoSelecionado.conteudoConcluido">
+                <form #formulario>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col sizeMd="12">
+                        <ion-text class="ion-text-center">
+                          <h2>{{conteudoSelecionado.titulo}}</h2>
+                        </ion-text>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="conteudoSelecionado.arquivo !== null">
+                      <ion-col sizeMd="12">
+                        <img [src]="conteudoSelecionado.arquivo" class="responsive" alt="{{conteudoSelecionado.titulo}}">
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col sizeMd="12">
+                        <ion-list>
+                          <ion-item *ngFor="let prova of conteudoSelecionado.provas; let i = index">
+                            <ion-grid>
+                              <ion-row>
+                                <ion-col>
+                                  <ion-text>
+                                    <h4>{{(i +1) + ') ' +prova.pergunta}}</h4>
+                                  </ion-text>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row *ngIf="prova.tipoComponente == 'M'">
+                                <ion-col>
+                                  <div class="ion-text-end">
+                                    <em>*Múltipla escolha</em>
+                                  </div>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row *ngIf="prova.tipoComponente == 'E'">
+                                <ion-col>
+                                  <ion-list>
+                                  <ion-radio-group [id]="'conteudo-' + prova.id" (ionChange)="atualizaGroupBoxSelecionado($event,'conteudo-' + prova.id);">
+                                    <ion-item *ngFor="let itensProvas of prova.itensProvas" >
+                                      <ion-label>
+                                        <span class="wrap-mat-radio-label">
+                                          {{itensProvas.questao}}
+                                        </span>
+                                      </ion-label>
+                                      <ion-radio slot="start"  [value]="itensProvas.id"></ion-radio>
+                                    </ion-item>
+                                  </ion-radio-group>
+                                </ion-list>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row *ngIf="prova.tipoComponente == 'M'">
+                                <ion-col>
+                                  <ion-list>
+                                    <ion-item *ngFor="let intensProvas of prova.itensProvas">
+                                      <ion-label>                                
+                                        <span class="wrap-mat-radio-label">
+                                          {{intensProvas.questao}}
+                                        </span>
+                                      </ion-label>
+                                      <ion-checkbox (ionChange)="atualizaChechkBoxSelecionado($event,'item-' + intensProvas.id)" [id]="intensProvas.id" slot="start" ></ion-checkbox>
+                                    </ion-item>
+                                  </ion-list>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row *ngIf="prova.tipoComponente == 'T'">
+                                <ion-col>
+                                  <ion-textarea [name]="'conteudo-' + prova.id" [id]="'conteudo-' + prova.id" cols="40" rows="5" ></ion-textarea>
+                                </ion-col>
+                              </ion-row>  
+                            </ion-grid>
+                          </ion-item>
+                        </ion-list>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col>
+                        <ion-button (click)="enviarProva()" expand="full">Enviar</ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </form>
+             </div>
           </div>
     
         </ion-col>
       </ion-row>
       <ion-row >
         <ion-col size-md="12">
-          <ion-text >
+          <ion-text *ngIf="conteudoSelecionado.tipo !== 'PR' && conteudoSelecionado.tipo !== 'PA'" >
             <h5> {{ conteudoSelecionado.modulo.titulo }} - {{ conteudoSelecionado.titulo}}</h5>
           </ion-text>
         </ion-col>
