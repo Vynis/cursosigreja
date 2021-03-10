@@ -55,6 +55,7 @@ namespace CursoIgreja.Api.Controllers
 
 
         [HttpGet("processar-curso-inscrito/{id}")]
+        [Obsolete("Nao esta sendo utilizado neste modulo. Olhar CursoController")]
         public async Task<IActionResult> ProcessarCursoInscrito(int id)
         {
             try
@@ -69,7 +70,8 @@ namespace CursoIgreja.Api.Controllers
                 foreach (var modulo in response.ProcessoInscricao.Curso.Modulo)
                    foreach (var conteudo in modulo.Conteudos)
                     {
-                        if (conteudo.Tipo.Equals("PR")) {
+                        if (conteudo.Tipo.Equals("PR") || conteudo.Tipo.Equals("PA"))
+                        {
                             var provaUsuario = listaProvaUsuario.Where(x => x.Prova.ConteudoId.Equals(conteudo.Id)).ToList();
 
                             if (provaUsuario.Count > 0)

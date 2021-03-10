@@ -1,0 +1,54 @@
+<ion-menu side="start" menuId="first" contentId="main2">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>{{titulo}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+      <ion-item-divider>
+        <ion-grid>
+          <ion-row>
+            <ion-col size-md="12">
+              <ion-progress-bar [value]="qtdProgresso"></ion-progress-bar><br>
+              {{ (qtdProgresso * 100) | number:'1.1-2'}} % Concluído
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item-divider>
+
+      <div *ngFor="let p of pages">
+
+        <ion-menu-toggle auto-hide="false" *ngIf="p.url">
+          <ion-list>
+            <ion-item>
+              <ion-icon *ngIf="p.icon != ''"  slot="start" color="dark" [name]="p.icon"></ion-icon> 
+              <ion-label>{{p.titulo}}</ion-label>
+            </ion-item>
+          </ion-list>
+       </ion-menu-toggle>
+
+       <ion-list  *ngIf="p.children?.length > 0">
+          <ion-item button  (click)="p.open = !p.open" [class.active-parent]="p.open" detail="false">
+            <ion-icon name="arrow-forward" slot="start" *ngIf="!p.open" ></ion-icon>
+            <ion-icon name="arrow-down" slot="start" *ngIf="p.open" ></ion-icon>
+            <ion-label>{{p.titulo}}</ion-label>
+        </ion-item>
+       </ion-list>
+
+
+       <ion-list *ngIf="p.open" >
+          <ion-menu-toggle>
+            <div class="sub" *ngFor="let sub of p.children">
+              <ion-item [class.active]="sub.idConteudo == conteudo.id"  (click)="chamarPagina(sub)" class="sub-item" >
+                <ion-icon *ngIf="sub.icon != ''"  slot="start" color="dark" [name]="sub.icon"></ion-icon> 
+                <ion-label>{{sub.titulo}}</ion-label>
+                <ion-icon *ngIf="sub.conteudoConcluido" name="checkmark-outline" style="color: green;"></ion-icon>
+              </ion-item>
+            </div>
+        </ion-menu-toggle>
+       </ion-list>
+      </div>
+  </ion-content>
+</ion-menu> 
+
+<ion-router-outlet id="main2"></ion-router-outlet>

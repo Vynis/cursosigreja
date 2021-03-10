@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.only(top: 30.0),
         child: WebView(
-          initialUrl: 'http://192.168.1.7:4200/',
+          initialUrl: 'http://igrejadecristobrasil.com.br/app',
           javascriptMode: JavascriptMode.unrestricted,
           // navigationDelegate: (NavigationRequest request) {
           //   if (request.url.startsWith('http')){

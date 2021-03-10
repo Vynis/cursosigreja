@@ -12,8 +12,12 @@ namespace CursoIgreja.Api.AutoMapper
     {
         public AutoMapperProfiles()
         {
-            CreateMap<Usuarios, UsuarioAutDto>().ReverseMap();
-            CreateMap<UsuarioSistema, UsuarioAutDto>().ReverseMap();
+            CreateMap<Conteudo, ConteudoDto>().ReverseMap();
+            CreateMap<Prova, ProvaDto>().ReverseMap();
+            CreateMap<ItemProva, ItemProvaDto>().ReverseMap();
+            CreateMap<Modulo, ModuloDto>().ReverseMap();
+            CreateMap<LiberacaoModulo, LiberacaoModuloDto>().ReverseMap();
+            CreateMap<Curso, CursoDto>().ReverseMap();
         }
     }
 }

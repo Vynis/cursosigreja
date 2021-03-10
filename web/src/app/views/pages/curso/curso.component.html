@@ -53,13 +53,13 @@
         <div class="col-xl-12" style="background-color: white;">
           <div class="row">
             <div class="col-xl-6">
-              <button [hidden]="conteudoSelecionado.tipo == 'PR'"
+              <button [hidden]="conteudoSelecionado.tipo == 'PR' || conteudoSelecionado.tipo == 'PA'"
                 [disabled]="conteudoSelecionado.id == idConteudoInicial" (click)="selecionarConteudo(null, 'a')"
                 style="width: 100%;" class="btn btn-outline-danger my-2 my-sm-0"><i class="fas fa-arrow-left"></i>
                 Anterior</button>
             </div>
             <div class="col-xl-6" style="text-align: right;">
-              <button [hidden]="conteudoSelecionado.tipo == 'PR'" [disabled]="conteudoSelecionado.id == idConteudoFinal"
+              <button [hidden]="conteudoSelecionado.tipo == 'PR' || conteudoSelecionado.tipo == 'PA'" [disabled]="conteudoSelecionado.id == idConteudoFinal"
                 (click)="selecionarConteudo(null, 'p')" style="width: 100%;"
                 class="btn btn-outline-success my-2 my-sm-0">Próximo
                 <i class="fas fa-arrow-right"></i>
@@ -79,19 +79,19 @@
               </div>
 
               <div *ngIf="conteudoSelecionado.tipo == 'VE'" >
-                
-              
+
+
                 <video #videoPlayer preload="auto"  poster="../../../../assets/media/video.png" controls width="100%" height="450px" oncontextmenu="return false;" controlsList="nodownload">
                   <source src="{{conteudoSelecionado.arquivo}}" type='video/mp4'/>
-               </video> 
+               </video>
               </div>
               <div *ngIf="conteudoSelecionado.tipo == 'DO'" style=" overflow-y: scroll;height: 450px;">
                 <a [href]="localApi + 'arq_arquivos/' +conteudoSelecionado.arquivo" target="_blank" >Clique aqui</a> para baixar o arquivo.
               </div>
 
-              <div *ngIf="conteudoSelecionado.tipo == 'PR'" >
-                <div *ngIf="provaRealizada" style="height: 450px; text-align: center; padding-top: 100px;" > 
-                 <h1>Parabéns.. Você já respondeu avaliação.</h1> 
+              <div *ngIf="conteudoSelecionado.tipo == 'PR' || conteudoSelecionado.tipo == 'PA' " >
+                <div *ngIf="provaRealizada" style="height: 450px; text-align: center; padding-top: 100px;" >
+                 <h1>Parabéns.. Você já respondeu avaliação.</h1>
                 </div>
                 <div *ngIf="!provaRealizada">
                   <form  #formulario>
@@ -99,8 +99,11 @@
                       <div class="col-xl-12" style="text-align: center;">
                         <h2>{{conteudoSelecionado.titulo}}</h2>
                       </div>
+                      <div class="col-xl-12" *ngIf="conteudoSelecionado.arquivo !== null"  style="text-align: center;">
+						<img [src]="conteudoSelecionado.arquivo" class="responsive" alt="{{conteudoSelecionado.titulo}}">
+                      </div>
                     </div>
-  
+
                     <div style="padding: 10px;" *ngFor="let prova of conteudoSelecionado.provas; let i = index" class="row">
                       <div class="col-xl-3"></div>
                       <div class="col-xl-6">
@@ -144,7 +147,7 @@
                       <div class="col-xl-3"></div>
                     </div>
                     <div class="row" style="padding-bottom: 15px; padding-top: 15px;">
-                      
+
                       <div class="col-xl-3"></div>
                       <div class="col-xl-6" style="text-align: left;">
                         <div (click)="enviarProva(conteudoSelecionado)" class="btn btn-primary">Enviar</div>
@@ -158,7 +161,8 @@
             <div class="col-xl-12">
               <mat-divider></mat-divider>
             </div>
-            <div *ngIf="conteudoSelecionado.id != 0 && conteudoSelecionado.tipo != 'PR'" class="col-xl-12"
+			{{conteudoSelecionado.tipo }}
+            <div *ngIf="conteudoSelecionado.id != 0 && conteudoSelecionado.tipo != 'PR' && conteudoSelecionado.tipo != 'PA'" class="col-xl-12"
               style="margin: 10px;height: 450px;">
               <span>
                 <h5> {{ conteudoSelecionado.modulo.titulo }} - {{ conteudoSelecionado.titulo}}</h5>
@@ -198,3 +202,5 @@
   </mat-sidenav-container>
 
 </div>
+
+

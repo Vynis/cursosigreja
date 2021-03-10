@@ -51,6 +51,7 @@ export class CursoComponent implements OnInit {
   urlVideoSelecionado = '';
   provaUsuario = [];
   provaRealizada = false;
+  showModal: boolean;
 
   @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
 
@@ -86,7 +87,7 @@ export class CursoComponent implements OnInit {
       }
     });
 
-    
+
 
   }
 
@@ -130,24 +131,24 @@ export class CursoComponent implements OnInit {
                 listaModulos.push(modulo);
               }
             });
-            
+
             dados.processoInscricao.curso.modulo = listaModulos;
 
-            
+
             if (dados.processoInscricao.curso.modulo.length == 0)
             {
               this.alertaSemConteudoCurso();
               return;
             }
 
-              
+
             this.modulos = this.orderPipe.transform(dados.processoInscricao.curso.modulo, 'ordem');
-            
+
             if (this.modulos[0].conteudos.length == 0){
               this.alertaSemConteudoCurso();
               return;
             }
-              
+
             this.idConteudoInicial = this.modulos[0].conteudos[0].id;
             this.idConteudoFinal = this.modulos[this.modulos.length - 1].conteudos[this.modulos[this.modulos.length - 1].conteudos.length - 1].id;
             this.provaUsuario = dados.usuario.provaUsuarios;
@@ -157,7 +158,7 @@ export class CursoComponent implements OnInit {
             this.calcularProgresso();
             this.selecionarConteudo(this.modulos[0].conteudos[0], '', this.modulos[0]);
             this.buscarUltimoConteudoUsuario(dados.processoInscricao.cursoId);
-  
+
             this.setCarregamento.next(true);
           }
           else {
@@ -211,7 +212,7 @@ export class CursoComponent implements OnInit {
             html: msg,
             icon: 'error',
             confirmButtonText: 'Ok',
-          }).then(result => { 
+          }).then(result => {
             if (result.value)
               location.reload();
           })
@@ -226,17 +227,17 @@ export class CursoComponent implements OnInit {
   }
 
   selecionarConteudo(conteudo: Conteudo, acao: string = '', modulo: Modulo = null) {
-    
+
     if (conteudo == null) {
 
       var ehProximoModulo = false;
 
       if (acao == 'p') {
         this.modulos.forEach(mod => {
-          
-          if (ehProximoModulo) 
-            this.conteudoSelecionado = mod.conteudos[0];           
-          
+
+          if (ehProximoModulo)
+            this.conteudoSelecionado = mod.conteudos[0];
+
           if (mod.id == this.conteudoSelecionado.moduloId) {
 
             //Busa proximo dentro o proprio modulo
@@ -246,14 +247,14 @@ export class CursoComponent implements OnInit {
               this.conteudoSelecionado = retornaProximo;
               this.conteudoSelecionado.modulo = mod;
             }
-            else 
-              ehProximoModulo = true;  
+            else
+              ehProximoModulo = true;
           }
 
         })
       } else {
         this.modulos.forEach((mod,i) => {
-                
+
           if (mod.id == this.conteudoSelecionado.moduloId) {
 
             //Busa anterior dentro o proprio modulo
@@ -263,8 +264,8 @@ export class CursoComponent implements OnInit {
               this.conteudoSelecionado = retornaAnterior;
               this.conteudoSelecionado.modulo = mod;
             }
-            else 
-              this.conteudoSelecionado = this.modulos[i - 1].conteudos[this.modulos[i - 1].conteudos.length - 1]; 
+            else
+              this.conteudoSelecionado = this.modulos[i - 1].conteudos[this.modulos[i - 1].conteudos.length - 1];
           }
 
         })
@@ -278,7 +279,7 @@ export class CursoComponent implements OnInit {
       this.conteudoSelecionado.modulo = modulo;
 
       if (this.validaProvaUsuario())
-        this.salvarConteudoUsuario(conteudo);      
+        this.salvarConteudoUsuario(conteudo);
     }
 
     if (this.conteudoSelecionado.tipo == 'VE') {
@@ -295,7 +296,7 @@ export class CursoComponent implements OnInit {
             if (res.prova.conteudoId === this.conteudoSelecionado.id)
               this.provaRealizada = true;
         })
-      }  
+      }
     }
 
 
@@ -385,6 +386,24 @@ export class CursoComponent implements OnInit {
     let errosItensM = 0;
     let contDiscursiva = 0;
 
+	if (this.conteudoSelecionado.tipo === 'PA') {
+		this.salvarProva();
+
+		Swal.fire({
+			title: 'Parabéns!!',
+			html: 'Você envio sua avaliação com sucesso!!',
+			icon: 'success',
+			confirmButtonText: 'Ir pra proxima etapa?',
+			allowOutsideClick: false
+		  }).then((result: any) => {
+			if (result.value) {
+			  location.reload();
+			}
+		  });
+
+	  return;
+	}
+
     this.conteudoSelecionado.provas.forEach(prov => {
       if (prov.tipoComponente == "E") {
         prov.itensProvas.forEach(itens => {
@@ -454,7 +473,7 @@ export class CursoComponent implements OnInit {
             html: msg,
             icon: 'error',
             confirmButtonText: 'Reveja suas respostas',
-          }).then(result => { 
+          }).then(result => {
             if (result.value)
               this.selecionarConteudo(this.conteudoSelecionado);
           })
@@ -462,7 +481,7 @@ export class CursoComponent implements OnInit {
         else {
 
           this.salvarProva();
-    
+
           Swal.fire({
             title: 'Parabéns!!',
             html: msg,
@@ -529,12 +548,12 @@ export class CursoComponent implements OnInit {
   salvarProva() {
     var idItensProva = [];
     var provaUsuario: ProvaUsuario[] = [];
-    
 
-    this.conteudoSelecionado.provas.forEach(prov => { 
+
+    this.conteudoSelecionado.provas.forEach(prov => {
       var itensProvaUsuario: ItemProvaUsuario[] = [];
 
-      if (prov.tipoComponente == "E") { 
+      if (prov.tipoComponente == "E") {
         prov.itensProvas.forEach(itens => {
           if (this.groupboxValorSelecionado['conteudo-' + prov.id] == itens.id)
             itensProvaUsuario.push({ id: 0,  provaUsuarioId: 0, itensProvaId: itens.id});
@@ -568,5 +587,18 @@ export class CursoComponent implements OnInit {
   atualizaGroupBoxSelecionado(event: MatRadioChange, name) {
     this.groupboxValorSelecionado[name] = event.value;
   }
+
+  show()
+  {
+    this.showModal = true; // Show-Hide Modal Check
+
+  }
+
+  hide()
+  {
+    this.showModal = false;
+  }
+
+
 
 }

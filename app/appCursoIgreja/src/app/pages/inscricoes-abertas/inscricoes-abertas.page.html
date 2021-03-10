@@ -1,0 +1,32 @@
+<app-navbar [titulo]="'Inscrições Abertas'" ></app-navbar>
+
+<ion-content [scrollEvents]="true"  *ngIf="listaInscricoesAbertas">
+
+    <ion-refresher slot="fixed" (ionRefresh)="buscarInscricoesAbertas($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
+    <ion-grid>
+        <ion-row>
+          <ion-col size-md="12">
+            <ion-searchbar *ngIf="listaInscricoesAbertasBackup.length > 0"  placeholder="Pesquisar" showcancelbutton="" (ionInput)="filtro($event)" ></ion-searchbar>
+            <ion-text *ngIf="listaInscricoesAbertasBackup.length == 0">
+                <h2>No momento não possui inscrições abertas...</h2>
+              </ion-text>
+            <ion-card *ngFor="let lista of listaInscricoesAbertas">
+              <ion-card-header>
+                <ion-card-title>{{lista.curso.titulo}}</ion-card-title>
+              </ion-card-header>
+            
+              <ion-card-content>
+                {{lista.curso.descricao}} <br>
+                <p>Perído de Inscrição: <b> {{ lista.dataInicial | date:"dd/MM/yyyy"}} até {{ lista.dataFinal | date: "dd/MM/yyyy"}} </b> </p>
+                <em>Investimento: <b>{{	lista.tipo == 'P' ? (lista.valor | currency:'BRL':true ) : 'Gratuito' }}</b></em> <br>	
+                <ion-button (click)="inscrever(lista.id)" >Inscrever</ion-button>
+              </ion-card-content>
+            </ion-card>
+    
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+</ion-content>
