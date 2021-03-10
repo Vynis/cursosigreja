@@ -35,6 +35,7 @@ const routes: Routes = [
   },
   {
     path: '',
+    canActivate: [AuthorizedGuard],
     loadChildren: () => import('./pages/tablinks/tablinks.module').then( m => m.TablinksPageModule)
   },
 
