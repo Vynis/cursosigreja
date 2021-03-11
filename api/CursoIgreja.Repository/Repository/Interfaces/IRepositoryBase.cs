@@ -13,6 +13,8 @@ namespace CursoIgreja.Repository.Repository.Interfaces
 
         Task<bool> Remover(TEntity entity);
 
+        Task<bool> RemoverRange(TEntity[] entity);
+
         Task<bool> SaveChangesAsync();
 
         Task<TEntity[]> ObterTodos();
@@ -24,6 +26,8 @@ namespace CursoIgreja.Repository.Repository.Interfaces
         Task<TEntity[]> Buscar(Expression<Func<TEntity, bool>> predicado);
 
         Task<TEntity[]> BuscaFiltroDinamico(PaginationFilter paginationFilter);
+
+        void DeatchLocal(Func<TEntity, bool> predicado);
 
     }
 }

@@ -52,7 +52,8 @@ namespace CursoIgreja.Repository.Repository.Class
                                                                 .Include(c => c.Conteudos)
                                                                 .Include(c => c.Curso);
 
-            return await query.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return await query.AsTracking().Where(c => c.Id == id).FirstOrDefaultAsync();
         }
+
     }
 }

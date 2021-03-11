@@ -31,5 +31,6 @@ namespace CursoIgreja.Domain.Models
 
         public List<ProcessoInscricao> ProcessoInscricao { get; set; }
         public List<Modulo> Modulo { get; set; }
+        public List<CursoProfessor> CursoProfessores { get; set; }
     }
 }

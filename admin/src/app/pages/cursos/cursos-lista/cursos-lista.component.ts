@@ -25,6 +25,8 @@ export class CursosListaComponent implements OnInit {
 
   acoes: DataTableAcoes[] = [
     { icone: 'create', evento: this.editar.bind(this), toolTip: 'Editar', color: 'primary' },
+    { icone: 'assignment', evento: this.editar.bind(this), toolTip: 'Contéudo', color: 'primary' },
+    { icone: 'lock_open', evento: this.editar.bind(this), toolTip: 'Liberação do Modulo', color: 'primary' },
   ];
 
   dadosTabela: CursoModel[] = [];

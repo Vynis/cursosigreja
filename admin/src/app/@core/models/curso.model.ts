@@ -1,3 +1,4 @@
+import { CursoProfessorModel } from "./cursoprofessor.model";
 import { ModuloModel } from "./modulos.model";
 
 export class CursoModel {
@@ -9,11 +10,13 @@ export class CursoModel {
     cargaHoraria: string ;
     arquivoImg: string;
     modulo: ModuloModel[];
+    cursoProfessores: CursoProfessorModel[];
     
     /**
      *
      */
     constructor() {
-        this.status = 'A';        
+        this.status = 'A';  
+        this.id = 0;      
     }
 }

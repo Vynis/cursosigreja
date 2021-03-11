@@ -8,4 +8,9 @@ export class ModuloModel {
     cursoId: number;
     conteudos: ConteudoModel[];
     liberacaoModulos: LiberacaoModuloModel[];
+
+    constructor() {
+        this.id = 0;
+        this.cursoId = 0;
+    }
 }

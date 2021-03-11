@@ -11,6 +11,7 @@ import { ComponentsModule } from '../components/components.module';
 import { CursosService } from '../../@core/services/cursos.service';
 import { InterceptService } from '../../@core/utils/intercept.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProfessorService } from '../../@core/services/professor.service';
 
 const routes: Routes = [
 	{
@@ -53,7 +54,8 @@ const routes: Routes = [
 	NbButtonModule,
 	NbSelectModule,
 	NbTabsetModule,
-	ReactiveFormsModule
+	ReactiveFormsModule,
+	NbSelectModule
   ],
   declarations: [
     CursosComponent,
@@ -67,7 +69,8 @@ const routes: Routes = [
 			useClass: InterceptService,
 		multi: true
 	},
-	CursosService
+	CursosService,
+	ProfessorService
   ]
 })
 export class CursosModule { }

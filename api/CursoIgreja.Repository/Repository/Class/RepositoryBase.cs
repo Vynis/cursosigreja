@@ -44,6 +44,12 @@ namespace CursoIgreja.Repository.Repository.Class
             return await _dataContext.SaveChangesAsync() > 0;
         }
 
+        public virtual async Task<bool> RemoverRange(TEntity[] entity)
+        {
+            _dataContext.RemoveRange(entity);
+            return await _dataContext.SaveChangesAsync() > 0;
+        }
+
         public virtual async Task<TEntity[]> Buscar(Expression<Func<TEntity, bool>> predicado)
         {
             return await _dataContext.Set<TEntity>().Where(predicado).ToArrayAsync();
@@ -69,6 +75,15 @@ namespace CursoIgreja.Repository.Repository.Class
             var expressionDynamic = _filtroDinamico.FromFiltroItemList<TEntity>(paginationFilter.Filtro.ToList());
 
             return await _dataContext.Set<TEntity>().Where(expressionDynamic).ToArrayAsync();
+        }
+
+        public virtual void DeatchLocal(Func<TEntity, bool> predicado)
+        {
+            var local = _dataContext.Set<TEntity>().Local.Where(predicado).FirstOrDefault();
+            if (local != null)
+            {
+                _dataContext.Entry(local).State = EntityState.Detached;
+            }
         }
     }
 }

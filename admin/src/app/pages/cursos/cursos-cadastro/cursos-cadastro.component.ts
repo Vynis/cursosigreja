@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProfessorModel } from './../../../@core/models/professor.model';
+import { ProfessorService } from './../../../@core/services/professor.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CursoModel } from '../../../@core/models/curso.model';
+import { ModuloModel } from '../../../@core/models/modulos.model';
 import { CursosService } from '../../../@core/services/cursos.service';
+import { CursoProfessorModel } from '../../../@core/models/cursoprofessor.model';
 
 @Component({
   selector: 'app-cursos-cadastro',
@@ -16,16 +20,20 @@ export class CursosCadastroComponent implements OnInit {
   curso: CursoModel;
   cursoOld: CursoModel;
   existeErro: boolean = false;
+  listaProfessores: ProfessorModel[];
+  listaProffessoresAdd: ProfessorModel[] = [];
+  selectedProfessor = new FormControl();
 
   get modulo(): FormArray{
     return <FormArray>this.formulario.get('modulo');
   }
-
+  
   constructor(private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private cursoService: CursosService,
     private toast: ToastrService,
-    private router: Router
+    private router: Router,
+    private professorService: ProfessorService
     ) { }
 
   ngOnInit() {
@@ -43,10 +51,12 @@ export class CursosCadastroComponent implements OnInit {
   }
 
   createForm(_curso: CursoModel) {
+    this.buscarProfessosAtivo();
     this.curso = _curso;
     this.cursoOld = Object.assign({},_curso); //Usa caso queira resetar o formulario
 
     this.formulario = this.fb.group({
+      id: [this.curso.id, [Validators.required] ],
       titulo: [this.curso.titulo,[Validators.required] ],
       cargaHoraria: [this.curso.cargaHoraria,[Validators.required] ],
       status: [this.curso.status,[Validators.required] ],
@@ -55,11 +65,12 @@ export class CursosCadastroComponent implements OnInit {
     });
   }
 
-  criarGrupoModulo(): FormGroup {
+  criarGrupoModulo(modulo: ModuloModel = new ModuloModel()): FormGroup {
     return this.fb.group({
-      titulo: ['',[Validators.required] ],
-      ordem: ['', [Validators.required]],
-      cursoId: ['']
+      id: [modulo.id,[Validators.required]],
+      titulo: [modulo.titulo,[Validators.required] ],
+      ordem: [modulo.ordem, [Validators.required]],
+      cursoId: [modulo.cursoId]
     });
   }
 
@@ -76,6 +87,12 @@ export class CursosCadastroComponent implements OnInit {
       return false;
     }
 
+    if (this.listaProffessoresAdd.length === 0) {
+      this.existeErro = true;
+      return false;
+    }
+
+
     return true;
   }
 
@@ -88,6 +105,9 @@ export class CursosCadastroComponent implements OnInit {
     _curso.status = controls.status.value;
     _curso.descricao = controls.descricao.value;
     _curso.cargaHoraria = controls.cargaHoraria.value;
+    _curso.modulo = controls.modulo.value;
+    _curso.cursoProfessores = this.preparaCursoProfessor();
+    
 
     return _curso;
   }
@@ -137,13 +157,16 @@ export class CursosCadastroComponent implements OnInit {
         if(!res.success)
           this.toast.error('Erro a buscar dados!');
         
-        this.curso = Object.assign({}, res.dados);
-        console.log(this.curso);
+        this.createForm(res.dados);
+        this.remModulo(0);
 
-        this.formulario.patchValue(this.curso);
+        this.curso.modulo.forEach(modulo => {
+          this.modulo.push(this.criarGrupoModulo(modulo));
+        });
 
-        
-        //this.createForm(res.dados);
+        this.curso.cursoProfessores.forEach(item => {
+          this.addProfessor(item['professor']);
+        })
       }
     )
   }
@@ -154,6 +177,36 @@ export class CursosCadastroComponent implements OnInit {
 
   remModulo(id: number) {
     this.modulo.removeAt(id);
+  }
+
+  buscarProfessosAtivo() {
+    this.professorService.obterAtivos().subscribe (
+      res => {
+        this.listaProfessores = res.dados;
+        console.log(this.listaProfessores);
+      }
+    );
+  }
+
+  addProfessor(professorSelecionado: ProfessorModel = this.selectedProfessor.value) {
+    const validarLista = this.listaProffessoresAdd.find(x => x.id === professorSelecionado.id);
+    if (validarLista === undefined && professorSelecionado !== null)   {
+      this.listaProffessoresAdd.push(professorSelecionado);
+      this.selectedProfessor.setValue(null);
+    } 
+  }
+
+  remProfessor(professorSelecionado: ProfessorModel) { 
+    this.listaProffessoresAdd = this.listaProffessoresAdd.filter(x => x.id !== professorSelecionado.id);
+  }
+
+  preparaCursoProfessor() : CursoProfessorModel[] {
+    let listaPreparada: CursoProfessorModel[] = [];
+    this.listaProffessoresAdd.forEach( res => {
+      listaPreparada.push({id: 0, professorId: res.id, cursoId: this.curso.id });
+    });
+
+    return listaPreparada;
   }
 
 }
