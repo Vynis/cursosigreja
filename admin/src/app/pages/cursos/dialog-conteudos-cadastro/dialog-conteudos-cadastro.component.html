@@ -1,14 +1,51 @@
 <nb-card style="width: 800px;" > 
   <nb-card-header>Cadastro de Conteúdo</nb-card-header>
   <nb-card-body>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="titulo" class="label">Titulo</label>
-          <input type="text" class="form-control"  nbInput fullWidth placeholder="Titulo" />
+    <form  [formGroup]="formulario">
+      <input type="hidden" formControlName="id">
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="form-group">
+            <label for="titulo" class="label">Titulo</label>
+            <input type="text" class="form-control"
+            [ngClass]="{'is-invalid': formulario.get('titulo').errors  && formulario.get('titulo').touched}"
+              nbInput fullWidth placeholder="Titulo" formControlName="titulo"  />
+              <div *ngIf="formulario.get('titulo').hasError('required')  && formulario.get('titulo').touched" class="invalid-feedback">
+                O titulo é obrigatório.
+              </div>
+          </div>
+          <div class="col-sm-2">
+            <label for="ordem" class="label">Ordem</label>
+            <input type="text" class="form-control"
+            [ngClass]="{'is-invalid': formulario.get('ordem').errors  && formulario.get('ordem').touched}"
+              nbInput fullWidth placeholder="ordem" formControlName="ordem"  />
+              <div *ngIf="formulario.get('ordem').hasError('required')  && formulario.get('ordem').touched" class="invalid-feedback">
+                O ordem é obrigatório.
+              </div>
+          </div>
+
+          <div class="col-sm-2">
+            <label for="modulo" class="label">Modulo</label>
+            <nb-select id="modulo" formControlName="modulo">
+              <nb-option [value]="null">Selecione</nb-option>
+              <nb-option value="A">Ativo</nb-option>
+              <nb-option value="I">Inativo</nb-option>
+            </nb-select>
+          </div>
+
+          <div class="col-sm-2">
+            <label for="tipo" class="label">Tipo de Conteúdo</label>
+            <nb-select id="tipo" formControlName="tipo">
+              <nb-option [value]="null">Selecione</nb-option>
+              <nb-option value="VE">Video Externo</nb-option>
+              <nb-option value="VI">Video Interno</nb-option>
+            </nb-select>
+          </div>
+
         </div>
       </div>
-    </div>
+    </form>
+
   </nb-card-body>
   <nb-card-footer>
     <button nbButton status="success" >Salvar</button>
