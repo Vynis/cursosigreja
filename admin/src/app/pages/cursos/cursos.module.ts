@@ -12,6 +12,9 @@ import { CursosService } from '../../@core/services/cursos.service';
 import { InterceptService } from '../../@core/utils/intercept.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProfessorService } from '../../@core/services/professor.service';
+import { DialogConteudosComponent } from './dialog-conteudos/dialog-conteudos.component';
+import { ConteudoService } from '../../@core/services/conteudo.service';
+import { DialogConteudosCadastroComponent } from './dialog-conteudos-cadastro/dialog-conteudos-cadastro.component';
 
 const routes: Routes = [
 	{
@@ -49,18 +52,20 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forChild(routes),
     NbCardModule,
-	ComponentsModule,
 	NbInputModule,
 	NbButtonModule,
 	NbSelectModule,
 	NbTabsetModule,
 	ReactiveFormsModule,
-	NbSelectModule
+	NbSelectModule,
+	ComponentsModule
   ],
   declarations: [
     CursosComponent,
     CursosListaComponent,
-    CursosCadastroComponent
+    CursosCadastroComponent,
+	DialogConteudosComponent,
+	DialogConteudosCadastroComponent
   ],
   providers: [
 	InterceptService,

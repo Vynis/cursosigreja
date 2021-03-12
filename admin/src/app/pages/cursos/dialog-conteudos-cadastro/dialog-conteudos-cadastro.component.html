@@ -1,0 +1,17 @@
+<nb-card style="width: 800px;" > 
+  <nb-card-header>Cadastro de Conteúdo</nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="titulo" class="label">Titulo</label>
+          <input type="text" class="form-control"  nbInput fullWidth placeholder="Titulo" />
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="success" >Salvar</button>
+    <button nbButton (click)="fechar()" >Fechar</button>
+  </nb-card-footer>
+</nb-card>

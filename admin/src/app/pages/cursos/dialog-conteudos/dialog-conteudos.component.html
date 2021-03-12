@@ -1,0 +1,27 @@
+
+
+<nb-card size="giant"  >
+    <nb-card-header>
+      <div class="row">
+        <div class="col-sm-10" style="padding-top: 15px;">
+          <h5>Lista de Conteúdos - {{curso.titulo}}</h5>
+        </div>
+        <div class="col-sm-2" style="text-align: right">
+          <a (click)="novo()"   nbButton status="primary"  >Novo</a>
+        </div>
+      </div>
+      </nb-card-header>
+    <nb-card-body>
+      <div class="row">
+        <div class="col-sm-12">
+          <app-grid-view [colunas]="colunas" [acoes]="acoes" [dadosTabela]="dadosTabela"></app-grid-view>
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="cancel()" >Fechar</button>
+    </nb-card-footer>
+  </nb-card>
+
+   
+
