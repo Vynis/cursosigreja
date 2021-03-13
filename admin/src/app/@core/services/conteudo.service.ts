@@ -19,6 +19,10 @@ export class ConteudoService {
     return this.http.get<ModeloBase>(`${this.caminhoApi}/conteudo/buscar-conteudo/${idCurso}`)
   }
 
+  obterPorId(id: number) {
+    return this.http.get<ModeloBase>(`${this.caminhoApi}/conteudo/buscar-id/${id}`)
+  }
+
   adicionar(conteudo: ConteudoModel) {
     return this.http.post<ModeloBase>(`${this.caminhoApi}/conteudo/adcionar`,conteudo).pipe()
   }

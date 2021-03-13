@@ -1,0 +1,65 @@
+<nb-card *ngIf="conteudo"  > 
+  <nb-card-header><h5>{{tituloPagina}}</h5> </nb-card-header>
+  <nb-card-body>
+
+    <nb-alert *ngIf="existeErro" status="danger" closable>Favor preencher todos os campos obrigatorios!</nb-alert>
+
+    <form  [formGroup]="formulario">
+      <input type="hidden" formControlName="id">
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="form-group">
+            <label for="titulo" class="label">Titulo</label>
+            <input type="text" class="form-control"
+            [ngClass]="{'is-invalid': formulario.get('titulo').errors  && formulario.get('titulo').touched}"
+              nbInput fullWidth placeholder="Titulo" formControlName="titulo"  />
+              <div *ngIf="formulario.get('titulo').hasError('required')  && formulario.get('titulo').touched" class="invalid-feedback">
+                O titulo é obrigatório.
+              </div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <label for="ordem" class="label">Ordem</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': formulario.get('ordem').errors  && formulario.get('ordem').touched}"
+            nbInput fullWidth placeholder="ordem" formControlName="ordem"  />
+            <div *ngIf="formulario.get('ordem').hasError('required')  && formulario.get('ordem').touched" class="invalid-feedback">
+              O ordem é obrigatório.
+            </div>
+        </div>
+
+        <div class="col-sm-5">
+          <label for="moduloId" class="label">Modulo</label>
+          <nb-select id="moduloId" formControlName="moduloId">
+            <nb-option [value]="null">Selecione</nb-option>
+            <nb-option *ngFor="let modulo of listaModulos" [value]="modulo.id">{{modulo.titulo}}</nb-option>
+          </nb-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="tipo" class="label">Tipo de Conteúdo</label>
+          <nb-select (change)="carregaTipoConteudo()"  id="tipo" formControlName="tipo">
+            <nb-option [value]="null">Selecione</nb-option>
+            <nb-option *ngFor="let tipo of tipoConteudo" [value]="tipo.id">{{tipo.descricao}}</nb-option>
+          </nb-select>
+        </div>
+        <div *ngIf="formulario.controls.tipo.value === 'VE'" class="col-sm-10">
+          <label for="arquivo" class="label">Link do Vídeo</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': formulario.get('arquivo').errors  && formulario.get('arquivo').touched}"
+            nbInput fullWidth placeholder="Link do Video" formControlName="arquivo"  />
+            <div *ngIf="formulario.get('arquivo').hasError('required')  && formulario.get('arquivo').touched" class="invalid-feedback">
+              O link é obrigatório.
+            </div>
+        </div>
+      </div>
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton (click)="submit()" status="success" >Salvar</button>
+    <button nbButton (click)="fechar()" >Fechar</button>
+  </nb-card-footer>
+</nb-card>

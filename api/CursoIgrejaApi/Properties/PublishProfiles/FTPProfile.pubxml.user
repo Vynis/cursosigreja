@@ -14,7 +14,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/26/2020 18:49:59</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>03/04/2021 15:04:09</publishTime>
+      <publishTime>03/12/2021 21:30:19</publishTime>
     </File>
     <File Include="AutoMapper.dll">
       <publishTime>07/01/2020 16:00:54</publishTime>
@@ -23,25 +23,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2020 16:22:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.deps.json">
-      <publishTime>03/04/2021 15:04:55</publishTime>
+      <publishTime>03/12/2021 21:32:15</publishTime>
     </File>
     <File Include="CursoIgreja.Api.dll">
-      <publishTime>03/04/2021 15:04:54</publishTime>
+      <publishTime>03/12/2021 21:32:14</publishTime>
     </File>
     <File Include="CursoIgreja.Api.exe">
-      <publishTime>03/04/2021 15:04:54</publishTime>
+      <publishTime>03/12/2021 21:32:14</publishTime>
     </File>
     <File Include="CursoIgreja.Api.pdb">
-      <publishTime>03/04/2021 15:04:54</publishTime>
+      <publishTime>03/12/2021 21:32:14</publishTime>
     </File>
     <File Include="CursoIgreja.Api.runtimeconfig.json">
-      <publishTime>02/28/2021 18:30:43</publishTime>
+      <publishTime>03/12/2021 21:31:01</publishTime>
     </File>
     <File Include="CursoIgreja.Domain.dll">
-      <publishTime>03/04/2021 15:03:40</publishTime>
+      <publishTime>03/12/2021 21:30:58</publishTime>
     </File>
     <File Include="CursoIgreja.Domain.pdb">
-      <publishTime>03/04/2021 15:03:40</publishTime>
+      <publishTime>03/12/2021 21:30:58</publishTime>
     </File>
     <File Include="CursoIgreja.PagSeguro.dll">
       <publishTime>01/18/2021 20:30:38</publishTime>
@@ -50,13 +50,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/18/2021 20:30:38</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.dll">
-      <publishTime>03/04/2021 15:03:41</publishTime>
+      <publishTime>03/12/2021 21:30:59</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.pdb">
-      <publishTime>03/04/2021 15:03:41</publishTime>
+      <publishTime>03/12/2021 21:30:59</publishTime>
     </File>
     <File Include="EFCore.NamingConventions.dll">
       <publishTime>01/20/2020 09:43:22</publishTime>
+    </File>
+    <File Include="FiltrDinamico.Core.dll">
+      <publishTime>03/12/2021 21:30:57</publishTime>
+    </File>
+    <File Include="FiltrDinamico.Core.pdb">
+      <publishTime>03/12/2021 21:30:57</publishTime>
     </File>
     <File Include="Microsoft.AspNetCore.Authentication.JwtBearer.dll">
       <publishTime>06/17/2020 22:02:22</publishTime>
@@ -74,49 +80,49 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/15/2019 07:38:50</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Abstractions.dll">
-      <publishTime>06/17/2020 07:46:14</publishTime>
+      <publishTime>08/21/2020 00:57:42</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.dll">
-      <publishTime>06/17/2020 07:46:34</publishTime>
+      <publishTime>08/21/2020 00:58:10</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Relational.Design.dll">
       <publishTime>02/17/2017 17:01:04</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Relational.dll">
-      <publishTime>06/17/2020 07:46:40</publishTime>
+      <publishTime>08/21/2020 00:58:16</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Caching.Abstractions.dll">
-      <publishTime>06/17/2020 06:46:58</publishTime>
+      <publishTime>08/20/2020 23:49:04</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Caching.Memory.dll">
-      <publishTime>06/17/2020 06:47:14</publishTime>
+      <publishTime>08/20/2020 23:49:30</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Configuration.Abstractions.dll">
-      <publishTime>06/17/2020 06:47:16</publishTime>
+      <publishTime>08/20/2020 23:49:38</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Configuration.Binder.dll">
-      <publishTime>06/17/2020 06:47:34</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Configuration.dll">
-      <publishTime>06/17/2020 06:47:24</publishTime>
+      <publishTime>08/20/2020 23:49:38</publishTime>
     </File>
     <File Include="Microsoft.Extensions.DependencyInjection.Abstractions.dll">
-      <publishTime>06/17/2020 06:47:30</publishTime>
+      <publishTime>08/20/2020 23:49:48</publishTime>
     </File>
     <File Include="Microsoft.Extensions.DependencyInjection.dll">
-      <publishTime>06/17/2020 06:47:24</publishTime>
+      <publishTime>08/20/2020 23:49:38</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Logging.Abstractions.dll">
-      <publishTime>06/17/2020 06:48:16</publishTime>
+      <publishTime>08/20/2020 23:51:02</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Logging.dll">
-      <publishTime>06/17/2020 06:48:28</publishTime>
+      <publishTime>08/20/2020 23:51:08</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Options.dll">
-      <publishTime>06/17/2020 06:47:24</publishTime>
+      <publishTime>08/20/2020 23:49:28</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Primitives.dll">
-      <publishTime>06/17/2020 06:47:48</publishTime>
+      <publishTime>08/20/2020 23:49:56</publishTime>
     </File>
     <File Include="Microsoft.IdentityModel.JsonWebTokens.dll">
       <publishTime>06/24/2019 19:50:38</publishTime>
@@ -137,7 +143,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/15/2019 16:25:40</publishTime>
     </File>
     <File Include="MySqlConnector.dll">
-      <publishTime>11/05/2019 11:58:26</publishTime>
+      <publishTime>08/20/2020 19:28:24</publishTime>
     </File>
     <File Include="Newtonsoft.Json.Bson.dll">
       <publishTime>11/27/2018 23:10:18</publishTime>
@@ -152,7 +158,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/06/2017 12:09:14</publishTime>
     </File>
     <File Include="Pomelo.EntityFrameworkCore.MySql.dll">
-      <publishTime>07/22/2020 15:48:32</publishTime>
+      <publishTime>11/02/2020 15:32:14</publishTime>
     </File>
     <File Include="Pomelo.JsonObject.dll">
       <publishTime>11/20/2019 10:56:36</publishTime>
@@ -194,7 +200,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/24/2019 19:49:50</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>03/04/2021 15:04:55</publishTime>
+      <publishTime>03/12/2021 21:32:15</publishTime>
     </File>
   </ItemGroup>
 </Project>

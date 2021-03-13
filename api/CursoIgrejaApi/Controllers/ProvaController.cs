@@ -9,24 +9,23 @@ using System.Threading.Tasks;
 namespace CursoIgreja.Api.Controllers
 {
     [ApiController]
-    [Route("api/conteudo")]
-    public class ConteudoController : ControllerBase
+    [Route("api/prova")]
+    public class ProvaController : ControllerBase
     {
-        private readonly IConteudoRepository _conteudoRepository;
+        private readonly IProvaRepository _provaRepository;
 
-        public ConteudoController(IConteudoRepository conteudoRepository)
+        public ProvaController(IProvaRepository provaRepository)
         {
-            _conteudoRepository = conteudoRepository;
+            _provaRepository = provaRepository;
         }
 
-
-        [HttpGet("buscar-conteudo/{idCurso}")]
-        public async Task<IActionResult> BuscaTodosConteudosCurso(int idCurso)
+        [HttpGet("buscar-prova/{idConteudo}")]
+        public async Task<IActionResult> BuscaTodosProvaConteudo(int idConteudo)
         {
             try
             {
-                var response = await _conteudoRepository.Buscar(x => x.Modulo.CursoId == idCurso);
-                return Response(response.OrderBy(c => c.Modulo.Ordem));
+                var response = await _provaRepository.Buscar(x => x.ConteudoId == idConteudo);
+                return Response(response.OrderBy(c => c.Ordem));
             }
             catch (Exception ex)
             {
@@ -35,11 +34,11 @@ namespace CursoIgreja.Api.Controllers
         }
 
         [HttpGet("buscar-id/{id}")]
-        public async Task<IActionResult> BuscaConteudoId(int id)
+        public async Task<IActionResult> BuscaProvaId(int id)
         {
             try
             {
-                var response = await _conteudoRepository.ObterPorId(id);
+                var response = await _provaRepository.ObterPorId(id);
                 return Response(response);
             }
             catch (Exception ex)
@@ -49,11 +48,11 @@ namespace CursoIgreja.Api.Controllers
         }
 
         [HttpPost("adcionar")]
-        public async Task<IActionResult> Add(Conteudo objeto)
+        public async Task<IActionResult> Add(Prova objeto)
         {
             try
             {
-                var response = await _conteudoRepository.Adicionar(objeto);
+                var response = await _provaRepository.Adicionar(objeto);
 
                 if (!response)
                     return Response("Erro ao cadastrar.", false);
@@ -67,16 +66,16 @@ namespace CursoIgreja.Api.Controllers
         }
 
         [HttpPut("alterar")]
-        public async Task<IActionResult> Alt(Conteudo objeto)
+        public async Task<IActionResult> Alt(Prova objeto)
         {
             try
             {
-                var valida = await _conteudoRepository.ObterPorId(objeto.Id);
+                var valida = await _provaRepository.ObterPorId(objeto.Id);
 
                 if (valida == null)
                     return Response("Id não enconrado", false);
 
-                var response = await _conteudoRepository.Atualizar(objeto);
+                var response = await _provaRepository.Atualizar(objeto);
 
                 if (!response)
                     return Response("Erro ao atualizar.", false);
@@ -94,15 +93,15 @@ namespace CursoIgreja.Api.Controllers
         {
             try
             {
-                var valida = await _conteudoRepository.ObterPorId(id);
+                var valida = await _provaRepository.ObterPorId(id);
 
                 if (valida == null)
                     return Response("Id não enconrado", false);
 
-                if (valida.Provas.Any())
-                    return Response("Não foi possível excluir possuir vinculo com provas!", false);
+                if (valida.ItensProvas.Any())
+                    return Response("Não foi possível excluir possuir vinculo com itens de provas!", false);
 
-                var response = await _conteudoRepository.Remover(valida);
+                var response = await _provaRepository.Remover(valida);
 
                 if (!response)
                     return Response("Erro ao deletar.", false);
@@ -114,6 +113,5 @@ namespace CursoIgreja.Api.Controllers
                 return ResponseErro(ex);
             }
         }
-
     }
 }

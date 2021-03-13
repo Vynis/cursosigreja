@@ -8,4 +8,11 @@ export class ProvaModel {
     ordem: number;
     conteudoId: number;
     itensProvas: ItemProvaModel[];
+    /**
+     *
+     */
+    constructor() {
+        this.id = 0;
+
+    }
 }

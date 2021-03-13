@@ -38,7 +38,6 @@ namespace CursoIgreja.Api.Controllers
 
 
         [HttpGet("buscar-modulo-curso/{idCurso}")]
-        [Obsolete("Nao esta sendo utilizado neste modulo. Olhar CursoController")]
         public async Task<IActionResult> BuscarModuloCurso(int idCurso)
         {
             try
@@ -49,7 +48,7 @@ namespace CursoIgreja.Api.Controllers
 
                 foreach (var modulo in retorno)
                     foreach(var conteudo in modulo.Conteudos)
-                    {
+                    {   
                         if (conteudo.Tipo.Equals("PR") || conteudo.Tipo.Equals("PA"))
                         {
                             var provaUsuario = listaProvaUsuario.Where(x => x.Prova.ConteudoId.Equals(conteudo.Id)).ToList();

@@ -1,0 +1,119 @@
+<form *ngIf="prova" [formGroup]="formulario">
+<nb-card>
+  <nb-card-header> 
+    <h5>{{tituloPagina}}</h5> 
+  </nb-card-header>
+  <nb-card-body>
+    <nb-alert *ngIf="existeErro" status="danger" closable>Favor preencher todos os campos obrigatorios!</nb-alert>
+
+    <nb-tabset>
+      <nb-tab tabTitle="Dados">
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="pergunta" class="label">Pergunta</label>
+              <input type="text" class="form-control"
+              [ngClass]="{'is-invalid': formulario.get('pergunta').errors  && formulario.get('pergunta').touched}"
+              nbInput fullWidth id="pergunta" placeholder="Pergunta" formControlName="pergunta" >
+              <div *ngIf="formulario.get('pergunta').hasError('required')  && formulario.get('pergunta').touched" class="invalid-feedback">
+                O pergunta é obrigatório.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-2">
+            <label for="tipoComponente" class="label">Tipo</label><br>
+            <nb-select fullWidth id="tipoComponente" formControlName="tipoComponente"  >
+              <nb-option [value]="null">Selecione</nb-option>
+              <nb-option *ngFor="let tipo of tipoProva" [value]="tipo.id">{{tipo.descricao}}</nb-option>
+            </nb-select>
+          </div>
+
+          <div class="col-sm-2">
+            <label for="status" class="label">Status</label><br>
+            <nb-select fullWidth id="status" formControlName="status"  selected="A">
+              <nb-option value="A">Ativo</nb-option>
+              <nb-option value="I">Inativo</nb-option>
+            </nb-select>
+          </div>
+
+          <div class="col-sm-2">
+            <label for="ordem" class="label">Ordem</label>
+            <input type="text" class="form-control"
+            [ngClass]="{'is-invalid': formulario.get('ordem').errors  && formulario.get('ordem').touched}"
+              nbInput fullWidth placeholder="ordem" formControlName="ordem"  />
+              <div *ngIf="formulario.get('ordem').hasError('required')  && formulario.get('ordem').touched" class="invalid-feedback">
+                O ordem é obrigatório.
+              </div>
+          </div>
+
+
+        </div>
+      </nb-tab>
+      <nb-tab [disabled]="formulario.controls.tipoComponente.value == 'T'" tabTitle="Questões">
+        <div class="row" >
+          <div class="col-sm-12">
+            <a  (click)="addQuestao()" class="float-right" nbButton status="primary">Adicionar Item da Questão</a>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-12">
+            <nb-card formArrayName="itensProvas" *ngFor="let mod of itensProvas.controls; let i = index;">
+              <nb-card-header>Questão {{i + 1}}</nb-card-header>
+              <nb-card-body>
+                <div >
+                  <div class="row" [formGroupName]="i" >
+                    <input type="hidden" formControlName="id">
+                    <div class="col-sm-8">
+                      <label for="questao" class="label">Questão</label>
+                      <input type="text" class="form-control"
+                      [ngClass]="{'is-invalid': itensProvas.get( i + '.questao').errors  && itensProvas.get(i + '.questao').touched}"
+                      nbInput fullWidth id="questao" placeholder="Questão" formControlName="questao" >
+                      <div *ngIf="itensProvas.get( i + '.questao').hasError('required')  && itensProvas.get( i + '.questao').touched" class="invalid-feedback">
+                        O questao é obrigatório.
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <label for="questaoCorreta" class="label">Questão Correta</label>
+                      <nb-select fullWidth id="questaoCorreta" formControlName="questaoCorreta" >
+                        <nb-option value="S">Sim</nb-option>
+                        <nb-option value="N">Não</nb-option>
+                      </nb-select>
+                    </div>
+                    <div class="col-sm-2">
+                      <label for="status" class="label">Status</label>
+                      <nb-select fullWidth id="status" formControlName="status"  selected="A">
+                        <nb-option value="A">Ativo</nb-option>
+                        <nb-option value="I">Inativo</nb-option>
+                      </nb-select>
+                    </div>
+                  </div>
+                </div>
+              </nb-card-body>
+              <nb-card-footer><a  (click)="remQuestao(i)" nbButton status="danger">Remover Item da Questão</a></nb-card-footer>
+            </nb-card>
+          </div>
+        </div>
+
+        <div *ngIf="itensProvas.controls.length > 1" class="row" >
+          <div class="col-sm-12">
+            <a  (click)="addQuestao()" class="float-right" nbButton status="primary">Adicionar Item da Questão</a>
+          </div>
+        </div>
+      </nb-tab>
+     </nb-tabset>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="row">
+      <div class="col-sm-1">
+        <button (click)="submit()"  type="submit" nbButton status="success">Enviar</button>
+      </div>
+      <div class="col-sm-1">
+        <a ghost (click)="voltar()" nbButton status="danger" [routerLink]="'/pages/cursos/provas/'" >Voltar</a>
+      </div>
+    </div>
+  </nb-card-footer>
+</nb-card>
+</form>
+

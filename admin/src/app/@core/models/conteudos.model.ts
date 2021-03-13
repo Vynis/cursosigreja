@@ -21,4 +21,9 @@ export class ConteudoModel {
 
     anexos: AnexoModel[];
     provas: ProvaModel[];
+
+
+    constructor() {
+       this.id = 0;
+    }
 }

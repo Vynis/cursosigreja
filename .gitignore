@@ -20,6 +20,7 @@ arq_propostas
 arq_marcas
 arq_logo_marcas
 arq_videos
+backup
 
 # profiling files
 chrome-profiler-events*.json

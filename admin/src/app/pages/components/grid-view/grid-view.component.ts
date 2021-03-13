@@ -21,6 +21,7 @@ export class GridViewComponent implements OnInit, AfterViewInit  {
     this.dataSource.data = itens;
   }
   @Input("usarIMG")usarIMG:boolean =false;
+  @Input() tamanhoPagina: number[] = [5, 10, 20];
 
   dataSource: any = new MatTableDataSource<any>();
   displayedColumns = [];

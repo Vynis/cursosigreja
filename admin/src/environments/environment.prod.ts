@@ -5,5 +5,5 @@
  */
 export const environment = {
   production: true,
-  api: ''
+  api: 'http://www.cursoigrejacristobrasil.kinghost.net/api/'
 };

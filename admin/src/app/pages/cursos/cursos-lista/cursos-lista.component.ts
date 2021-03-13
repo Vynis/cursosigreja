@@ -8,7 +8,7 @@ import { PaginationfilterModel } from '../../../@core/models/paginationfilter.mo
 import { CursosService } from '../../../@core/services/cursos.service';
 import { DataTableAcoes } from '../../components/_models/DataTableAcoes';
 import { DataTableColunas } from '../../components/_models/DataTableColunas';
-import { DialogConteudosComponent } from '../dialog-conteudos/dialog-conteudos.component';
+import { ConteudosComponent } from '../conteudos-lista/conteudos-lista.component';
 
 @Component({
   selector: 'app-cursos-lista',
@@ -27,7 +27,7 @@ export class CursosListaComponent implements OnInit {
 
   acoes: DataTableAcoes[] = [
     { icone: 'create', evento: this.editar.bind(this), toolTip: 'Editar', color: 'primary' },
-    { icone: 'assignment', evento: this.abrirModalConteudo.bind(this), toolTip: 'Contéudo', color: 'primary' },
+    { icone: 'assignment', evento: this.abrirConteudo.bind(this), toolTip: 'Contéudo', color: 'primary' },
     { icone: 'lock_open', evento: this.editar.bind(this), toolTip: 'Liberação do Modulo', color: 'primary' },
   ];
 
@@ -36,7 +36,6 @@ export class CursosListaComponent implements OnInit {
   constructor(
     private cursoServices: CursosService,
     private route: Router,
-    private dialogService: NbDialogService
     ) { }
 
   ngOnInit() {
@@ -66,8 +65,8 @@ export class CursosListaComponent implements OnInit {
     this.route.navigate([`pages/cursos/cadastro/edit/${cursos.id}`]);
   }
 
-  abrirModalConteudo(cursos: CursoModel) {
-    this.dialogService.open(DialogConteudosComponent, { context : { curso: cursos }}, );
+  abrirConteudo(cursos: CursoModel) {
+    this.route.navigate([`pages/cursos/conteudos/${cursos.id}`]);
   }
 
 }

@@ -4,4 +4,11 @@ export class ItemProvaModel {
     status: string;
     questaoCorreta: string;
     provaId: number;
+
+    /**
+     *
+     */
+    constructor() {     
+        this.id = 0;
+    }
 }
