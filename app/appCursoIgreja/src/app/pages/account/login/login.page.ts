@@ -59,7 +59,11 @@ export class LoginPage implements OnInit {
       res => {
         if (res.success) { 
           SecurityUtil.set(res.dados);
-          this.navCtrl.navigateRoot('/');
+          if (res.dados.usuario.dadosComp) 
+            this.navCtrl.navigateRoot('/tablinks/home');
+          else
+            this.navCtrl.navigateRoot('/tablinks/meus-dados/endereco');
+
         } else {
           this.showError('Login inválido. Email/Cpf ou Senha estão incorreto!');
         }
@@ -103,6 +107,10 @@ export class LoginPage implements OnInit {
         loading.dismiss();
 			})
 		).subscribe();
+  }
+
+  cadastro() {
+    this.navCtrl.navigateRoot('/register');
   }
 
 }

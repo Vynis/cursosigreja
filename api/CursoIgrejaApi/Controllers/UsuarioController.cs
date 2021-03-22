@@ -57,6 +57,29 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
+        [HttpPost("alterar")]
+        public async Task<IActionResult> Alterar(Usuarios usuario)
+        {
+            try
+            {
+                var valida = await _usuarioRepository.ObterPorId(usuario.Id);
+
+                if (valida == null)
+                    return Response("Id não enconrado", false);
+
+                var response = await _usuarioRepository.Atualizar(usuario);
+
+                if (!response)
+                    return Response("Erro ao atualizar.", false);
+
+                return Response("Atualização realizada com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
         [HttpGet("verifica-cadastro/{emailOuCpf}")]
         [AllowAnonymous]
         public async Task<IActionResult> VerificaCadastro(string emailOuCpf) 

@@ -30,5 +30,5 @@ export class Usuario {
     quemPastoreia: string;
     frequentaCelula: string;
     quemLider: string;
-
+    dadosComp: boolean;
 }
