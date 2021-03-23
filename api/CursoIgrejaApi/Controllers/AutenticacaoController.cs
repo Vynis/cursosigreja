@@ -38,19 +38,7 @@ namespace CursoIgreja.Api.Controllers
         }
 
 
-        [HttpGet("busca-por-id/{id}")]
-        public async Task<IActionResult> BuscaPorId(int id)
-        {
-            try
-            {
-                return Response(await _usuarioRepository.ObterPorId(id));
-            }
-            catch (Exception ex)
-            {
 
-                return ResponseErro(ex);
-            }
-        }
 
         [HttpGet("gerar-senha")]
         [AllowAnonymous]
@@ -82,7 +70,7 @@ namespace CursoIgreja.Api.Controllers
                 if (usuario == null)
                     return Response("Usuário ou senha incorreto!", false);
 
-                usuario.DadosComp = string.IsNullOrEmpty(response.Select(x => x.Rua).FirstOrDefault()) ? false : true;
+                usuario.DadosComp = string.IsNullOrEmpty(response.Select(x => x.Rua).FirstOrDefault()) || response.Select(x => x.CongregacaoId).FirstOrDefault() == 0 ? false : true;
 
                 var geraLog = new GeraLogUsuario(_logUsuarioRepository, _usuarioRepository, usuario.Id).Gerar("Autenticar", "Logou no sistema").Result;
 

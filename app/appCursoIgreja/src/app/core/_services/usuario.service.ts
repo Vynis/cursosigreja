@@ -19,4 +19,12 @@ export class UsuarioService {
     return this.http.post<ModeloBase>(`${this.caminhoApi}usuario/cadastrar`,usuario).pipe();
   }
 
+  alterar(usuario: Usuario) : Observable<ModeloBase> {
+    return this.http.put<ModeloBase>(`${this.caminhoApi}usuario/alterar`,usuario).pipe();
+  }
+
+  buscaporId(id: number)  {
+    return this.http.get<ModeloBase>(`${this.caminhoApi}usuario/busca-por-id/${id}`)
+  }
+
 }

@@ -1,14 +1,14 @@
-<app-navbar [titulo]="'Meus dados'" ></app-navbar>
+<app-navbar [titulo]="'Meus dados - Localização'" ></app-navbar>
 
 <ion-content [scrollEvents]="true" padding>
-  <form [formGroup]="form">
+  <form *ngIf="user" [formGroup]="form">
     <ion-grid>
       <ion-row justify-content-center>
 
         <ion-col size="9" >
           <ion-list lines="none" class="animated fadeIn">
             <ion-item>
-              <ion-label position="stacked">Cep</ion-label>
+              <ion-label position="floating">Cep</ion-label>
               <ion-input type="text"  placeholder="Informe o cep" formControlName="cep" >
             </ion-input>
             </ion-item>
@@ -28,33 +28,33 @@
         <ion-col size="12">
           <ion-list lines="none" class="animated fadeIn">
             <ion-item>
-              <ion-label position="stacked">Rua/Avenida</ion-label>
+              <ion-label position="floating">Rua/Avenida</ion-label>
               <ion-input type="text"  placeholder="Informe a Rua/Avenida" formControlName="rua" >
               </ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="stacked">Numero</ion-label>
+              <ion-label position="floating">Numero</ion-label>
               <ion-input type="text"  placeholder="Informe numero" formControlName="numero" >
               </ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="stacked">Bairro</ion-label>
+              <ion-label position="floating">Bairro</ion-label>
               <ion-input type="text"  placeholder="Informe bairro" formControlName="bairro" >
               </ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="stacked">Cidade</ion-label>
+              <ion-label position="floating">Cidade</ion-label>
               <ion-input type="text"  placeholder="Informe cidade" formControlName="cidade" >
               </ion-input>
             </ion-item>
             <ion-item>
-              <ion-label position="stacked">Estado</ion-label>
+              <ion-label position="floating">Estado</ion-label>
               <ion-select cancelText="Cancelar" placeholder="Selecione o Estado" formControlName="estado">
                 <ion-select-option  *ngFor="let estado of listaestadosBrasileiros" [value]="estado.sigla">{{ estado.nome }}</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label position="stacked">Complemento</ion-label>
+              <ion-label position="floating">Complemento</ion-label>
               <ion-input type="text"  placeholder="Informe complemente" formControlName="complemento" >
               </ion-input>
             </ion-item>
@@ -62,7 +62,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <ion-button  expand="full" size="large" class="animated fadeIn" [disabled]="!form.valid">
+    <ion-button (click)="submit()"  expand="full" size="large" class="animated fadeIn" [disabled]="!form.valid">
       Enviar
     </ion-button>
   </form>

@@ -24,6 +24,20 @@ namespace CursoIgreja.Api.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("busca-por-id/{id}")]
+        public async Task<IActionResult> BuscaPorId(int id)
+        {
+            try
+            {
+                return Response(await _usuarioRepository.ObterPorId(id));
+            }
+            catch (Exception ex)
+            {
+
+                return ResponseErro(ex);
+            }
+        }
+
         [HttpPost("cadastrar")]
         [AllowAnonymous]
         public async Task<IActionResult> Cadastrar(Usuarios usuario)
@@ -57,7 +71,7 @@ namespace CursoIgreja.Api.Controllers
             }
         }
 
-        [HttpPost("alterar")]
+        [HttpPut("alterar")]
         public async Task<IActionResult> Alterar(Usuarios usuario)
         {
             try

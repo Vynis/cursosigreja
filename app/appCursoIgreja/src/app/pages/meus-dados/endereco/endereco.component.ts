@@ -2,9 +2,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { EstadosBrasileiros } from 'src/app/core/utils/estados-brasileiros.enum';
 import { ConsultaCepService } from 'src/app/core/_services/consulta-cep.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { SecurityUtil } from 'src/app/core/utils/security.util';
 import { Usuario } from 'src/app/core/_models/usurario.model';
+import { UsuarioService } from 'src/app/core/_services/usuario.service';;
 
 @Component({
   selector: 'app-endereco',
@@ -20,22 +21,42 @@ export class EnderecoComponent implements OnInit {
     public fb: FormBuilder, 
     private cepService: ConsultaCepService,
     private loadCtrl: LoadingController,
+    private usuarioService: UsuarioService,
+    private toastCtrl: ToastController,
+    private navCtrl: NavController,
     ) { }
 
   ngOnInit() {
-    this.createForm();
-    this.user = SecurityUtil.getUsuario();
+    this.buscaDadosUsuario();
+  }
+
+  async buscaDadosUsuario() {
+
+    const loading = await this.loadCtrl.create({ message: 'Aguarde...' });
+    loading.present();
+
+    this.usuarioService.buscaporId(SecurityUtil.getUsuario().id).subscribe( res => {
+      loading.dismiss();
+      if (res.success){
+        this.user = res.dados;
+        this.createForm();
+      }
+    },
+    error => {
+      loading.dismiss();
+    }
+    )
   }
 
   createForm() {
     this.form = this.fb.group({
-      cep: ['', Validators.required],
-			rua: ['', Validators.required],
-			complemento: [''],
-			numero: [''],
-			bairro: ['', Validators.required],
-			cidade: ['', Validators.required],
-			estado: ['GO', Validators.required]
+      cep: [this.user.cep, Validators.required],
+			rua: [this.user.rua, Validators.required],
+			complemento: [this.user.complemento],
+			numero: [this.user.numero],
+			bairro: [this.user.bairro, Validators.required],
+			cidade: [this.user.cidade, Validators.required],
+			estado: [this.user.estado, Validators.required]
     })
   }
 
@@ -63,6 +84,49 @@ export class EnderecoComponent implements OnInit {
       }
       )
 		} 
-	  }
+
+	}
+
+  async submit() {
+    if (this.form.invalid)
+      return;
+
+    const controls = this.form.controls;
+    this.user.cep = controls.cep.value;
+    this.user.rua = controls.rua.value;
+    this.user.bairro = controls.bairro.value;
+    this.user.cidade = controls.cidade.value;
+    this.user.estado = controls.estado.value;
+    this.user.complemento = controls.complemento.value;
+    this.user.numero = controls.numero.value;
+
+    const loading = await this.loadCtrl.create({ message: 'Aguarde...' });
+    loading.present();
+
+    this.usuarioService.alterar(this.user).subscribe(
+      res => {
+        loading.dismiss();
+
+        if (res.success) {
+          this.showMessage('Endereço cadastrado com sucesso!');
+
+          if (!SecurityUtil.getUsuario().dadosComp)
+            this.navCtrl.navigateRoot('/tablinks/meus-dados/gerais');
+
+        }
+
+      },
+      error => {
+        loading.dismiss();
+      }
+    )
+
+  }
+
+  async showMessage(message) {
+    const msg = await this.toastCtrl.create({ message: message, duration: 3000 });
+    msg.present();
+  }
+
 
 }

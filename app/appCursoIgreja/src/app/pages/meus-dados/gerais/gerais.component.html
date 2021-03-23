@@ -1,3 +1,50 @@
-<p>
-  gerais works!
-</p>
+<app-navbar [titulo]="'Meus dados - Gerais'" ></app-navbar>
+
+<ion-content [scrollEvents]="true" padding>
+  <form *ngIf="user" [formGroup]="form">
+    <ion-grid>
+      <ion-row justify-content-center>
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="floating">Congregação</ion-label>
+            <ion-select formControlName="congregacaoId">
+              <ion-select-option *ngFor="let lista of listaCongregacoes" [value]="lista.id">{{lista.nome}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item size="12">
+            <ion-label position="floating">Congrega há quanto tempo?</ion-label>
+            <ion-input type="text"  formControlName="congregaHaQuantoTempo" >
+            </ion-input>
+          </ion-item>
+          <ion-item size="12">
+            <ion-label position="floating">Recebe pastoreio de alguém mais proximo?</ion-label>
+            <ion-select formControlName="recebePastoreiro">
+              <ion-select-option value="S">Sim</ion-select-option>
+              <ion-select-option value="N">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item size="12">
+          <ion-label position="floating">De quem?</ion-label>
+            <ion-input type="text"  formControlName="quemPastoreia" >
+            </ion-input>
+          </ion-item>
+          <ion-item size="12">
+            <ion-label position="floating">Frequenta alguma célula?</ion-label>
+            <ion-select formControlName="frequentaCelula">
+              <ion-select-option value="S">Sim</ion-select-option>
+              <ion-select-option value="N">Não</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item size="12">
+            <ion-label position="floating">Quem é o líder?</ion-label>
+            <ion-input type="text"  formControlName="quemLider" >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button (click)="submit()"  expand="full" size="large" class="animated fadeIn" [disabled]="!form.valid">
+      Enviar
+    </ion-button>
+  </form>
+</ion-content>

@@ -18,6 +18,11 @@ export class SecurityUtil {
         }
     }
 
+    public static setUsuario(usuario : Usuario) {
+        const data = JSON.stringify(usuario);
+        localStorage.setItem('usuario', btoa(data));
+    }
+
     public static getToken(): string {
         const data = localStorage.getItem('token');
         if (data) {

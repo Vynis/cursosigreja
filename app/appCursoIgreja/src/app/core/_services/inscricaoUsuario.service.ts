@@ -36,7 +36,6 @@ export class InscricaoUsuarioService {
             );
     }
 
-
     cadastrarSemToken(inscricao: InscricaoUsuario): Observable<any> {
         return this.http.post<InscricaoUsuario>(`${this.caminhoApi}inscricao-usuario/cadastrar`,inscricao)
             .pipe(

@@ -49,6 +49,7 @@ export class RegisterPage implements OnInit {
     _usuario.telefoneCelular = controls.telefoneCelular.value;
     _usuario.telefoneFixo = controls.telefoneFixo.value;
     _usuario.senha = controls.senha.value;
+    _usuario.tipoAcesso = 'E';
 
     return _usuario;
   }
