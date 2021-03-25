@@ -1,6 +1,6 @@
 import { async } from '@angular/core/testing';
 import { Component, OnInit } from '@angular/core';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { InscricaoUsuario } from 'src/app/core/_models/inscricaoUsuario.model';
 import { ModeloBase } from 'src/app/core/_models/modelo-base';
 import { ProcessoInscricao } from 'src/app/core/_models/processoInscricao.model';
@@ -20,7 +20,8 @@ export class InscricoesAbertasPage implements OnInit {
     private processoInscricao:  ProcessoInscricaoService,
     private loadCtrl: LoadingController,
     public alertController: AlertController,
-    private inscricaoUsuarioService: InscricaoUsuarioService
+    private inscricaoUsuarioService: InscricaoUsuarioService,
+    private toastCtrl: ToastController,
   ) { }
 
   ngOnInit() {
@@ -114,7 +115,10 @@ export class InscricoesAbertasPage implements OnInit {
             this.mensagemConfirmacao();
 					}
 
-				}
+				} else {
+          this.showMessage(res.dados);
+        }
+
         loading.dismiss();
 			}
 		);
@@ -183,6 +187,11 @@ export class InscricoesAbertasPage implements OnInit {
 
     await alert.present();
     this.buscarInscricoesAbertas(null);
+  }
+
+  async showMessage(message) {
+    const msg = await this.toastCtrl.create({ message: message, duration: 3000 });
+    msg.present();
   }
 
 }

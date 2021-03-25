@@ -2,7 +2,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { EstadosBrasileiros } from 'src/app/core/utils/estados-brasileiros.enum';
 import { ConsultaCepService } from 'src/app/core/_services/consulta-cep.service';
-import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { SecurityUtil } from 'src/app/core/utils/security.util';
 import { Usuario } from 'src/app/core/_models/usurario.model';
 import { UsuarioService } from 'src/app/core/_services/usuario.service';;
@@ -16,6 +16,7 @@ export class EnderecoComponent implements OnInit {
   public form: FormGroup;
   listaestadosBrasileiros = EstadosBrasileiros;
   public user: Usuario = null;
+  public dadosComp = SecurityUtil.getUsuario().dadosComp;
   
   constructor(
     public fb: FormBuilder, 
@@ -24,6 +25,7 @@ export class EnderecoComponent implements OnInit {
     private usuarioService: UsuarioService,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
+    public modalController: ModalController
     ) { }
 
   ngOnInit() {
@@ -126,6 +128,14 @@ export class EnderecoComponent implements OnInit {
   async showMessage(message) {
     const msg = await this.toastCtrl.create({ message: message, duration: 3000 });
     msg.present();
+  }
+
+  dismiss() {
+    // using the injected ModalController this page
+    // can "dismiss" itself and optionally pass back data
+    this.modalController.dismiss({
+      'dismissed': true
+    });
   }
 
 

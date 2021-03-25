@@ -1,7 +1,11 @@
 <app-navbar [titulo]="'Meus dados'" ></app-navbar>
-
 <ion-content>
   <app-user-card></app-user-card>
+  <ion-list lines="full">
+    <ion-item button (click)="presentModal()">
+      <ion-label>Endereço</ion-label>
+    </ion-item>
+  </ion-list>
   <!-- <ion-list lines="full">
     <ion-item>
       <ion-icon name="create-outline"></ion-icon> Alterar dados

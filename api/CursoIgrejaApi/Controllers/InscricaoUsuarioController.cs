@@ -99,10 +99,22 @@ namespace CursoIgreja.Api.Controllers
             try
             {
                 var validaInscricao = await _inscricaoUsuarioRepository.Buscar(x => x.ProcessoInscricaoId.Equals(inscricaoUsuario.ProcessoInscricaoId)
-                && x.UsuarioId.Equals(inscricaoUsuario.UsuarioId) && x.Status != "CA");
+                && x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)) && x.Status != "CA");
 
                 if (validaInscricao.Any())
-                    Response("Já se encontra inscrito neste curso", false);
+                    return Response("Já se encontra inscrito neste curso", false);
+
+                var listaInscricaoUsuario = await _inscricaoUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)) && x.Status != "CA");
+
+                if (listaInscricaoUsuario.Any())
+                {
+                    var idCursoProcessoInscricao = _processoInscricaoRepository.ObterPorId(inscricaoUsuario.ProcessoInscricaoId).Result.CursoId;
+
+                    var validaFezCurso = listaInscricaoUsuario.ToList().Exists(x => x.ProcessoInscricao.CursoId.Equals(idCursoProcessoInscricao));
+
+                    if (validaFezCurso)
+                        return Response("Já se encontra inscrito neste curso", false);
+                }
 
                 inscricaoUsuario.DataInscricao = DateTime.Now;
                 inscricaoUsuario.Usuario = null;

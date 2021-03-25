@@ -1,4 +1,8 @@
-<app-navbar [titulo]="'Meus dados - Localização'" ></app-navbar>
+<app-navbar [titulo]="'Meus dados - Localização'" >
+  <ion-buttons *ngIf="dadosComp" slot="end">
+    <ion-button (click)="dismiss()" >Fechar</ion-button>
+  </ion-buttons>
+</app-navbar>
 
 <ion-content [scrollEvents]="true" padding>
   <form *ngIf="user" [formGroup]="form">

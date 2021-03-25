@@ -20,7 +20,6 @@ export class GeraisComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder, 
-    private cepService: ConsultaCepService,
     private loadCtrl: LoadingController,
     private usuarioService: UsuarioService,
     private toastCtrl: ToastController,
