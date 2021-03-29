@@ -107,7 +107,7 @@ namespace CursoIgreja.Api.Controllers
                     usuario.Email = urlEmailConfig;
                 }
 
-                var linkAcesso = $"http://igrejadecristobrasil.com.br/empower/auth/reset/{ModificaValor(CriptografiaService.Criptografar(usuario.Id.ToString()))}";
+                var linkAcesso = $"http://igrejadecristobrasil.com.br/app/reset/{ModificaValor(CriptografiaService.Criptografar(usuario.Id.ToString()))}";
                 var titulo = "Empower School";
                 var cabecalho = $"RECUPERAR SENHA - {usuario.Nome.ToUpper()}";
                 var mensagem = $"Olá {usuario.Nome} <br /> <br /> <a href=\"{linkAcesso}\">Clique aqui</a> para renovar sua acesso. <br /> <br /> Att,<br /> Equipe Empower Schoool ";

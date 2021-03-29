@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Recriar uma nova senha</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true" padding>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col size-md="12">
+        <form [formGroup]="form">
+          <ion-list lines="none" class="animated fadeIn">
+            <ion-item>
+              <ion-label position="stacked">Nova Senha</ion-label>
+              <ion-input type="password"  placeholder="Nova Senha" formControlName="senha" required>
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Confirmar Senha</ion-label>
+              <ion-input type="password"  placeholder="Confirmar Senha" formControlName="confirmarSenha" required>
+              </ion-input>
+            </ion-item>
+          </ion-list>
+          <br />
+
+          <ion-button  expand="full" size="large" class="animated fadeIn" (click)="submit()" [disabled]="!form.valid">
+          Enviar
+        </ion-button>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -14,6 +14,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/account/register/register.module').then(m => m.RegisterPageModule)
   },
   {
+    path: 'reset',
+    loadChildren: () => import('./pages/account/reset/reset.module').then(m => m.ResetPageModule)
+  },
+  {
     path: 'curso',
     canActivate: [AuthorizedGuard],
     loadChildren: () => import('./pages/curso/curso.module').then(m => m.CursoPageModule)
@@ -23,6 +27,11 @@ const routes: Routes = [
     canActivate: [AuthorizedGuard],
     loadChildren: () => import('./pages/tablinks/tablinks.module').then( m => m.TablinksPageModule)
   },
+  {
+    path: 'reset',
+    loadChildren: () => import('./pages/account/reset/reset.module').then( m => m.ResetPageModule)
+  },
+
 
 ];
 

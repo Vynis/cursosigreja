@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Usuario } from 'src/app/core/_models/usurario.model';
+import { ConfirmPasswordValidator } from 'src/app/core/utils/confirm-password.validator';
 
 @Component({
   selector: 'app-register',
@@ -32,6 +33,8 @@ export class RegisterPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       senha: ['', Validators.required],
       confirmarSenha: ['', Validators.required]
+    }, {
+      validator: ConfirmPasswordValidator.MatchPassword
     });
     
   }
