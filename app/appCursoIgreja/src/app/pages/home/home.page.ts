@@ -41,6 +41,8 @@ export class HomePage implements OnInit {
           element.processoInscricao.dataInicial = new Date(element.processoInscricao.dataInicial);
           element.processoInscricao.dataInicalPagto = new Date(element.processoInscricao.dataInicalPagto);
           element.processoInscricao.dataFinalPagto = new Date(element.processoInscricao.dataFinalPagto);
+          element.processoInscricao.dataInicioVisualizacaoCurso = new Date(element.processoInscricao.dataInicioVisualizacaoCurso);
+          element.processoInscricao.dataFinalVisualizacaoCurso  = new Date(element.processoInscricao.dataFinalVisualizacaoCurso);
         });
         this.listaInscricaoCurso = dados;
         this.listaInscricaoCursoBackup = dados;

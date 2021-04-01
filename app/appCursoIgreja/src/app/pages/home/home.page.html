@@ -21,8 +21,11 @@
         
           <ion-card-content>
             {{lista.processoInscricao.curso.descricao}} <br>
+            <span *ngIf="!(dataAtual >= lista.processoInscricao.dataInicioVisualizacaoCurso && dataAtual <= lista.processoInscricao.dataFinalVisualizacaoCurso)">
+              <br><em style="color: red;">Periodo de visualização concluído!</em>
+            </span>
             <!-- <ion-progress-bar color="primary" value="0.5"></ion-progress-bar> -->
-            <ion-button [routerLink]="['/curso/' + lista.id]" *ngIf="lista.status == 'CO'" >Assistir curso</ion-button>
+            <ion-button [routerLink]="['/curso/' + lista.id]" *ngIf="lista.status == 'CO' && ( dataAtual >= lista.processoInscricao.dataInicioVisualizacaoCurso && dataAtual <= lista.processoInscricao.dataFinalVisualizacaoCurso)" >Assistir curso</ion-button>
             <ion-button (click)="gerarPagamento(lista)" *ngIf="lista.status == 'AG' && ( dataAtual >= lista.processoInscricao.dataInicalPagto && dataAtual <= lista.processoInscricao.dataFinalPagto) && lista.processoInscricao.tipo == 'P'" color="success">Pagamento</ion-button>
             <ion-button (click)="cancelarInscricao(lista.id)" *ngIf="lista.status == 'AG'" color="warning">Cancelar Inscrição</ion-button>
           </ion-card-content>

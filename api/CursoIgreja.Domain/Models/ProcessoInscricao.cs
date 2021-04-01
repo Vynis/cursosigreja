@@ -26,6 +26,9 @@ namespace CursoIgreja.Domain.Models
         public DateTime? DataInicalPagto { get; set; }
         public DateTime? DataFinalPagto { get; set; }
 
+        public DateTime? DataInicioVisualizacaoCurso { get; set; }
+        public DateTime? DataFinalVisualizacaoCurso { get; set; }
+
         [Column("cursoid")]
         public int CursoId { get; set; }
         public Curso Curso { get; set; }

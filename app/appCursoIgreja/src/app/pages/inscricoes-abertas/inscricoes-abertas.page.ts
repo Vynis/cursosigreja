@@ -6,6 +6,7 @@ import { ModeloBase } from 'src/app/core/_models/modelo-base';
 import { ProcessoInscricao } from 'src/app/core/_models/processoInscricao.model';
 import { InscricaoUsuarioService } from 'src/app/core/_services/inscricaoUsuario.service';
 import { ProcessoInscricaoService } from 'src/app/core/_services/processoInscricao.service';
+import { dateToString } from 'src/app/core/utils/date';
 
 @Component({
   selector: 'app-inscricoes-abertas',
@@ -41,6 +42,7 @@ export class InscricoesAbertasPage implements OnInit {
         if (res.success){
           this.listaInscricoesAbertas = res.dados;
           this.listaInscricoesAbertasBackup = res.dados;
+          console.log(res.dados);
         }
 
         if (event !== null)
@@ -71,10 +73,6 @@ export class InscricoesAbertasPage implements OnInit {
   }
 
  async inscrever(id: number) {
-		var inscricaoUsuario = new InscricaoUsuario();
-		inscricaoUsuario.processoInscricaoId = id;
-		inscricaoUsuario.status = 'AG';
-
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Tem certeza que deseja se inscrever para este curso',
@@ -90,7 +88,7 @@ export class InscricoesAbertasPage implements OnInit {
         }, {
           text: 'Sim',
           handler: () => {
-            this.inscreverUsuario(inscricaoUsuario);
+            this.alertaAceitaTermoUso(id);
           }
         }
       ]
@@ -98,6 +96,47 @@ export class InscricoesAbertasPage implements OnInit {
 
     await alert.present();
 	}
+
+  mensagemTermo(idProcessoInscricao: number) {
+    var texto = '';
+    const dadosCurso = this.listaInscricoesAbertasBackup.filter(x => x.id == idProcessoInscricao)[0];
+
+    texto = '- O <b>cadastro</b> será efetivado somente mediante pagamento da inscrição por uma das opções oferecidas na plataforma.<br>';
+    texto+= '- O <b>acesso</b> ao sistema para as atividades do curso será liberado mediante a agenda programada para ciclos de formação:<br><br>';
+    texto+= `${dadosCurso.curso.titulo}: ${dateToString(dadosCurso.dataInicioVisualizacaoCurso)} até ${dateToString(dadosCurso.dataFinalVisualizacaoCurso)} <br><br>`;
+    texto+= '- O <b>certificado de conclusão</b> satisfatória será concedido mediante o percentual de 100% de acesso as atividades até a data programada para a conclusão do curso.';
+    return texto;
+  }
+
+  async alertaAceitaTermoUso(id: number) {
+		var inscricaoUsuario = new InscricaoUsuario();
+		inscricaoUsuario.processoInscricaoId = id;
+		inscricaoUsuario.status = 'AG';
+
+
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: `Termo de acordo Empower School ${new Date().getFullYear()}`,
+      message: this.mensagemTermo(id),
+      buttons: [
+        {
+          text: 'Não Aceito',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Aceito',
+          handler: () => {
+            this.inscreverUsuario(inscricaoUsuario);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 
   async inscreverUsuario(inscricaoUsuario: InscricaoUsuario) {
     const loading = await this.loadCtrl.create({ message: 'Aguarde...' });

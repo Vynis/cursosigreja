@@ -12,4 +12,6 @@ export class ProcessoInscricao {
     valor: number;
     dataInicalPagto: Date;
     dataFinalPagto: Date;
+    dataInicioVisualizacaoCurso: Date;
+    dataFinalVisualizacaoCurso: Date;
 }

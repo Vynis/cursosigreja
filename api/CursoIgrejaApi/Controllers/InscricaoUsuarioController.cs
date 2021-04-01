@@ -104,17 +104,17 @@ namespace CursoIgreja.Api.Controllers
                 if (validaInscricao.Any())
                     return Response("Já se encontra inscrito neste curso", false);
 
-                var listaInscricaoUsuario = await _inscricaoUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)) && x.Status != "CA");
+                //var listaInscricaoUsuario = await _inscricaoUsuarioRepository.Buscar(x => x.UsuarioId.Equals(Convert.ToInt32(User.Identity.Name)) && x.Status != "CA");
 
-                if (listaInscricaoUsuario.Any())
-                {
-                    var idCursoProcessoInscricao = _processoInscricaoRepository.ObterPorId(inscricaoUsuario.ProcessoInscricaoId).Result.CursoId;
+                //if (listaInscricaoUsuario.Any())
+                //{
+                //    var idCursoProcessoInscricao = _processoInscricaoRepository.ObterPorId(inscricaoUsuario.ProcessoInscricaoId).Result.CursoId;
 
-                    var validaFezCurso = listaInscricaoUsuario.ToList().Exists(x => x.ProcessoInscricao.CursoId.Equals(idCursoProcessoInscricao));
+                //    var validaFezCurso = listaInscricaoUsuario.ToList().Exists(x => x.ProcessoInscricao.CursoId.Equals(idCursoProcessoInscricao));
 
-                    if (validaFezCurso)
-                        return Response("Já se encontra inscrito neste curso", false);
-                }
+                //    if (validaFezCurso)
+                //        return Response("Já se encontra inscrito neste curso", false);
+                //}
 
                 inscricaoUsuario.DataInscricao = DateTime.Now;
                 inscricaoUsuario.Usuario = null;
@@ -268,7 +268,7 @@ namespace CursoIgreja.Api.Controllers
             {
                 var resultado = await _inscricaoUsuarioRepository.Buscar(x => x.UsuarioId == Convert.ToInt32(User.Identity.Name) && !x.Status.Equals("CA"));
 
-                return Response(resultado);
+                return Response(resultado.OrderByDescending(c => c.DataInscricao));
             }
             catch (Exception ex)
             {
