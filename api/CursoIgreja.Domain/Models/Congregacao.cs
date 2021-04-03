@@ -15,6 +15,7 @@ namespace CursoIgreja.Domain.Models
         [Column("status")]
         public string Status { get; set; }
         public List<Usuarios> Usuarios { get; set; }
+        public List<Membro> Membros { get; set; }
 
     }
 }

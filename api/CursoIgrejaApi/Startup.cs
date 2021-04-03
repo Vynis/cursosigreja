@@ -185,6 +185,7 @@ namespace CursoIgrejaApi
             services.AddScoped<IUsuarioSistemaRepository, UsuarioSistemaRepository>();
             services.AddScoped<IProfessorRepository, ProfessorRepository>();
             services.AddScoped<IProvaRepository, ProvaRepository>();
+            services.AddScoped<IMembroRepository, MembroRepository>();
 
         }
     }

@@ -37,7 +37,7 @@ namespace CursoIgreja.Repository.Data
         public DbSet<PerfilPermissoes> PerfilPermissoes { get; set; }
         public DbSet<Professor> Professores { get; set; }
         public DbSet<CursoProfessor> CursoProfessores { get; set; }
-
+        public DbSet<Membro> Membros { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
