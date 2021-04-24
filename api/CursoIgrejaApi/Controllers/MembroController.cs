@@ -26,11 +26,18 @@ namespace CursoIgreja.Api.Controllers
         {
             try
             {
-                //Valida email existente
-                var validaEmail = await _membroRepository.Buscar(x => x.Email.Trim().ToUpper().Equals(membro.Email.Trim().ToUpper()));
+                if (membro.PossuiEmail)
+                {
 
-                if (validaEmail.Any())
-                    return Response("Email já cadastrado na base de dados!", false);
+                    if (string.IsNullOrEmpty(membro.Email))
+                        return Response("Informe o email!", false);
+
+                    //Valida email existente
+                    var validaEmail = await _membroRepository.Buscar(x => x.Email.Trim().ToUpper().Equals(membro.Email.Trim().ToUpper()));
+
+                    if (validaEmail.Any())
+                        return Response("Email já cadastrado na base de dados!", false);
+                }
 
                 //Valida nome existente
                 var validaNome = await _membroRepository.Buscar(x => x.Nome.Trim().ToUpper().Equals(membro.Nome.Trim().ToUpper()));

@@ -21,7 +21,7 @@
         
           <ion-card-content>
             {{lista.processoInscricao.curso.descricao}} <br>
-            <span *ngIf="!(dataAtual >= lista.processoInscricao.dataInicioVisualizacaoCurso && dataAtual <= lista.processoInscricao.dataFinalVisualizacaoCurso)">
+            <span *ngIf="!(dataAtual >= lista.processoInscricao.dataInicioVisualizacaoCurso && dataAtual <= lista.processoInscricao.dataFinalVisualizacaoCurso) && !(lista.processoInscricao.dataInicioVisualizacaoCurso >= dataAtual) ">
               <br><em style="color: red;">Periodo de visualização concluído!</em>
             </span>
             <!-- <ion-progress-bar color="primary" value="0.5"></ion-progress-bar> -->
