@@ -69,4 +69,6 @@ export class CursosListaComponent implements OnInit {
     this.route.navigate([`pages/cursos/conteudos/${cursos.id}`]);
   }
 
+  //teste
+
 }
