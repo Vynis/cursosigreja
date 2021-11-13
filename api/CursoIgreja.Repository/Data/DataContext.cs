@@ -1,4 +1,6 @@
 ﻿using CursoIgreja.Domain.Models;
+using CursoIgreja.Domain.Models.Views;
+using CursoIgreja.Repository.Mapping;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -38,6 +40,8 @@ namespace CursoIgreja.Repository.Data
         public DbSet<Professor> Professores { get; set; }
         public DbSet<CursoProfessor> CursoProfessores { get; set; }
         public DbSet<Membro> Membros { get; set; }
+        public DbSet<VwContagemInscricoes> VwContagemInscricoes { get; set; }
+        public DbSet<VwContagemInscricoesCurso> VwContagemInscricoesCursos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +54,9 @@ namespace CursoIgreja.Repository.Data
                 fk.DeleteBehavior = DeleteBehavior.Restrict;  
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new VwContagemInscricoesCongregacaoMap());
+            modelBuilder.ApplyConfiguration(new VwContagemInscricaoCursoMap());
 
         }
 

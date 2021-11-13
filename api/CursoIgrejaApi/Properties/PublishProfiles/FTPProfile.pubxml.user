@@ -8,7 +8,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACfEg8F5GN0yYhQZSWChXXAAAAAACAAAAAAAQZgAAAAEAACAAAADoOzMJLAEPnsvaS6s0GYfNx4pteVx2o2WE6opMwAaadgAAAAAOgAAAAAIAACAAAACySOgxitaVWlLaWYHfuGf7r7T0zIHOEx6OLsnNnGDryiAAAABhk5PqmZlPbnkEn/hYMJA7K6za3eDq25LfmBiOY+HlGEAAAACYsxc22y6fjN15x8JtnIkIaqi4PlMxUWGz1RWPYc5LZ9kYgV4Zwaz3+aWi8Hbgtxfj6Yrh7JfI1a/KVp4QKmu8</EncryptedPassword>
     <_PublishTargetUrl>ftp://ftp.cursoigrejacristobrasil.kinghost.net/www</_PublishTargetUrl>
-    <History>True|2021-04-24T12:18:03.9373650Z;False|2021-04-24T09:11:17.7028783-03:00;False|2021-04-24T09:10:54.9771376-03:00;</History>
+    <History>True|2021-10-27T21:52:36.7590280Z;True|2021-05-09T08:55:14.7574762-03:00;True|2021-04-24T09:18:03.9373650-03:00;False|2021-04-24T09:11:17.7028783-03:00;False|2021-04-24T09:10:54.9771376-03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -24,25 +24,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2020 16:22:44</publishTime>
     </File>
     <File Include="CursoIgreja.Api.deps.json">
-      <publishTime>04/24/2021 09:17:14</publishTime>
+      <publishTime>10/27/2021 18:51:21</publishTime>
     </File>
     <File Include="CursoIgreja.Api.dll">
-      <publishTime>04/24/2021 09:17:10</publishTime>
+      <publishTime>10/27/2021 18:51:16</publishTime>
     </File>
     <File Include="CursoIgreja.Api.exe">
-      <publishTime>04/24/2021 09:17:10</publishTime>
+      <publishTime>10/27/2021 18:51:16</publishTime>
     </File>
     <File Include="CursoIgreja.Api.pdb">
-      <publishTime>04/24/2021 09:17:10</publishTime>
+      <publishTime>10/27/2021 18:51:16</publishTime>
     </File>
     <File Include="CursoIgreja.Api.runtimeconfig.json">
-      <publishTime>04/24/2021 08:30:14</publishTime>
+      <publishTime>10/27/2021 18:51:16</publishTime>
     </File>
     <File Include="CursoIgreja.Domain.dll">
-      <publishTime>04/24/2021 08:30:09</publishTime>
+      <publishTime>10/27/2021 18:51:14</publishTime>
     </File>
     <File Include="CursoIgreja.Domain.pdb">
-      <publishTime>04/24/2021 08:30:09</publishTime>
+      <publishTime>10/27/2021 18:51:14</publishTime>
     </File>
     <File Include="CursoIgreja.PagSeguro.dll">
       <publishTime>04/24/2021 08:30:07</publishTime>
@@ -51,10 +51,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/24/2021 08:30:07</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.dll">
-      <publishTime>04/24/2021 08:30:11</publishTime>
+      <publishTime>10/27/2021 18:51:15</publishTime>
     </File>
     <File Include="CursoIgreja.Repository.pdb">
-      <publishTime>04/24/2021 08:30:11</publishTime>
+      <publishTime>10/27/2021 18:51:15</publishTime>
     </File>
     <File Include="EFCore.NamingConventions.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -201,7 +201,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/24/2019 19:49:50</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>04/24/2021 09:17:14</publishTime>
+      <publishTime>10/27/2021 18:51:21</publishTime>
     </File>
   </ItemGroup>
 </Project>

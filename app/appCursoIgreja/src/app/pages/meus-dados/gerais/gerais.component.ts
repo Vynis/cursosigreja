@@ -75,6 +75,13 @@ export class GeraisComponent implements OnInit {
       return;
 
     const controls = this.form.controls;
+  
+    if (controls.congregacaoId.value === 0  || controls.congregacaoId.value === null){
+      this.showMessage('Selecione uma congregação!');
+      return;
+    }
+
+    
     this.user.congregacaoId = controls.congregacaoId.value;
     this.user.congregaHaQuantoTempo = controls.congregaHaQuantoTempo.value;
     this.user.recebePastoreiro = controls.recebePastoreiro.value;

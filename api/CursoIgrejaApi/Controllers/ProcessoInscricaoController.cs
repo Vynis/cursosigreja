@@ -88,6 +88,26 @@ namespace CursoIgreja.Api.Controllers
         }
 
 
+        [HttpGet("buscar-ciclos")]
+        [AllowAnonymous]
+        public async Task<IActionResult> BuscarCiclos()
+        {
+            try
+            {
+                var listaBd = await _processoInscricaoRepository.ObterTodos();
+
+                var agrupamento = listaBd.ToList().GroupBy(c => new { c.Ano, c.Ciclo }).Select(c => new { Ano = c.Key.Ano, Ciclo = c.Key.Ciclo });
+
+                return Response(agrupamento.OrderByDescending(c => c.Ano).OrderByDescending(c => c.Ciclo));
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseErro(ex);
+            }
+        }
+
+
 
     }
 }

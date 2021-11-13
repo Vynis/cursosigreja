@@ -1,0 +1,68 @@
+<nb-tabset style="color: white; background-color: white;">
+    <nb-tab tabTitle="Contagem por Congregação">
+        <form *ngIf="carregouDados" [formGroup]="formulario">
+            <nb-card >
+                <nb-card-header>
+                    Filtro
+                </nb-card-header>
+                <nb-card-body>
+                  
+                    <div class="row">
+                        <div class="col-md-4">
+                          <label for="tipo" class="label">Qual ciclo/ano?</label><br>
+                          <nb-select placeholder="Tipo do Filtro"  status="primary" formControlName="filtroCiclo" >
+                              <nb-option [value]="null">Todos</nb-option>
+                              <nb-option *ngFor="let lista of listaCiclos" [value]="lista">{{lista.ciclo}}/{{lista.ano}}</nb-option>
+                            </nb-select>
+                        </div>
+    
+                    </div> 
+    
+                  
+                </nb-card-body>
+                <nb-card-footer>
+                    <button (click)="pesquisar()" type="submit" nbButton status="primary">Filtrar</button>
+                </nb-card-footer>
+            </nb-card>
+        </form>
+
+        <ng2-smart-table 
+        [settings]="settings" 
+        [source]="source" 
+        >
+        </ng2-smart-table>
+    </nb-tab>
+    <nb-tab tabTitle="Contagem por Curso">
+        <form *ngIf="carregouDados" [formGroup]="formulario">
+            <nb-card >
+                <nb-card-header>
+                    Filtro
+                </nb-card-header>
+                <nb-card-body>
+                  
+                    <div class="row">
+                        <div class="col-md-4">
+                          <label for="tipo" class="label">Qual ciclo/ano?</label><br>
+                          <nb-select placeholder="Tipo do Filtro"  status="primary" formControlName="filtroCiclo" >
+                              <nb-option [value]="null">Todos</nb-option>
+                              <nb-option *ngFor="let lista of listaCiclos" [value]="lista">{{lista.ciclo}}/{{lista.ano}}</nb-option>
+                            </nb-select>
+                        </div>
+    
+                    </div> 
+    
+                  
+                </nb-card-body>
+                <nb-card-footer>
+                    <button (click)="pesquisar()" type="submit" nbButton status="primary">Filtrar</button>
+                </nb-card-footer>
+            </nb-card>
+        </form>
+
+        <ng2-smart-table 
+        [settings]="settings" 
+        [source]="source2" 
+        >
+        </ng2-smart-table>
+    </nb-tab>
+   </nb-tabset>

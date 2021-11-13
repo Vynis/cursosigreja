@@ -168,6 +168,7 @@ namespace CursoIgrejaApi
             services.AddScoped<IFiltroDinamico, FiltroDinamico>();
             services.AddScoped<IFilterInterpreterFactory, FilterInterpreterFactory>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            services.AddScoped(typeof(IRepositoryBaseView<>), typeof(RepositoryViewBase<>));
             services.AddScoped<IUsuariosRepository, UsuariosRepository>();
             services.AddScoped<ICongregacaoRepository, CongregacaoRepository>();
             services.AddScoped<ICursoRepository, CursoRepository>();
@@ -186,6 +187,8 @@ namespace CursoIgrejaApi
             services.AddScoped<IProfessorRepository, ProfessorRepository>();
             services.AddScoped<IProvaRepository, ProvaRepository>();
             services.AddScoped<IMembroRepository, MembroRepository>();
+            services.AddScoped<IVwContagemInscricaoCongregacaoRepository, VwContagemInscricaoCongregacaoRepository>();
+            services.AddScoped<IVwContagemInscricaoCursoRepository, VwContagemInscricaoCursoRepository>();
 
         }
     }

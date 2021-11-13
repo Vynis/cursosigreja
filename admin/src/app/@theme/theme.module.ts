@@ -1,3 +1,4 @@
+import { BlankLayoutComponent } from './layouts/blank/blank.layout';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -61,6 +62,7 @@ const COMPONENTS = [
   OneColumnLayoutComponent,
   ThreeColumnsLayoutComponent,
   TwoColumnsLayoutComponent,
+  BlankLayoutComponent
 ];
 const PIPES = [
   CapitalizePipe,

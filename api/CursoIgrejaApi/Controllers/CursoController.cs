@@ -303,7 +303,7 @@ namespace CursoIgreja.Api.Controllers
                 {
                     if (modulo.LiberacaoModulos.Count > 0)
                     {
-                        if (DateTime.Now > modulo.LiberacaoModulos.FirstOrDefault().DataInicio)
+                        if (DateTime.Now > modulo.LiberacaoModulos.LastOrDefault().DataInicio)
                             listaLiberacaoModulo.Add(_mapper.Map<ModuloDto>(modulo));
                     }
                     else
